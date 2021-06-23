@@ -2,30 +2,31 @@ using UnityEngine;
 
 public class IKManager : MonoBehaviour
 {
-    [SerializeField, Range(0, 0.1f)] private float threshold = 0.05f;
+    [SerializeField, Range(0, 0.1f)] private float distanceThreshold = 0.05f;
     [SerializeField, Range(1f, 10f)] private float convergenceFactor = 5;
+    [SerializeField, Range(1, 20)] private int convergenceSteps = 10;
 
     public Joint root, end;
-    public GameObject target;
+    public GameObject target, pole;
 
 
     void Update()
     {
-        // Only rotate if the distance is above the threshold
-        if (Vector3.Distance(end.transform.position, root.transform.position) > threshold)
+        for (int i = 0; i < convergenceSteps; i++)
         {
-            // Rotate every joint, starting from the root
-            Joint currentJoint = root;
-            while (currentJoint != null)
+            // Only rotate if the distance is above the threshold
+            if (GetDistance(end.transform.position, target.transform.position) > distanceThreshold)
             {
-                float slope = ComputeSlope(currentJoint);
-                currentJoint.Rotate(-slope * convergenceFactor); // Negative slope
-                currentJoint = currentJoint.child;
+                // Rotate every joint, starting from the root
+                Joint currentJoint = root;
+                while (currentJoint != null)
+                {
+                    float slope = ComputeSlope(currentJoint);
+                    //currentJoint.Rotate(-slope * convergenceFactor); // Negative slope
+                    currentJoint = currentJoint.child; // Iterate over children
+                }
             }
-            
-            
         }
-
     }
 
 
@@ -41,15 +42,24 @@ public class IKManager : MonoBehaviour
         // This LITERALLY rotates the transform. There is probably another math-only way that doesn't
 
         float deltaTheta = 0.01f;
+        Vector3 deltaAngle = Vector3.forward * deltaTheta;
         float x0 = Vector3.Distance(end.transform.position, target.transform.position);
 
-        joint.Rotate(deltaTheta);
+        joint.Rotate(deltaAngle);
 
         float x1 = Vector3.Distance(end.transform.position, target.transform.position);
 
-        joint.Rotate(-deltaTheta);
+        joint.Rotate(-deltaAngle);
 
         return (x1 - x0) / deltaTheta;
     }
+
+    private float GetDistance(Vector3 v1, Vector3 v2)
+    {
+        return Vector3.Distance(v1, v2);
+    }
+
+
+
 
 }

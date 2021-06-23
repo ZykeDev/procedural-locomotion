@@ -14,12 +14,15 @@ public class Joint : MonoBehaviour
             if (jointChild != null)
             {
                 child = jointChild;
+                break;
             }
         }
     }
 
-    public void Rotate(float angle)
+    public void Rotate(Vector3 rotation)
     {
-        transform.Rotate(Vector3.up * angle);
+        //transform.Rotate(Vector3.forward * angle);
+        //transform.rotation = (Quaternion.Euler(x, y, z));
+        transform.Rotate(rotation);
     }
 }

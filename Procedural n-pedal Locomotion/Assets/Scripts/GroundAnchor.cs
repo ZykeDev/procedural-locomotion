@@ -1,0 +1,57 @@
+using UnityEngine;
+
+public class GroundAnchor : MonoBehaviour
+{
+    private Transform origin;
+    private int layerMask;
+
+    
+    Vector3 verticalOffset = new Vector3(0, 0.75f, 0);
+    Vector3 verticalGap = new Vector3(0, 0.2f, 0);
+
+
+    void Awake()
+    {
+        origin = transform.parent;
+        if (origin == null)
+        {
+            Debug.LogError("No origin parent");
+        }
+    }
+
+    void Start()
+    {
+        layerMask = LayerMask.GetMask("Ground");
+    }
+
+    void Update()
+    {
+        Anchor();
+    }
+
+    /// <summary>
+    /// Keeps the object anchored to the ground
+    /// </summary>
+    private void Anchor()
+    {
+        RaycastHit hit;
+
+        // First, check if the ground is between the object and the target
+        if (Physics.Linecast(origin.position + verticalOffset, transform.position, out hit, layerMask))
+        {
+            transform.position = hit.point + verticalGap;
+        }
+        // If there is nothing in between, anchor the object to the ground
+        else if (Physics.Raycast(transform.position + verticalOffset, -transform.up, out hit, Mathf.Infinity, layerMask))
+        {
+            transform.position = hit.point + verticalGap;
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        origin = transform.parent;
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(origin.position, transform.position);
+    }
+}

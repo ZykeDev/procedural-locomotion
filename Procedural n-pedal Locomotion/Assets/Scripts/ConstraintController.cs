@@ -12,19 +12,24 @@ public class ConstraintController : MonoBehaviour
     private TwoBoneIKConstraint TwoBoneIKConstraint { get { return GetComponent<TwoBoneIKConstraint>(); } }
 
     private float distanceThreshold = 1.5f;
-    private float proximityThreshold = 0.1f;
-    private float speed = 5f;
+    private float proximityThreshold = 0.01f;
+    private float speed = 10f;
     private bool isMoving = false;
 
 
-    void Start()
+    void Awake()
     {
         originalPos = transform.position;
         tip = TwoBoneIKConstraint.data.tip;
-
     }
 
+
     void Update()
+    {
+        Move();
+    }
+
+    private void Move()
     {
         if (!isMoving)
         {
@@ -44,12 +49,13 @@ public class ConstraintController : MonoBehaviour
         }
         else
         {
+            print("moving");
             // Move the leg to target
             transform.position = Vector3.Lerp(transform.position, target.position, speed * Time.deltaTime);
 
             // Keep moving until very close to the target
             isMoving = Vector3.Distance(transform.position, target.position) > proximityThreshold;
-            
+
             // If the movement is done, cleanely reset the positions
             if (!isMoving)
             {
@@ -58,6 +64,25 @@ public class ConstraintController : MonoBehaviour
             }
         }
     }
+
+
+    /// <summary>
+    /// Moves the target forward to simulate a quadrupedal locomotion pattern
+    /// </summary>
+    /// <param name="difference"></param>
+    public void ForwardTarget(float difference)
+    {
+        difference = distanceThreshold / 2;
+        target.parent.position = new Vector3(target.parent.position.x, target.parent.position.y, target.parent.position.z + difference);
+    }
+
+
+
+
+
+
+
+
 
     private void OnDrawGizmos()
     {

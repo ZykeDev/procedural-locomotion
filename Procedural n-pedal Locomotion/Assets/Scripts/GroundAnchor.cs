@@ -8,19 +8,15 @@ public class GroundAnchor : MonoBehaviour
     private Vector3 verticalOffset = new Vector3(0, 0.75f, 0);
     private Vector3 verticalGap = new Vector3(0, 0.2f, 0);
 
-
-    void Awake()
+    void Start()
     {
+        layerMask = LayerMask.GetMask("Ground");
+
         origin = transform.parent;
         if (origin == null)
         {
             Debug.LogError("No origin parent");
         }
-    }
-
-    void Start()
-    {
-        layerMask = LayerMask.GetMask("Ground");
     }
 
     void Update()
@@ -47,9 +43,9 @@ public class GroundAnchor : MonoBehaviour
         }
     }
 
+
     private void OnDrawGizmos()
     {
-        origin = transform.parent;
         Gizmos.color = Color.red;
         Gizmos.DrawLine(origin.position, transform.position);
     }

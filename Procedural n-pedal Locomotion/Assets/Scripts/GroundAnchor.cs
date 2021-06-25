@@ -5,9 +5,8 @@ public class GroundAnchor : MonoBehaviour
     private Transform origin;
     private int layerMask;
 
-    
-    Vector3 verticalOffset = new Vector3(0, 0.75f, 0);
-    Vector3 verticalGap = new Vector3(0, 0.2f, 0);
+    private Vector3 verticalOffset = new Vector3(0, 0.75f, 0);
+    private Vector3 verticalGap = new Vector3(0, 0.2f, 0);
 
 
     void Awake()

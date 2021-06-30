@@ -16,9 +16,17 @@ public class ConstraintController : MonoBehaviour
 
     private TwoBoneIKConstraint TwoBoneIKConstraint { get { return GetComponent<TwoBoneIKConstraint>(); } }
 
-    private float distanceThreshold = 1f;
+    [SerializeField, Min(0.1f), Tooltip("Distance after which to take a step.")]
+    private float distanceThreshold = 1.5f;
+
     private float proximityThreshold = 0.01f;
+
+    [SerializeField, Min(0.1f), Tooltip("Movement Speed.")]
     private float speed = 10f;
+
+    [SerializeField, Min(0.1f), Tooltip("Maximum height reached by the limb during its limb's arching animation.")]
+    private float limbMovementHeight = 0.5f;
+
     public bool IsMoving { get; private set; }
 
 
@@ -47,9 +55,10 @@ public class ConstraintController : MonoBehaviour
             
             if (distanceToTarget > distanceThreshold && !isOppositeMoving)
             {
+                int axisIndex = 1; // Make a parabola along the Y axis only
+
                 // Start moving the limb
-                Coro.Perp(transform, target.position, 0.2f, OnMovementEnd);
-                print("From: " + transform.position + " > " + target.position);
+                Coro.Perp(transform, target.position, axisIndex, 0.5f, OnMovementEnd);
                 IsMoving = true;
             }
             else
@@ -58,26 +67,6 @@ public class ConstraintController : MonoBehaviour
                 transform.position = originalPos;
             }
         }
-        else
-        {
-            /*
-            // Move the leg to target
-            //transform.position = Vector3.Lerp(transform.position, target.position, speed * Time.deltaTime);
-            transform.position = MathParabolic.Parabola(transform.position, target.position, speed * Time.deltaTime);
-            print(speed * Time.deltaTime);
-
-            // Keep moving until very close to the target
-            IsMoving = Vector3.Distance(transform.position, target.position) > proximityThreshold;
-
-            // If the movement is done, cleanely reset the positions
-            if (!IsMoving)
-            {
-                print("---");
-                transform.position = target.position;
-                originalPos = transform.position;
-            }
-            */
-        }
     }
 
     private void OnMovementEnd()
@@ -85,6 +74,7 @@ public class ConstraintController : MonoBehaviour
         IsMoving = false;
         transform.position = target.position;
         originalPos = transform.position;
+        print("done moving");
     }
 
 
@@ -94,6 +84,7 @@ public class ConstraintController : MonoBehaviour
     /// <param name="difference"></param>
     public void ForwardTarget(float difference)
     {
+        // TODO use differnece
         difference = distanceThreshold / 2;
         target.parent.position = new Vector3(target.parent.position.x, target.parent.position.y, target.parent.position.z + difference);
     }

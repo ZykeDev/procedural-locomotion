@@ -40,11 +40,11 @@ public class Coro : MonoBehaviour
         box.coroutine = _instance.StartCoroutine(coro);
     }
 
-    public static void Perp(Transform obj, Vector3 targetPos, float duration, Action callback)
+    public static void Perp(Transform obj, Vector3 targetPos, int axis, float duration, Action callback)
     {
         CoroutineBox box = new CoroutineBox();
 
-        IEnumerator coro = _instance.Perp(box, obj, targetPos, duration, callback);
+        IEnumerator coro = _instance.Perp(box, obj, targetPos, axis, duration, callback);
         box.coroutine = _instance.StartCoroutine(coro);
     }
 
@@ -83,7 +83,7 @@ public class Coro : MonoBehaviour
     /// <summary>
     /// Parabolically Interpolates the obj's position towards the target position.
     /// </summary>
-    private IEnumerator Perp(CoroutineBox box, Transform obj, Vector3 targetPos, float duration, Action callback)
+    private IEnumerator Perp(CoroutineBox box, Transform obj, Vector3 targetPos, int axisIndex, float duration, Action callback)
     {
         yield return new WaitForEndOfFrame();
 
@@ -91,17 +91,34 @@ public class Coro : MonoBehaviour
         _runningCoroutines.Add(self);
 
         Vector3 startingPos = obj.position;
+        Vector3 newPos = Vector3.zero;
         float elapsedTime = 0;
 
         while (elapsedTime < duration)
         {
             float step = elapsedTime / duration;
+    
+            // Perp only over the given axis (usually Y), based on the direction vector
+            float parabolicPoint = Interp.Perp(startingPos, targetPos, axisIndex, step);
 
-            float xLerp = Mathf.Lerp(startingPos.x, targetPos.x, step);
-            float zLerp = Mathf.Lerp(startingPos.z, targetPos.z, step);
-            float yParabola = MathParabolic.Parabola(startingPos.y, targetPos.y, step);
+            // Adjust the parabolicPoint to align with the general locomotion direction (Terrain Escalation)
+            float adjustedPoint = parabolicPoint + Mathf.Lerp(startingPos[axisIndex], targetPos[axisIndex], step);
 
-            obj.position = new Vector3(xLerp, yParabola, zLerp);
+            // Assign the new position axis value
+            newPos[axisIndex] = adjustedPoint;
+
+            // Lerp normally the other two axes
+            for (int i = 0; i < 3; i++)
+            {
+                if (i != axisIndex)
+                {
+                    newPos[i] = Mathf.Lerp(startingPos[i], targetPos[i], step);
+                }
+            }
+
+            // Finally update the position
+            print(Math.Round(step * 100, 0) + " > " + newPos);
+            obj.position = newPos;
 
             elapsedTime += Time.deltaTime;
             yield return null;

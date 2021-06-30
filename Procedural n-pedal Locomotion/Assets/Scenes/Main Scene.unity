@@ -320,7 +320,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 160401681}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.31, y: -1.03, z: 11.96}
+  m_LocalPosition: {x: -1.31, y: -1.03, z: 6.65}
   m_LocalScale: {x: 7, y: 7, z: 7}
   m_Children: []
   m_Father: {fileID: 0}
@@ -413,6 +413,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 928477319}
   opposite: {fileID: 1463264460}
+  distanceThreshold: 1.5
+  speed: 10
+  limbMovementHeight: 1
 --- !u!1 &495101736
 GameObject:
   m_ObjectHideFlags: 0
@@ -485,6 +488,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 872444054}
   opposite: {fileID: 614930495}
+  distanceThreshold: 1.5
+  speed: 10
+  limbMovementHeight: 0.5
 --- !u!4 &549788043 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400028, guid: 5d67c81cdf5717340b0943f1f80dd628, type: 3}
@@ -562,6 +568,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 1525488142}
   opposite: {fileID: 495101739}
+  distanceThreshold: 1.5
+  speed: 10
+  limbMovementHeight: 0.5
 --- !u!4 &703681364 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400018, guid: 5d67c81cdf5717340b0943f1f80dd628, type: 3}
@@ -1459,6 +1468,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 29405590}
   opposite: {fileID: 416535388}
+  distanceThreshold: 1.5
+  speed: 10
+  limbMovementHeight: 0.5
 --- !u!1001 &1483985464
 PrefabInstance:
   m_ObjectHideFlags: 0

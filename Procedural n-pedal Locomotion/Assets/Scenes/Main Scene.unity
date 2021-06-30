@@ -320,7 +320,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 160401681}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.31, y: -1.03, z: 6.65}
+  m_LocalPosition: {x: -1.31, y: -1.03, z: 5.99}
   m_LocalScale: {x: 7, y: 7, z: 7}
   m_Children: []
   m_Father: {fileID: 0}
@@ -414,7 +414,7 @@ MonoBehaviour:
   target: {fileID: 928477319}
   opposite: {fileID: 1463264460}
   distanceThreshold: 1.5
-  speed: 10
+  speed: 8
   limbMovementHeight: 1
 --- !u!1 &495101736
 GameObject:
@@ -446,7 +446,7 @@ Transform:
   m_LocalScale: {x: 0.2, y: 0.20000003, z: 0.2}
   m_Children: []
   m_Father: {fileID: 1083671333}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &495101738
 MonoBehaviour:
@@ -481,7 +481,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 495101736}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 03ee9fffeb358fd4f8d826fda5055bf8, type: 3}
   m_Name: 
@@ -489,8 +489,8 @@ MonoBehaviour:
   target: {fileID: 872444054}
   opposite: {fileID: 614930495}
   distanceThreshold: 1.5
-  speed: 10
-  limbMovementHeight: 0.5
+  speed: 8
+  limbMovementHeight: 1
 --- !u!4 &549788043 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400028, guid: 5d67c81cdf5717340b0943f1f80dd628, type: 3}
@@ -526,7 +526,7 @@ Transform:
   m_LocalScale: {x: 0.2, y: 0.20000003, z: 0.2}
   m_Children: []
   m_Father: {fileID: 1083671333}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &614930494
 MonoBehaviour:
@@ -561,7 +561,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 614930492}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 03ee9fffeb358fd4f8d826fda5055bf8, type: 3}
   m_Name: 
@@ -569,8 +569,8 @@ MonoBehaviour:
   target: {fileID: 1525488142}
   opposite: {fileID: 495101739}
   distanceThreshold: 1.5
-  speed: 10
-  limbMovementHeight: 0.5
+  speed: 8
+  limbMovementHeight: 1
 --- !u!4 &703681364 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400018, guid: 5d67c81cdf5717340b0943f1f80dd628, type: 3}
@@ -1261,8 +1261,8 @@ Transform:
   m_Children:
   - {fileID: 416535386}
   - {fileID: 1463264458}
-  - {fileID: 614930493}
   - {fileID: 495101737}
+  - {fileID: 614930493}
   m_Father: {fileID: 1090714284}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1299,7 +1299,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   limbs:
   - {fileID: 0}
-  useZigzagMotion: 0
+  useZigzagMotion: 1
 --- !u!4 &1090714284
 Transform:
   m_ObjectHideFlags: 0
@@ -1461,7 +1461,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1463264457}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 03ee9fffeb358fd4f8d826fda5055bf8, type: 3}
   m_Name: 
@@ -1469,8 +1469,8 @@ MonoBehaviour:
   target: {fileID: 29405590}
   opposite: {fileID: 416535388}
   distanceThreshold: 1.5
-  speed: 10
-  limbMovementHeight: 0.5
+  speed: 8
+  limbMovementHeight: 1
 --- !u!1001 &1483985464
 PrefabInstance:
   m_ObjectHideFlags: 0

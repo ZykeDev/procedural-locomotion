@@ -31,10 +31,18 @@ public class Entity : MonoBehaviour
 
             for (int i = 0; i < limbs.Count; i++)
             {
-                if (i % 2 != 0)
-                    limbs[i].ForwardTarget(zigzagDifference);
+                if (i % 2 != 0) limbs[i].ForwardTarget(zigzagDifference);
             }
         }
+    }
+
+
+
+    void Update()
+    {
+        // Rotate body based on weigthed limb vectors
+        
+
     }
 
 

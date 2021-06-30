@@ -21,8 +21,8 @@ public class ConstraintController : MonoBehaviour
 
     private float proximityThreshold = 0.01f;
 
-    [SerializeField, Min(0.1f), Tooltip("Movement Speed.")]
-    private float speed = 10f;
+    [SerializeField, Range(0.1f, 10f), Tooltip("Movement Speed.")]
+    private float speed = 2f;
 
     [SerializeField, Min(0.1f), Tooltip("Maximum height reached by the limb during its limb's arching animation.")]
     private float limbMovementHeight = 0.5f;
@@ -58,7 +58,7 @@ public class ConstraintController : MonoBehaviour
                 int axisIndex = 1; // Make a parabola along the Y axis only
 
                 // Start moving the limb
-                Coro.Perp(transform, target.position, axisIndex, 0.5f, OnMovementEnd);
+                Coro.Perp(transform, target.position, axisIndex, 1 / speed, OnMovementEnd);
                 IsMoving = true;
             }
             else
@@ -85,7 +85,7 @@ public class ConstraintController : MonoBehaviour
     public void ForwardTarget(float difference)
     {
         // TODO use differnece
-        difference = distanceThreshold / 2;
+        difference = distanceThreshold / 4;
         target.parent.position = new Vector3(target.parent.position.x, target.parent.position.y, target.parent.position.z + difference);
     }
 

@@ -28,6 +28,7 @@ public class ConstraintController : MonoBehaviour
     private float limbMovementHeight = 0.5f;
 
     public bool IsMoving { get; private set; }
+    public Transform TipTransform { get; private set; }
 
 
     void Awake()
@@ -35,6 +36,7 @@ public class ConstraintController : MonoBehaviour
         originalPos = transform.position;
         tip = TwoBoneIKConstraint.data.tip;
         IsMoving = false;
+        TipTransform = tip.transform;
     }
 
 
@@ -74,7 +76,6 @@ public class ConstraintController : MonoBehaviour
         IsMoving = false;
         transform.position = target.position;
         originalPos = transform.position;
-        print("done moving");
     }
 
 

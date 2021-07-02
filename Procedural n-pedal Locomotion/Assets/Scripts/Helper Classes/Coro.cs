@@ -117,7 +117,7 @@ public class Coro : MonoBehaviour
             }
 
             // Finally update the position
-            print(Math.Round(step * 100, 0) + " > " + newPos);
+            //print(Math.Round(step * 100, 0) + " > " + newPos);
             obj.position = newPos;
 
             elapsedTime += Time.deltaTime;

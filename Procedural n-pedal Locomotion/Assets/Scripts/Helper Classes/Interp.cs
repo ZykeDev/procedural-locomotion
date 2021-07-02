@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Interp
 {
-    private static float minThreshold = 0.01f;
+    private static readonly float distThreshold = 0.01f;    // Minimum target distance. If lower, the object snaps to the target.
 
     /// <summary>
     /// Returns the Parabolically Interpolated value for p along the given axis, scaled over the distance from "from" to "to".
@@ -29,7 +29,7 @@ public class Interp
         //dist = Mathf.Abs(from[axis] - to[axis]);
 
         // If the distance is too short, return the destination directly
-        if (dist <= minThreshold)
+        if (dist <= distThreshold)
         {
             return to[axis];
         }

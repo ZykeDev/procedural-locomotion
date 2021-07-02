@@ -8,10 +8,14 @@ public class GroundAnchor : MonoBehaviour
     private Vector3 verticalOffset = new Vector3(0, 0.75f, 0);
     private Vector3 verticalGap = new Vector3(0, 0.2f, 0);
 
-    void Start()
+
+    void Awake()
     {
         layerMask = LayerMask.GetMask("Ground");
+    }
 
+    void Start()
+    {
         origin = transform.parent;
         if (origin == null)
         {

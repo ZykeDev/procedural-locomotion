@@ -30,6 +30,7 @@ public class ConstraintController : MonoBehaviour
     public bool IsMoving { get; private set; }
     public Transform TipTransform { get; private set; }
 
+    private Entity ParentEntity;
 
     void Awake()
     {
@@ -37,6 +38,7 @@ public class ConstraintController : MonoBehaviour
         tip = TwoBoneIKConstraint.data.tip;
         IsMoving = false;
         TipTransform = tip.transform;
+        ParentEntity = GetComponentInParent<Entity>();
     }
 
 

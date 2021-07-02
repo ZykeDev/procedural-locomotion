@@ -41,7 +41,8 @@ public class GroundAnchor : MonoBehaviour
             transform.position = hit.point + verticalGap;
         }
         // If there is nothing in between, anchor the object to the ground
-        else if (Physics.Raycast(transform.position + verticalOffset, -transform.up, out hit, Mathf.Infinity, layerMask))
+                                                                   // -transform.up
+        else if (Physics.Raycast(transform.position + verticalOffset, -Vector3.down, out hit, Mathf.Infinity, layerMask))
         {
             transform.position = hit.point + verticalGap;
         }

@@ -8,9 +8,9 @@ public class Entity : MonoBehaviour
     [SerializeField] private bool useZigzagMotion = true;
     private float zigzagDifference = 1f;
 
+    public bool IsUpdatingGait { get; private set; }
     private int groundMask;
     private RaycastHit groundHit;
-    private bool IsUpdatingGait = false;
     private Quaternion fromRotation, toRotation;
 
     void Awake()
@@ -101,14 +101,13 @@ public class Entity : MonoBehaviour
                 // If there is a difference in rotation
                 if (groundHit.normal != transform.up)
                 {
-                    
-
                     IsUpdatingGait = true;  
                 }
             }       
         }
         
 
+        // TODO - interefers with target positioning. Need to de-rotate them? Or make them rotaion-independant?
 
         if (IsUpdatingGait)
         {
@@ -127,51 +126,4 @@ public class Entity : MonoBehaviour
             }
         }
     }
-
-
-
-
-
-
-
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.blue;
-        Gizmos.DrawLine(transform.position, groundHit.point);
-    }
-
 }
-
-/*
-var adjustSpeed : float = 1;
-private var fromRotation : Quaternion;
-private var toRotation : Quaternion;
-private var targetNormal : Vector3; (up)
-private var hit : raycastHit;
-private var weight : float = 1;
-
-
-
-function FixedUpdate()
-{
-    if (Physics.Raycast(transform.position, -Vector3.up, hit))
-    {
-        if (hit.distance > .9) rigidbody.AddForce(-Vector3.up  350000);
-        if (hit.normal == transform.up) return;
-        if (hit.normal != targetNormal)
-        {
-            targetNormal = hit.normal;
-            fromRotation = transform.rotation;
-            torotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
-            weight = 0;
-        }
-        if (weight <= 1)
-        {
-            weight += Time.deltaTime  adjustSpeed;
-            tranform.rotation = Quaternion.Slerp(fromRotation, toRotation, weight);
-            //Or to smooth the weight
-            //tranform.rotation = Quaternion.Slerp(fromRotation, toRotation,
-            //                                        Mathf.SmoothStep(weight));
-        }
-    }/*/

@@ -9,9 +9,9 @@ public class Entity : MonoBehaviour
     private float zigzagDifference = 1f;
 
     private int groundMask;
-    private Vector3 groundTarget;
-
-
+    private RaycastHit groundHit;
+    private bool IsUpdatingGait = false;
+    private Quaternion fromRotation, toRotation;
 
     void Awake()
     {
@@ -43,7 +43,7 @@ public class Entity : MonoBehaviour
 
 
 
-    void Update()
+    void LateUpdate()
     {
         // Set the entity's height based on the limb tips.
         // Do we update this only after a limb has reached its target?
@@ -61,7 +61,6 @@ public class Entity : MonoBehaviour
 
     private void UpdateGait()
     {
-
         // Basically, find the target normal of the plane passing from all limb coordinates
         // A plane will always interesct 3 points, but what about the other limbs?
         // We can:
@@ -82,33 +81,51 @@ public class Entity : MonoBehaviour
         // Force the distance vector between the body and the ground to never change
         float elevation = 0.5f;
         
-        // Update the distance to the ground below
-        if (Physics.Raycast(transform.position, -transform.up, out RaycastHit hit, Mathf.Infinity, groundMask))
+        if (!IsUpdatingGait)
         {
-            groundTarget = hit.point;
-
-            Vector3 newPos = new Vector3(transform.position.x, hit.point.y + elevation, transform.position.z);
-            transform.position = newPos;
-        }
-
-
-
-        // Update the rotation to be parallel to the ground below
-        if (Physics.Raycast(transform.position, -transform.up, out hit, Mathf.Infinity, groundMask))
-        {
-            groundTarget = hit.point;
-
-            // If there is a difference in rotation
-            if (hit.normal != transform.up)
+            // Update the distance to the ground below
+            if (Physics.Raycast(transform.position, -transform.up, out groundHit, Mathf.Infinity, groundMask))
             {
-                Quaternion fromRotation = transform.rotation;
-                Quaternion toRotation = Quaternion.FromToRotation(transform.up, hit.normal);
-
-                print(fromRotation + " -> " + toRotation);
-
-                transform.rotation = Quaternion.Slerp(fromRotation, toRotation, Time.deltaTime * 10);
+                // If there is a difference in height
+                if (groundHit.point.y + elevation != transform.position.y)
+                {
+                    Vector3 newPos = new Vector3(transform.position.x, groundHit.point.y + elevation, transform.position.z);
+                    transform.position = newPos;
+                }
             }
-        }       
+
+
+            // Update the rotation to be parallel to the ground below
+            if (Physics.Raycast(transform.position, -transform.up, out groundHit, Mathf.Infinity, groundMask))
+            {
+                // If there is a difference in rotation
+                if (groundHit.normal != transform.up)
+                {
+                    
+
+                    IsUpdatingGait = true;  
+                }
+            }       
+        }
+        
+
+
+        if (IsUpdatingGait)
+        {
+            fromRotation = transform.rotation;
+            toRotation = Quaternion.FromToRotation(transform.up, groundHit.normal);
+            transform.rotation = Quaternion.Slerp(fromRotation, toRotation, Time.deltaTime * 10);
+
+            // Check if they are very close
+            Quaternion delta = transform.rotation * Quaternion.Inverse(toRotation);
+            
+            if (delta.eulerAngles.magnitude <= 0.1f)
+            {
+                transform.rotation = toRotation;
+                transform.up = groundHit.normal;
+                IsUpdatingGait = false;
+            }
+        }
     }
 
 
@@ -121,7 +138,7 @@ public class Entity : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.blue;
-        Gizmos.DrawLine(transform.position, groundTarget);
+        Gizmos.DrawLine(transform.position, groundHit.point);
     }
 
 }

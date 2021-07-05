@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Entity : MonoBehaviour
@@ -13,27 +14,25 @@ public class Entity : MonoBehaviour
     private RaycastHit groundHit;
     private Quaternion fromRotation, toRotation;
 
+    public Vector3 CenterOfMass { get; private set; }
+
     void Awake()
     {
         groundMask = LayerMask.GetMask("Ground");
 
         limbs = new List<ConstraintController>(GetComponentsInChildren<ConstraintController>());
 
+        // Find the center of mass
+        CenterOfMass = ComputeCenterOfMass();
+
         // Find local forward vector 
-        
+
     }
 
     void Start()
     {
         if (useZigzagMotion)
         {
-            // FR
-            // FL, BL
-            // BR
-            // ...
-
-            // TODO order them FL, FR, BL, BR
-
             for (int i = 0; i < limbs.Count; i++)
             {
                 if (i % 2 != 0) limbs[i].ForwardTarget(zigzagDifference);
@@ -50,7 +49,10 @@ public class Entity : MonoBehaviour
         UpdateGait();
 
         // Rotate body based on weigthed limb vectors
-        
+
+
+        // Update the center of mass
+        UpdateCenterOfMass();
 
     }
 
@@ -80,11 +82,11 @@ public class Entity : MonoBehaviour
 
         // Force the distance vector between the body and the ground to never change
         float elevation = 0.5f;
-        
+
         if (!IsUpdatingGait)
         {
             // Update the distance to the ground below
-            if (Physics.Raycast(transform.position, -transform.up, out groundHit, Mathf.Infinity, groundMask))
+            if (Physics.Raycast(CenterOfMass, -transform.up, out groundHit, Mathf.Infinity, groundMask))
             {
                 // If there is a difference in height
                 if (groundHit.point.y + elevation != transform.position.y)
@@ -93,37 +95,56 @@ public class Entity : MonoBehaviour
                     transform.position = newPos;
                 }
             }
-
-
-            // Update the rotation to be parallel to the ground below
-            if (Physics.Raycast(transform.position, -transform.up, out groundHit, Mathf.Infinity, groundMask))
+            /*
+            List<Vector3> tips = new List<Vector3>();
+            for (int i = 0; i < limbs.Count; i++)
             {
-                // If there is a difference in rotation
-                if (groundHit.normal != transform.up)
-                {
-                    IsUpdatingGait = true;  
-                }
-            }       
-        }
-        
-
-        // TODO - interefers with target positioning. Need to de-rotate them? Or make them rotaion-independant?
-
-        if (IsUpdatingGait)
-        {
-            fromRotation = transform.rotation;
-            toRotation = Quaternion.FromToRotation(transform.up, groundHit.normal);
-            transform.rotation = Quaternion.Slerp(fromRotation, toRotation, Time.deltaTime * 10);
-
-            // Check if they are very close
-            Quaternion delta = transform.rotation * Quaternion.Inverse(toRotation);
-            
-            if (delta.eulerAngles.magnitude <= 0.1f)
-            {
-                transform.rotation = toRotation;
-                transform.up = groundHit.normal;
-                IsUpdatingGait = false;
+                tips.Add(limbs[i].transform.position);
             }
+
+            // Find the centroid
+            Vector3 centroid = tips.Aggregate(Vector3.zero, (tot, v) => tot + v) / tips.Count;
+
+            // Find the normal of the plane with the centroid at its center, using the first and penultimate tip points
+            Vector3 normal = Vector3.Cross(tips[0] - centroid, tips[tips.Count - 1] - centroid);
+
+            // Rotate the entity to align with the normal
+            fromRotation = transform.rotation;
+            toRotation = Quaternion.FromToRotation(transform.up, normal);
+
+            // Rotate only if necessary
+            Quaternion delta = transform.rotation * Quaternion.Inverse(toRotation);
+
+            if (delta.eulerAngles.magnitude > 1f)
+            {
+                //transform.rotation = Quaternion.Slerp(fromRotation, toRotation, Time.deltaTime * 2);
+                transform.rotation = toRotation;
+            }
+            */
         }
+    }
+
+
+
+
+
+
+    private void UpdateCenterOfMass()
+    {
+        CenterOfMass = ComputeCenterOfMass();
+    }
+
+    private Vector3 ComputeCenterOfMass()
+    {
+        Vector3 com = transform.position + Vector3.up * 1f;
+
+        return com;
+    }
+
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(CenterOfMass, .05f);
     }
 }

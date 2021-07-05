@@ -43,7 +43,7 @@ public class ConstraintController : MonoBehaviour
         // Pass the tip down to the Anchor for initial positioning
         target.gameObject.GetComponent<GroundAnchor>().SetTip(tip);
 
-        IsMoving = true;
+        //IsMoving = true;
     }
 
 
@@ -62,6 +62,7 @@ public class ConstraintController : MonoBehaviour
             // Check if the opposite limb is already moving
             bool isOppositeMoving = opposite != null && opposite.IsMoving;
             
+            // TODO also check if the distance is too great (edges)
             if (distanceToTarget > distanceThreshold && !isOppositeMoving)
             {
                 int axisIndex = 1; // Make a parabola along the Y axis only

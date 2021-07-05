@@ -34,11 +34,16 @@ public class ConstraintController : MonoBehaviour
 
     void Awake()
     {
+        ParentEntity = GetComponentInParent<Entity>();
         originalPos = transform.position;
         tip = TwoBoneIKConstraint.data.tip;
         IsMoving = false;
         TipTransform = tip.transform;
-        ParentEntity = GetComponentInParent<Entity>();
+
+        // Pass the tip down to the Anchor for initial positioning
+        target.gameObject.GetComponent<GroundAnchor>().SetTip(tip);
+
+        IsMoving = true;
     }
 
 

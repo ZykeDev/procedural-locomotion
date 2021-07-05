@@ -34,7 +34,7 @@ public class Interp
             return to[axis];
         }
 
-        float height = 0.5f;                        // Parametrical height of the peak
+        float height = 0.5f;                        // Parametrical height of the global max (peak)
         float m = 4 * height / (dist * dist);       // Peak coord conversion factor
 
         float x = p * dist;                         // Scale the p over the distance

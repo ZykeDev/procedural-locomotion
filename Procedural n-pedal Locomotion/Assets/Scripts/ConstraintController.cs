@@ -35,21 +35,22 @@ public class ConstraintController : MonoBehaviour
     void Awake()
     {
         ParentEntity = GetComponentInParent<Entity>();
-        originalPos = transform.position;
         tip = TwoBoneIKConstraint.data.tip;
-        IsMoving = false;
         TipTransform = tip.transform;
+        IsMoving = false;
 
         // Pass the tip down to the Anchor for initial positioning
         target.gameObject.GetComponent<GroundAnchor>().SetTip(tip);
-
-        //IsMoving = true;
     }
 
 
     void Update()
     {
         Move();
+
+        if (tip.name == "Bone.011_end") { 
+        print(tip.transform.position);
+        }
     }
 
     private void Move()
@@ -61,12 +62,11 @@ public class ConstraintController : MonoBehaviour
 
             // Check if the opposite limb is already moving
             bool isOppositeMoving = opposite != null && opposite.IsMoving;
-            
+
             // TODO also check if the distance is too great (edges)
             if (distanceToTarget > distanceThreshold && !isOppositeMoving)
             {
                 int axisIndex = 1; // Make a parabola along the Y axis only
-
                 // Start moving the limb
                 Coro.Perp(transform, target.position, axisIndex, 1 / speed, OnMovementEnd);
                 IsMoving = true;

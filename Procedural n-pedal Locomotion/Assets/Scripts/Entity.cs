@@ -80,19 +80,19 @@ public class Entity : MonoBehaviour
         }
         */
 
-        // Force the distance vector between the body and the ground to never change
-        float elevation = 0.5f;
-
         if (!IsUpdatingGait)
         {
             // Update the distance to the ground below
-            if (Physics.Raycast(CenterOfMass, -transform.up, out groundHit, Mathf.Infinity, groundMask))
+            //                                -transform.up
+            if (Physics.Raycast(CenterOfMass, transform.TransformDirection(Vector3.down), out groundHit, Mathf.Infinity, groundMask))
             {
+                Debug.DrawRay(CenterOfMass, transform.TransformDirection(Vector3.down) * groundHit.distance, Color.yellow);
+                
                 // If there is a difference in height
-                if (groundHit.point.y + elevation != transform.position.y)
+                if (transform.position.y != groundHit.point.y)
                 {
-                    Vector3 newPos = new Vector3(transform.position.x, groundHit.point.y + elevation, transform.position.z);
-                    transform.position = newPos;
+                    Vector3 newPos = new Vector3(transform.position.x, groundHit.point.y, transform.position.z);
+                    transform.position = Vector3.Lerp(transform.position, newPos, Time.deltaTime * 20);
                 }
             }
             /*

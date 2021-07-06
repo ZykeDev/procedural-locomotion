@@ -60,8 +60,10 @@ public class GroundAnchor : MonoBehaviour
         if (Physics.Raycast(transform.position + verticalOffset, transform.TransformDirection(Vector3.down), out hit, Mathf.Infinity, layerMask))
         {
             Debug.DrawRay(transform.position + verticalOffset, transform.TransformDirection(Vector3.down) * hit.distance, Color.yellow);
-            transform.position = hit.point;
-            temp = hit.point;
+            if (transform.position != hit.point)
+            {
+                UpdatePosition(hit.point);
+            }
         }
         /*
         // First, check if the ground is between the object and the target
@@ -81,6 +83,11 @@ public class GroundAnchor : MonoBehaviour
         }*/
     }
 
+    private void UpdatePosition(Vector3 pos)
+    {
+        transform.position = pos;
+        temp = pos;
+    }
 
 
     public void SetTip(Transform tip) => this.tip = tip;

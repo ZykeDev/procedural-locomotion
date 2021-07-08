@@ -6,6 +6,9 @@ public class Entity : MonoBehaviour
 {
     [SerializeField] private List<ConstraintController> limbs;
 
+    [SerializeField, Range(0.1f, 50f), Tooltip("Speed at which to realign the entity's body when waling on slopes.")] 
+    private float realignmentSpeed = 25f;
+
     [SerializeField] private bool useZigzagMotion = true;
     private float zigzagDifference = 1f;
 
@@ -77,47 +80,33 @@ public class Entity : MonoBehaviour
         }
         */
 
-        if (!IsUpdatingGait)
+
+        // Update the distance to the ground below
+        //                                -transform.up
+        if (Physics.Raycast(CenterOfMass, transform.TransformDirection(Vector3.down), out groundHit, Mathf.Infinity, groundMask))
         {
-            // Update the distance to the ground below
-            //                                -transform.up
-            if (Physics.Raycast(CenterOfMass, transform.TransformDirection(Vector3.down), out groundHit, Mathf.Infinity, groundMask))
+            Debug.DrawRay(CenterOfMass, transform.TransformDirection(Vector3.down) * groundHit.distance, Color.yellow);
+
+            // If there is a difference in height
+            if (transform.position.y != groundHit.point.y)
             {
-                Debug.DrawRay(CenterOfMass, transform.TransformDirection(Vector3.down) * groundHit.distance, Color.yellow);
-                
-                // If there is a difference in height
-                if (transform.position.y != groundHit.point.y)
+                // Update the hieght
+                Vector3 targetPos = new Vector3(transform.position.x, groundHit.point.y, transform.position.z);
+                transform.position = Vector3.Lerp(transform.position, targetPos, Time.deltaTime * realignmentSpeed);
+
+                // Update the rotation
+                Quaternion targetRot = FindRotation();
+                transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, Time.deltaTime * realignmentSpeed);
+
+                bool isPosEnough = Mathf.Abs((transform.position - targetPos).magnitude) <= 0.1f;
+                bool isRotEnough = Mathf.Abs(Quaternion.Angle(transform.rotation, targetRot)) <= 1f;
+
+                if (isPosEnough && isRotEnough)
                 {
-                    Vector3 newPos = new Vector3(transform.position.x, groundHit.point.y, transform.position.z);
-                    transform.position = Vector3.Lerp(transform.position, newPos, Time.deltaTime * 20);
+                    transform.position = targetPos;
+                    transform.rotation = targetRot;
                 }
             }
-            /*
-            List<Vector3> tips = new List<Vector3>();
-            for (int i = 0; i < limbs.Count; i++)
-            {
-                tips.Add(limbs[i].transform.position);
-            }
-
-            // Find the centroid
-            Vector3 centroid = tips.Aggregate(Vector3.zero, (tot, v) => tot + v) / tips.Count;
-
-            // Find the normal of the plane with the centroid at its center, using the first and penultimate tip points
-            Vector3 normal = Vector3.Cross(tips[0] - centroid, tips[tips.Count - 1] - centroid);
-
-            // Rotate the entity to align with the normal
-            fromRotation = transform.rotation;
-            toRotation = Quaternion.FromToRotation(transform.up, normal);
-
-            // Rotate only if necessary
-            Quaternion delta = transform.rotation * Quaternion.Inverse(toRotation);
-
-            if (delta.eulerAngles.magnitude > 1f)
-            {
-                //transform.rotation = Quaternion.Slerp(fromRotation, toRotation, Time.deltaTime * 2);
-                transform.rotation = toRotation;
-            }
-            */
         }
     }
 
@@ -137,9 +126,154 @@ public class Entity : MonoBehaviour
     }
 
 
+    /// <summary>
+    /// Finds the new rotation values along the X and Z axis to remain stable, based on the relative positons of the limbs
+    /// </summary>
+    /// <returns></returns>
+    private Quaternion FindRotation()
+    {
+        Quaternion rotation = new Quaternion();
+        List<float> angles = new List<float>();
+        float rotationAdjustment = 1; //90;
+
+        // Find the rotation along X
+        float rotX;
+        {
+            // Find the angle differences between different limbs
+            for (int i = 0; i < limbs.Count - 2; i++)
+            {
+                Vector3 a = limbs[i].transform.position;        // Pos of the first limb tip
+                Vector3 b = limbs[i + 2].transform.position;    // Pos of the second limb tip
+                Vector3 c;                                      // Pos C to make a right triangle ACB
+                int rotDirection;                               // Sign of the rotation
+
+                // Make sure C is parallel to the lower point
+                if (a.y > b.y)
+                {
+                    c = new Vector3(a.x, b.y, a.z);
+                    rotDirection = 1;
+                }
+                else
+                {
+                    c = new Vector3(b.x, a.y, b.z);
+                    rotDirection = -1;
+                }
+
+                // Get the triangle sides
+                float hypotenuse = Vector3.Distance(a, b);
+                float opposite = Vector3.Distance(a, c);
+                float adjacent = Vector3.Distance(b, c);
+
+                // Find both angles and use the smalles one (acute)
+                float theta = Mathf.Asin(opposite / hypotenuse) * Mathf.Rad2Deg;
+                float gamma = Mathf.Asin(adjacent / hypotenuse) * Mathf.Rad2Deg;
+
+                // Find the lesser angle between the two
+                float angle = theta <= gamma ? theta : gamma;
+
+                // Adjust the rotation to match the body
+                angle += rotDirection * rotationAdjustment;
+
+                angles.Add(angle);
+            }
+
+            // Average out the angles
+            float angleSum = 0;
+            for (int i = 0; i < angles.Count; i++)
+            {
+                angleSum += angles[i];
+            }
+
+            rotX = angleSum / angles.Count;
+        }
+
+        // Find the rotation along Z
+        float rotZ;
+        {
+            // Find the angle differences between different limbs
+            for (int i = 0; i < limbs.Count - 1; i += 2)
+            {
+                Vector3 a = limbs[i].transform.position;        // Pos of the first limb tip
+                Vector3 b = limbs[i + 1].transform.position;    // Pos of the second limb tip
+                Vector3 c;                                      // Pos C to make a right triangle ACB
+                int rotDirection;                               // Sign of the rotation
+
+                // Make sure C is parallel to the lower point
+                if (a.y > b.y)
+                {
+                    c = new Vector3(a.x, b.y, a.z);
+                    rotDirection = 1;
+                }
+                else
+                {
+                    c = new Vector3(b.x, a.y, b.z);
+                    rotDirection = -1;
+                }
+
+                // Get the triangle sides
+                float hypotenuse = Vector3.Distance(a, b);
+                float opposite = Vector3.Distance(a, c);
+                float adjacent = Vector3.Distance(b, c);
+
+                // Find both angles and use the smalles one (acute)
+                float theta = Mathf.Asin(opposite / hypotenuse) * Mathf.Rad2Deg;
+                float gamma = Mathf.Asin(adjacent / hypotenuse) * Mathf.Rad2Deg;
+
+                // Find the lesser angle between the two
+                float angle = theta <= gamma ? theta : gamma;
+
+                // Adjust the rotation to match the body
+                angle += rotDirection * rotationAdjustment;
+
+                angles.Add(angle);
+            }
+
+            // Average out the angles
+            float angleSum = 0;
+            for (int i = 0; i < angles.Count; i++)
+            {
+                angleSum += angles[i];
+            }
+
+            rotZ = angleSum / angles.Count;
+        }
+
+
+        Vector3 eulerAngles = transform.rotation.eulerAngles;
+        eulerAngles.x = Mathf.RoundToInt(rotX);
+        eulerAngles.z = Mathf.RoundToInt(rotZ);
+
+        rotation = Quaternion.Euler(eulerAngles);
+
+        //print("Rot to " + eulerAngles);
+
+        return rotation;
+    }
+
+
+
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawSphere(CenterOfMass, .05f);
+
+        Vector3 a = limbs[0].transform.position;        // Pos of the first limb tip
+        Vector3 b = limbs[0 + 2].transform.position;    // Pos of the second limb tip
+        Vector3 c;                                      // Pos C to make a right triangle ACB
+
+        // Make sure C is parallel to the lower point
+        if (a.y > b.y)
+        {
+            c = new Vector3(a.x, b.y, a.z);
+        }
+        else
+        {
+            c = new Vector3(b.x, a.y, b.z);
+        }
+
+        Gizmos.DrawLine(a, b);
+        Gizmos.DrawLine(a, c);
+        Gizmos.DrawLine(b, c);
     }
 }

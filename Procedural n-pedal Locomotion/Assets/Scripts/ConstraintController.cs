@@ -48,15 +48,11 @@ public class ConstraintController : MonoBehaviour
     void Update()
     {
         Move();
-
-        if (tip.name == "Bone.011_end") { 
-        print(tip.transform.position);
-        }
     }
 
     private void Move()
     {
-        if (!IsMoving)
+        if (!IsMoving && !ParentEntity.IsUpdatingGait)
         {
             // Check if the distance to the target point is too great
             float distanceToTarget = Vector3.Distance(transform.position, target.position);

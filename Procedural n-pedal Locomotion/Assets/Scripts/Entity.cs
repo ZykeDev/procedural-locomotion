@@ -24,9 +24,6 @@ public class Entity : MonoBehaviour
 
         // Find the center of mass
         CenterOfMass = ComputeCenterOfMass();
-
-        // Find local forward vector 
-
     }
 
     void Start()
@@ -123,8 +120,6 @@ public class Entity : MonoBehaviour
             */
         }
     }
-
-
 
 
 

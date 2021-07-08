@@ -4,10 +4,18 @@ using UnityEngine;
 public class MovementController : MonoBehaviour
 {
     private CharacterController Controller => GetComponent<CharacterController>();
-    [SerializeField, Range(0.01f, 20f)] private float speed = 10f;
+    private Entity Entity => GetComponent<Entity>();
 
+    [SerializeField, Range(0.01f, 20f)] private float speed = 10f;
     [SerializeField, Range(0.1f, 50f)] private float turnSpeed = 5f;
     private float turnVelocity;
+
+    private void Start()
+    {
+        // Use the CoM as the geometrical center
+        // TODO for now its only using the Y component
+        Controller.center = new Vector3(0, Entity.CenterOfMass.y, 0);
+    }
 
     void Update()
     {

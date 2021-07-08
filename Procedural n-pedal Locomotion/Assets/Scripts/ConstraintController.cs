@@ -38,6 +38,7 @@ public class ConstraintController : MonoBehaviour
         tip = TwoBoneIKConstraint.data.tip;
         TipTransform = tip.transform;
         IsMoving = false;
+        originalPos = transform.position;
 
         // Pass the tip down to the Anchor for initial positioning
         target.gameObject.GetComponent<GroundAnchor>().SetTip(tip);

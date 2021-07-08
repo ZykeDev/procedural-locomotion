@@ -52,7 +52,7 @@ public class ConstraintController : MonoBehaviour
 
     private void Move()
     {
-        if (!IsMoving && !ParentEntity.IsUpdatingGait)
+        if (!IsMoving)
         {
             // Check if the distance to the target point is too great
             float distanceToTarget = Vector3.Distance(transform.position, target.position);

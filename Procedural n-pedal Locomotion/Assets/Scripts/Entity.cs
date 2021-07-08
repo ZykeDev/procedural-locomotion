@@ -13,6 +13,7 @@ public class Entity : MonoBehaviour
     private float zigzagDifference = 1f;
 
     public bool IsUpdatingGait { get; private set; }
+    public bool IsRotating { get; private set; }
     private int groundMask;
     private RaycastHit groundHit;
     private Quaternion fromRotation, toRotation;
@@ -90,21 +91,26 @@ public class Entity : MonoBehaviour
             // If there is a difference in height
             if (transform.position.y != groundHit.point.y)
             {
-                // Update the hieght
+                // Update the height and rotation
                 Vector3 targetPos = new Vector3(transform.position.x, groundHit.point.y, transform.position.z);
-                transform.position = Vector3.Lerp(transform.position, targetPos, Time.deltaTime * realignmentSpeed);
-
-                // Update the rotation
                 Quaternion targetRot = FindRotation();
-                transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, Time.deltaTime * realignmentSpeed);
 
                 bool isPosEnough = Mathf.Abs((transform.position - targetPos).magnitude) <= 0.1f;
-                bool isRotEnough = Mathf.Abs(Quaternion.Angle(transform.rotation, targetRot)) <= 1f;
+                bool isRotEnough = Mathf.Abs(Quaternion.Angle(transform.rotation, targetRot)) <= 1.1f;
+
+                print(transform.rotation + ", " + targetRot + ", " + isRotEnough);
 
                 if (isPosEnough && isRotEnough)
                 {
                     transform.position = targetPos;
                     transform.rotation = targetRot;
+                    IsRotating = false;
+                }
+                else
+                {
+                    IsRotating = true;
+                    transform.position = Vector3.Lerp(transform.position, targetPos, Time.deltaTime * realignmentSpeed);
+                    transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, Time.deltaTime * realignmentSpeed);
                 }
             }
         }

@@ -52,17 +52,19 @@ public class GroundAnchor : MonoBehaviour
             forceInitPos = false;
         }
 
-
-        Vector3 direction = useGeometricalUpwards ? Vector3.down : transform.up;
-
-        RaycastHit hit;
-
-        if (Physics.Raycast(transform.position + verticalOffset, transform.TransformDirection(Vector3.down), out hit, Mathf.Infinity, layerMask))
+        if (!ParentEntity.IsRotating)
         {
-            Debug.DrawRay(transform.position + verticalOffset, transform.TransformDirection(Vector3.down) * hit.distance, Color.yellow);
-            if (transform.position != hit.point)
+            Vector3 direction = useGeometricalUpwards ? Vector3.down : transform.up;
+
+            RaycastHit hit;
+
+            if (Physics.Raycast(transform.position + verticalOffset, transform.TransformDirection(Vector3.down), out hit, Mathf.Infinity, layerMask))
             {
-                UpdatePosition(hit.point);
+                Debug.DrawRay(transform.position + verticalOffset, transform.TransformDirection(Vector3.down) * hit.distance, Color.yellow);
+                if (transform.position != hit.point)
+                {
+                    UpdatePosition(hit.point);
+                }
             }
         }
         /*

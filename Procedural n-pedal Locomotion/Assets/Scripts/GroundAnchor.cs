@@ -10,9 +10,11 @@ public class GroundAnchor : MonoBehaviour
 
     private Vector3 verticalOffset = new Vector3(0, 1f, 0);
     private Vector3 verticalGap = new Vector3(0, 0.05f, 0);
-    Vector3 temp;
+    private Vector3 temp;
+
     // TODO Parametrize into upwards: geometrical / gravitational
     private bool useGeometricalUpwards = true;
+    private float maxRange;
 
     void Awake()
     {
@@ -23,16 +25,7 @@ public class GroundAnchor : MonoBehaviour
     void Start()
     {
         temp = transform.position;
-        /*
-        origin = transform.parent;
 
-        if (origin == null)
-        {
-#if UNITY_EDITOR
-            Debug.LogError("No origin parent");
-#endif
-        }
-        */
     }
 
     void Update()
@@ -55,43 +48,68 @@ public class GroundAnchor : MonoBehaviour
         if (!ParentEntity.IsRotating)
         {
             Vector3 direction = useGeometricalUpwards ? Vector3.down : transform.up;
+            direction = transform.TransformDirection(Vector3.down);
+            direction = -transform.up;
 
             RaycastHit hit;
 
-            if (Physics.Raycast(transform.position + verticalOffset, transform.TransformDirection(Vector3.down), out hit, Mathf.Infinity, layerMask))
+            if (Physics.Raycast(transform.position + verticalOffset, direction, out hit, Mathf.Infinity, layerMask))
             {
-                Debug.DrawRay(transform.position + verticalOffset, transform.TransformDirection(Vector3.down) * hit.distance, Color.yellow);
+                Debug.DrawRay(transform.position + verticalOffset, direction * hit.distance, Color.yellow);
+                
                 if (transform.position != hit.point)
                 {
                     UpdatePosition(hit.point);
                 }
             }
         }
-        /*
-        // First, check if the ground is between the object and the target
-        if (Physics.Linecast(origin.position + verticalOffset, transform.position, out hit, layerMask))
-        {
-            transform.position = hit.point + verticalGap;
-        }*/
-
-        // If there is nothing in between, anchor the object to the ground
-        // -transform.up
-/*
-        if (Physics.Raycast(origin.position + verticalOffset, -Vector3.down, out hit, Mathf.Infinity, layerMask))
-        {
-            print(origin.position + " -> " + hit.point);
-            origin.position = hit.point;
-            //transform.position = hit.point; // + verticalGap;
-        }*/
     }
 
-    private void UpdatePosition(Vector3 pos)
+    private void UpdatePosition(Vector3 newPos)
     {
-        transform.position = pos;
-        temp = pos;
+        float distance = Vector3.Distance(transform.position, newPos);
+
+        if (distance > maxRange)
+        {
+            // Find the applied vector from the current position towards the target
+            Vector3 posToTarget = newPos - transform.position;
+
+            // Clamp the target pos to never exceed the limbs range
+            //(((b-a)/|b-a|)*r)+a
+            newPos = (posToTarget.normalized * maxRange) + transform.position;
+        }
+
+        // Update the values
+        transform.position = newPos;
+        temp = newPos;
     }
 
 
-    public void SetTip(Transform tip) => this.tip = tip;
+    public void SetData(Transform tip, float maxRange)
+    {
+        this.tip = tip;
+        this.maxRange = maxRange;
+    }
 
+
+    /// <summary>
+    /// Rescales a given vector to have a magnitude equal to "scale".
+    /// </summary>
+    /// <param name="v"></param>
+    /// <param name="scale"></param>
+    /// <returns></returns>
+    public static Vector3 Rescale(Vector3 v, float scale)
+    {
+        Vector3 scaledVector = v;
+
+        scaledVector *= (1 - scale / v.magnitude);
+
+        return scaledVector;
+    }
+
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(transform.position, maxRange/4);
+    }
 }

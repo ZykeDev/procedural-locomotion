@@ -13,8 +13,10 @@ public class ConstraintController : MonoBehaviour
 
     private Vector3 originalPos;
     private Transform tip;
+    private float maxRange;                 // Maximum range of the limb chain
 
     private TwoBoneIKConstraint TwoBoneIKConstraint => GetComponent<TwoBoneIKConstraint>();
+    private Entity ParentEntity => GetComponentInParent<Entity>();
 
     [SerializeField, Min(0.1f), Tooltip("Distance after which to take a step.")]
     private float distanceThreshold = 1.5f;
@@ -30,7 +32,6 @@ public class ConstraintController : MonoBehaviour
     public bool IsMoving { get; private set; }
     public Transform TipTransform { get; private set; }
 
-    private Entity ParentEntity => GetComponentInParent<Entity>();
 
     void Awake()
     {
@@ -39,8 +40,10 @@ public class ConstraintController : MonoBehaviour
         originalPos = transform.position;
         IsMoving = false;
 
+        maxRange = GetChainLength();
+
         // Pass the tip down to the Anchor for initial positioning
-        target.gameObject.GetComponent<GroundAnchor>().SetTip(tip);
+        target.gameObject.GetComponent<GroundAnchor>().SetData(tip, maxRange);
     }
 
 
@@ -97,6 +100,23 @@ public class ConstraintController : MonoBehaviour
         target.parent.position = new Vector3(target.parent.position.x, target.parent.position.y, target.parent.position.z + difference);
     }
 
+
+    // TODO generalize by changing bones with joints
+    /// <summary>
+    /// Returns the length of the entire limb by adding up the distance between bones
+    /// </summary>
+    /// <returns></returns>
+    public float GetChainLength()
+    {
+        Vector3 root = TwoBoneIKConstraint.data.root.transform.position;
+        Vector3 mid = TwoBoneIKConstraint.data.mid.transform.position;
+        Vector3 tip = TwoBoneIKConstraint.data.tip.transform.position;
+
+        float tipToMid = Vector3.Distance(tip, mid);
+        float midToRoot = Vector3.Distance(mid, root);
+
+        return tipToMid + midToRoot;
+    }
 
 
 

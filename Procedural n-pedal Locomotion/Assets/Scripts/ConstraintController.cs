@@ -14,7 +14,7 @@ public class ConstraintController : MonoBehaviour
     private Vector3 originalPos;
     private Transform tip;
 
-    private TwoBoneIKConstraint TwoBoneIKConstraint { get { return GetComponent<TwoBoneIKConstraint>(); } }
+    private TwoBoneIKConstraint TwoBoneIKConstraint => GetComponent<TwoBoneIKConstraint>();
 
     [SerializeField, Min(0.1f), Tooltip("Distance after which to take a step.")]
     private float distanceThreshold = 1.5f;
@@ -30,15 +30,14 @@ public class ConstraintController : MonoBehaviour
     public bool IsMoving { get; private set; }
     public Transform TipTransform { get; private set; }
 
-    private Entity ParentEntity;
+    private Entity ParentEntity => GetComponentInParent<Entity>();
 
     void Awake()
     {
-        ParentEntity = GetComponentInParent<Entity>();
         tip = TwoBoneIKConstraint.data.tip;
         TipTransform = tip.transform;
-        IsMoving = false;
         originalPos = transform.position;
+        IsMoving = false;
 
         // Pass the tip down to the Anchor for initial positioning
         target.gameObject.GetComponent<GroundAnchor>().SetTip(tip);
@@ -50,6 +49,9 @@ public class ConstraintController : MonoBehaviour
         Move();
     }
 
+    /// <summary>
+    /// Move the limb towards the target Ground Anchor
+    /// </summary>
     private void Move()
     {
         if (!IsMoving)

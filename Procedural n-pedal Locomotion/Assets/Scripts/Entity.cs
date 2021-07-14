@@ -127,7 +127,6 @@ public class Entity : MonoBehaviour
     /// <returns></returns>
     private Quaternion FindRotation()
     {
-        Quaternion rotation = new Quaternion();
         List<float> angles = new List<float>();
 
         // Find the rotation along X
@@ -252,8 +251,8 @@ public class Entity : MonoBehaviour
         Vector3 eulerAngles = transform.rotation.eulerAngles;
         eulerAngles.x = -Mathf.RoundToInt(rotX);
         //eulerAngles.z = -Mathf.RoundToInt(rotZ); TODO
-        
-        rotation = Quaternion.Euler(eulerAngles);
+
+        Quaternion rotation = Quaternion.Euler(eulerAngles);
 
 
         return rotation;

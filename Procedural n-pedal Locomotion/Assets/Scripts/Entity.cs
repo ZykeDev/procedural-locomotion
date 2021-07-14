@@ -1,24 +1,26 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class Entity : MonoBehaviour
 {
-    [SerializeField] private List<ConstraintController> limbs;
-
+    [SerializeField] private GameObject body;
+    
     [SerializeField, Range(0.1f, 50f), Tooltip("Speed at which to realign the entity's body when waling on slopes.")] 
     private float realignmentSpeed = 25f;
+
     [SerializeField, Range(0.01f, 1f), Tooltip("Min height difference above which to start rotating the body.")]
     private float realignmentThreshold = 0.1f;
 
     [SerializeField] private bool useZigzagMotion = true;
     private float zigzagDifference = 1f;
 
+
+
+    private List<ConstraintController> limbs;
     public bool IsUpdatingGait { get; private set; }
     public bool IsRotating { get; private set; }
     private int groundMask;
     private RaycastHit groundHit;
-    private Quaternion fromRotation, toRotation;
 
     public Vector3 CenterOfMass { get; private set; }
 
@@ -66,18 +68,18 @@ public class Entity : MonoBehaviour
         {
             Debug.DrawRay(CenterOfMass, direction * groundHit.distance, Color.yellow);
 
-            // Rotate to match the limbs' position
+            // Rotate to match the limb positions
             Quaternion targetRot = FindRotation();
 
             // Only rotate if there is enough of a difference in rotations
-            bool isRotEnough = Mathf.Abs(Quaternion.Angle(transform.rotation, targetRot)) <= 1.1f;
+            bool isRotEnough = Mathf.Abs(Quaternion.Angle(body.transform.rotation, targetRot)) <= 1.1f;
             if (!isRotEnough)
             {
-                transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, Time.deltaTime * realignmentSpeed);
+                body.transform.rotation = Quaternion.Lerp(body.transform.rotation, targetRot, Time.deltaTime * realignmentSpeed);
             }
             else
             {
-                transform.rotation = targetRot;
+                body.transform.rotation = targetRot;
             }
 
 
@@ -248,12 +250,11 @@ public class Entity : MonoBehaviour
 
 
         Vector3 eulerAngles = transform.rotation.eulerAngles;
-        eulerAngles.x = Mathf.RoundToInt(rotX);
-        eulerAngles.z = Mathf.RoundToInt(rotZ);
-
+        eulerAngles.x = -Mathf.RoundToInt(rotX);
+        //eulerAngles.z = -Mathf.RoundToInt(rotZ); TODO
+        
         rotation = Quaternion.Euler(eulerAngles);
 
-        //print("Rot to " + eulerAngles);
 
         return rotation;
     }
@@ -265,23 +266,5 @@ public class Entity : MonoBehaviour
     {
         Gizmos.color = Color.blue;
         Gizmos.DrawSphere(CenterOfMass, .05f);
-
-        Vector3 a = limbs[0].transform.position;        // Pos of the first limb tip
-        Vector3 b = limbs[0 + 2].transform.position;    // Pos of the second limb tip
-        Vector3 c;                                      // Pos C to make a right triangle ACB
-
-        // Make sure C is parallel to the lower point
-        if (a.y > b.y)
-        {
-            c = new Vector3(a.x, b.y, a.z);
-        }
-        else
-        {
-            c = new Vector3(b.x, a.y, b.z);
-        }
-
-        Gizmos.DrawLine(a, b);
-        Gizmos.DrawLine(a, c);
-        Gizmos.DrawLine(b, c);
     }
 }

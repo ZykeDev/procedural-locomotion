@@ -4,13 +4,11 @@ public class GroundAnchor : MonoBehaviour
 {
     private Entity ParentEntity;
     private Transform tip;                  // Tip of the limb. Should be passed down by the Constraint Controller
-    private Transform origin;
     private int layerMask;
     private bool forceInitPos = true;       // Forces the target position to start exactly where the tip is
 
     private Vector3 verticalOffset = new Vector3(0, 1f, 0);
     private Vector3 verticalGap = new Vector3(0, 0.05f, 0);
-    private Vector3 temp;
 
     // TODO Parametrize into upwards: geometrical / gravitational
     private bool useGeometricalUpwards = true;
@@ -20,12 +18,6 @@ public class GroundAnchor : MonoBehaviour
     {
         layerMask = LayerMask.GetMask("Ground");
         ParentEntity = GetComponentInParent<Entity>();
-    }
-
-    void Start()
-    {
-        temp = transform.position;
-
     }
 
     void Update()
@@ -40,13 +32,13 @@ public class GroundAnchor : MonoBehaviour
     {
         if (tip && forceInitPos)
         {
-            //origin.position = tip.position;
             transform.position = tip.position;
             forceInitPos = false;
         }
 
         if (!ParentEntity.IsRotating)
         {
+            // TODO remove overrides
             Vector3 direction = useGeometricalUpwards ? Vector3.down : transform.up;
             direction = transform.TransformDirection(Vector3.down);
             direction = -transform.up;
@@ -67,21 +59,24 @@ public class GroundAnchor : MonoBehaviour
 
     private void UpdatePosition(Vector3 newPos)
     {
+        /*  Deprecated (would need to use the distance from Root to newPos)
+        
         float distance = Vector3.Distance(transform.position, newPos);
 
+        // Clamp the distance at maxRange
         if (distance > maxRange)
         {
             // Find the applied vector from the current position towards the target
             Vector3 posToTarget = newPos - transform.position;
 
-            // Clamp the target pos to never exceed the limbs range
-            //(((b-a)/|b-a|)*r)+a
+            // (((b-a) / |b-a|) * r) + a
             newPos = (posToTarget.normalized * maxRange) + transform.position;
         }
+        */
+
 
         // Update the values
         transform.position = newPos;
-        temp = newPos;
     }
 
 
@@ -110,6 +105,6 @@ public class GroundAnchor : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireSphere(transform.position, maxRange/4);
+
     }
 }

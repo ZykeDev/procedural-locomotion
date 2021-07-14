@@ -9,11 +9,11 @@ public class ConstraintController : MonoBehaviour
 
     [SerializeField, Tooltip("Reference to the joint opposite to this one with respect to the walking axis.")]
     private ConstraintController opposite;
-    
 
     private Vector3 originalPos;
     private Transform tip;
     private float maxRange;                 // Maximum range of the limb chain
+    private int layerMask;
 
     private TwoBoneIKConstraint TwoBoneIKConstraint => GetComponent<TwoBoneIKConstraint>();
     private Entity ParentEntity => GetComponentInParent<Entity>();
@@ -39,11 +39,17 @@ public class ConstraintController : MonoBehaviour
         TipTransform = tip.transform;
         originalPos = transform.position;
         IsMoving = false;
+        layerMask = LayerMask.GetMask("Ground");
 
         maxRange = GetChainLength();
 
         // Pass the tip down to the Anchor for initial positioning
         target.gameObject.GetComponent<GroundAnchor>().SetData(tip, maxRange);
+    }
+
+    void Start()
+    {
+        AnchorOriginalPosition();
     }
 
 
@@ -90,6 +96,19 @@ public class ConstraintController : MonoBehaviour
 
 
     /// <summary>
+    /// Anchors the starting tip position to the ground below
+    /// </summary>
+    private void AnchorOriginalPosition()
+    {
+        if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, Mathf.Infinity, layerMask))
+        {
+            Debug.DrawRay(transform.position, Vector3.down * hit.distance, Color.yellow);
+            originalPos = hit.transform.position;
+        }
+    }
+
+
+    /// <summary>
     /// Moves the target forward to simulate a quadrupedal locomotion pattern
     /// </summary>
     /// <param name="difference"></param>
@@ -125,5 +144,12 @@ public class ConstraintController : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawLine(transform.position, target.position);
+
+        Vector3 root = TwoBoneIKConstraint.data.root.transform.position;
+        Vector3 mid = TwoBoneIKConstraint.data.mid.transform.position;
+        Vector3 tip = TwoBoneIKConstraint.data.tip.transform.position;
+
+        //Gizmos.DrawLine(tip, mid);
+        //Gizmos.DrawLine(mid, root);
     }
 }

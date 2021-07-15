@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[DefaultExecutionOrder(-1)]
 public class Entity : MonoBehaviour
 {
     [SerializeField] private GameObject body;
@@ -47,7 +48,7 @@ public class Entity : MonoBehaviour
 
 
 
-    void LateUpdate()
+    void FixedUpdate()
     {
         // Update the center of mass
         UpdateCenterOfMass();
@@ -66,7 +67,7 @@ public class Entity : MonoBehaviour
 
         if (Physics.Raycast(CenterOfMass, direction, out groundHit, Mathf.Infinity, groundMask))
         {
-            Debug.DrawRay(CenterOfMass, direction * groundHit.distance, Color.yellow);
+            //Debug.DrawRay(CenterOfMass, direction * groundHit.distance, Color.yellow);
 
             bool isRotEnough = true;
 
@@ -133,8 +134,7 @@ public class Entity : MonoBehaviour
     private Quaternion FindRotation()
     {
         List<float> angles = new List<float>();
-        int rotXDirection = 1;                                   // Sign of the rotation
-        int rotZDirection = 1;                                   // Sign of the rotation
+        int rotXDirection, rotZDirection;                       // Signs of rotation
 
         // Find the rotation along X
         float rotX;

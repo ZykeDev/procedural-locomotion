@@ -52,14 +52,13 @@ public class ConstraintController : MonoBehaviour
         AnchorOriginalPosition();
     }
 
-
-    void Update()
+    void FixedUpdate()
     {
         Move();
     }
 
     /// <summary>
-    /// Move the limb towards the target Ground Anchor
+    /// Moves the limb towards the target Ground Anchor
     /// </summary>
     private void Move()
     {
@@ -100,10 +99,12 @@ public class ConstraintController : MonoBehaviour
     /// </summary>
     private void AnchorOriginalPosition()
     {
-        if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, Mathf.Infinity, layerMask))
+        Vector3 direction = transform.TransformDirection(Vector3.down);
+
+        if (Physics.Raycast(transform.position, direction, out RaycastHit hit, Mathf.Infinity, layerMask))
         {
-            Debug.DrawRay(transform.position, Vector3.down * hit.distance, Color.yellow);
-            originalPos = hit.transform.position;
+            Debug.DrawRay(transform.position, direction * hit.distance, Color.cyan);
+            originalPos = hit.point;
         }
     }
 
@@ -144,12 +145,5 @@ public class ConstraintController : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawLine(transform.position, target.position);
-
-        Vector3 root = TwoBoneIKConstraint.data.root.transform.position;
-        Vector3 mid = TwoBoneIKConstraint.data.mid.transform.position;
-        Vector3 tip = TwoBoneIKConstraint.data.tip.transform.position;
-
-        //Gizmos.DrawLine(tip, mid);
-        //Gizmos.DrawLine(mid, root);
     }
 }

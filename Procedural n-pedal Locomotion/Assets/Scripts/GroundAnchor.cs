@@ -10,7 +10,7 @@ public class GroundAnchor : MonoBehaviour
     private Vector3 verticalOffset = new Vector3(0, 1f, 0);
     private Vector3 verticalGap = new Vector3(0, 0.05f, 0);
 
-    // TODO Parametrize into upwards: geometrical / gravitational
+    // TODO Parametrize into upwards: global v3.down / local -t.up
     private bool useGeometricalUpwards = true;
     private float maxRange;
 

@@ -68,18 +68,23 @@ public class Entity : MonoBehaviour
         {
             Debug.DrawRay(CenterOfMass, direction * groundHit.distance, Color.yellow);
 
-            // Rotate to match the limb positions
-            Quaternion targetRot = FindRotation();
+            bool isRotEnough = true;
 
-            // Only rotate if there is enough of a difference in rotations
-            bool isRotEnough = Mathf.Abs(Quaternion.Angle(body.transform.rotation, targetRot)) <= 1.1f;
-            if (!isRotEnough)
+            if (!AreLegsMoving())
             {
-                body.transform.rotation = Quaternion.Lerp(body.transform.rotation, targetRot, Time.deltaTime * realignmentSpeed);
-            }
-            else
-            {
-                body.transform.rotation = targetRot;
+                // Rotate to match the limb positions
+                Quaternion targetRot = FindRotation();
+
+                // Only rotate if there is enough of a difference in rotations
+                isRotEnough = Mathf.Abs(Quaternion.Angle(body.transform.rotation, targetRot)) <= 1.1f;
+                if (!isRotEnough)
+                {
+                    body.transform.rotation = Quaternion.Lerp(body.transform.rotation, targetRot, Time.deltaTime * realignmentSpeed);
+                }
+                else
+                {
+                    body.transform.rotation = targetRot;
+                }
             }
 
 
@@ -128,6 +133,8 @@ public class Entity : MonoBehaviour
     private Quaternion FindRotation()
     {
         List<float> angles = new List<float>();
+        int rotXDirection = 1;                                   // Sign of the rotation
+        int rotZDirection = 1;                                   // Sign of the rotation
 
         // Find the rotation along X
         float rotX;
@@ -138,7 +145,6 @@ public class Entity : MonoBehaviour
                 Vector3 a = limbs[i].transform.position;        // Pos of the first limb tip
                 Vector3 b = limbs[i + 2].transform.position;    // Pos of the second limb tip
                 Vector3 c;                                      // Pos C to make a right triangle ACB
-                int rotDirection;                               // Sign of the rotation
 
                 // Skip the calculation if the limbs are (almost) at the same height
                 if (Mathf.Abs(a.y - b.y) <= realignmentThreshold)
@@ -151,12 +157,12 @@ public class Entity : MonoBehaviour
                 if (a.y > b.y)
                 {
                     c = new Vector3(a.x, b.y, a.z);
-                    rotDirection = 1;
+                    rotXDirection = -1;
                 }
                 else
                 {
                     c = new Vector3(b.x, a.y, b.z);
-                    rotDirection = -1;
+                    rotXDirection = 1;
                 }
 
 
@@ -173,7 +179,7 @@ public class Entity : MonoBehaviour
                 float angle = theta <= gamma ? theta : gamma;
 
                 // Adjust the rotation to match the body
-                angle += rotDirection;
+                angle *= rotXDirection;
 
                 angles.Add(angle);
             }
@@ -197,7 +203,6 @@ public class Entity : MonoBehaviour
                 Vector3 a = limbs[i].transform.position;        // Pos of the first limb tip
                 Vector3 b = limbs[i + 1].transform.position;    // Pos of the second limb tip
                 Vector3 c;                                      // Pos C to make a right triangle ACB
-                int rotDirection;                               // Sign of the rotation
 
                 // Skip the calculation if the limbs are (almost) at the same height
                 if (Mathf.Abs(a.y - b.y) <= realignmentThreshold)
@@ -210,12 +215,12 @@ public class Entity : MonoBehaviour
                 if (a.y > b.y)
                 {
                     c = new Vector3(a.x, b.y, a.z);
-                    rotDirection = 1;
+                    rotZDirection = -1;
                 }
                 else
                 {
                     c = new Vector3(b.x, a.y, b.z);
-                    rotDirection = -1;
+                    rotZDirection = 1;
                 }
 
 
@@ -232,7 +237,7 @@ public class Entity : MonoBehaviour
                 float angle = theta <= gamma ? theta : gamma;
 
                 // Adjust the rotation to match the body
-                angle += rotDirection;
+                angle *= rotZDirection;
 
                 angles.Add(angle);
             }
@@ -249,8 +254,8 @@ public class Entity : MonoBehaviour
 
 
         Vector3 eulerAngles = transform.rotation.eulerAngles;
-        eulerAngles.x = -Mathf.RoundToInt(rotX);
-        //eulerAngles.z = -Mathf.RoundToInt(rotZ); TODO
+        eulerAngles.x = Mathf.RoundToInt(rotX);
+        eulerAngles.z = Mathf.RoundToInt(rotZ);
 
         Quaternion rotation = Quaternion.Euler(eulerAngles);
 
@@ -258,6 +263,23 @@ public class Entity : MonoBehaviour
         return rotation;
     }
 
+
+    /// <summary>
+    /// Returns true if one or more legs are currently moving
+    /// </summary>
+    /// <returns></returns>
+    private bool AreLegsMoving()
+    {
+        for (int i = 0; i < limbs.Count; i++)
+        {
+            if (limbs[i].IsMoving)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
 
 

@@ -8,7 +8,9 @@ public class GroundAnchor : MonoBehaviour
     private bool forceInitPos = true;       // Forces the target position to start exactly where the tip is
 
     private Vector3 verticalOffset = new Vector3(0, 1f, 0);
-    private Vector3 verticalGap = new Vector3(0, 0.05f, 0);
+    private Vector3 verticalGap = new Vector3(0, 0.001f, 0);    // Short vertical vector
+
+    private Vector3 prevPos;
 
     // TODO Parametrize into upwards: global v3.down / local -t.up
     private bool useGeometricalUpwards = true;
@@ -43,16 +45,27 @@ public class GroundAnchor : MonoBehaviour
             direction = transform.TransformDirection(Vector3.down);
             direction = -transform.up;
 
-            RaycastHit hit;
+            Vector3 target = prevPos;
 
-            if (Physics.Raycast(transform.position + verticalOffset, direction, out hit, Mathf.Infinity, layerMask))
+            Vector3 cvo = transform.position + verticalOffset;  // Previous vertical offset position
+            Vector3 pvo = prevPos + verticalOffset;             // Current vertical offset position
+
+            // Check if there are obstacles between the previous and next positions
+            if (Physics.Linecast(pvo, transform.position + verticalGap, out RaycastHit obstacle, layerMask))
             {
-                Debug.DrawRay(transform.position + verticalOffset, direction * hit.distance, Color.yellow);
-                
-                if (transform.position != hit.point)
-                {
-                    UpdatePosition(hit.point);
-                }
+                Debug.DrawLine(pvo, obstacle.point, Color.white);
+                target = obstacle.point;
+            }
+            else if (Physics.Raycast(cvo, direction, out RaycastHit hit, Mathf.Infinity, layerMask))
+            {
+                Debug.DrawRay(cvo, direction * hit.distance, Color.yellow);
+                target = hit.point;
+            }
+
+
+            if (transform.position != target)
+            {
+                UpdatePosition(target);
             }
         }
     }
@@ -76,6 +89,7 @@ public class GroundAnchor : MonoBehaviour
 
 
         // Update the values
+        prevPos = transform.position;
         transform.position = newPos;
     }
 
@@ -87,24 +101,4 @@ public class GroundAnchor : MonoBehaviour
     }
 
 
-    /// <summary>
-    /// Rescales a given vector to have a magnitude equal to "scale".
-    /// </summary>
-    /// <param name="v"></param>
-    /// <param name="scale"></param>
-    /// <returns></returns>
-    public static Vector3 Rescale(Vector3 v, float scale)
-    {
-        Vector3 scaledVector = v;
-
-        scaledVector *= (1 - scale / v.magnitude);
-
-        return scaledVector;
-    }
-
-
-    private void OnDrawGizmos()
-    {
-
-    }
 }

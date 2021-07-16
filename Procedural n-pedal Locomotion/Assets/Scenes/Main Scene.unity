@@ -520,7 +520,7 @@ GameObject:
   - component: {fileID: 532087096}
   m_Layer: 7
   m_Name: Wall
-  m_TagString: Untagged
+  m_TagString: Untraversable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

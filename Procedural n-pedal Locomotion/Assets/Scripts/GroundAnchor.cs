@@ -22,10 +22,12 @@ public class GroundAnchor : MonoBehaviour
         ParentEntity = GetComponentInParent<Entity>();
     }
 
-    void Update()
+    void FixedUpdate()
     {
         Anchor();
     }
+
+    bool isHittingWall = false;
 
     /// <summary>
     /// Keeps the object anchored to the ground below
@@ -46,51 +48,68 @@ public class GroundAnchor : MonoBehaviour
             direction = -transform.up;
 
             Vector3 target = prevPos;
+            Vector3 perceivedTarget = target;
 
             Vector3 cvo = transform.position + verticalOffset;  // Previous vertical offset position
             Vector3 pvo = prevPos + verticalOffset;             // Current vertical offset position
-
+            /*
             // Check if there are obstacles between the previous and next positions
-            if (Physics.Linecast(pvo, transform.position + verticalGap, out RaycastHit obstacle, layerMask))
+            bool isThereGround = Physics.Raycast(cvo, direction, out RaycastHit hit, Mathf.Infinity, layerMask);
+            bool isThereObstacle = Physics.Linecast(pvo, transform.position + verticalGap, out RaycastHit obstacle, layerMask);
+            print("-- anchoring --");
+            print("Obstacle from " + pvo + " -> " + transform.position + verticalGap + ": " + isThereObstacle);
+            print("Ground from " + cvo + " -> down: " + isThereObstacle);
+
+            if (isThereObstacle)
             {
                 Debug.DrawLine(pvo, obstacle.point, Color.white);
-                target = obstacle.point;
+                perceivedTarget = obstacle.point;
             }
-            else if (Physics.Raycast(cvo, direction, out RaycastHit hit, Mathf.Infinity, layerMask))
+            else if (isThereGround)
             {
                 Debug.DrawRay(cvo, direction * hit.distance, Color.yellow);
-                target = hit.point;
+                perceivedTarget = hit.point;
             }
 
 
             if (transform.position != target)
             {
-                UpdatePosition(target);
+                prevPos = transform.position;
+                transform.position = target;
             }
+            */
+
+
+
+            bool isGroundHit = Physics.Raycast(cvo, direction, out RaycastHit groundHit, Mathf.Infinity, layerMask);
+            bool isObstacleHit = Physics.Linecast(pvo, groundHit.point, out RaycastHit obstacleHit, layerMask);
+
+            if (isGroundHit && isObstacleHit)
+            {
+                perceivedTarget = groundHit.point;
+                target = obstacleHit.point;
+            }
+            else if (isGroundHit)
+            {
+                perceivedTarget = groundHit.point;
+                target = perceivedTarget;
+            }
+
         }
     }
 
-    private void UpdatePosition(Vector3 newPos)
+    
+    /// <summary>
+    /// Scales the applied vector from a to b by a factor of scale
+    /// </summary>
+    /// <param name="a"></param>
+    /// <param name="b"></param>
+    /// <param name="scale"></param>
+    /// <returns></returns>
+    private static Vector3 Rescale(Vector3 a, Vector3 b, float scale)
     {
-        /*  Deprecated (would need to use the distance from Root to newPos)
-        
-        float distance = Vector3.Distance(transform.position, newPos);
-
-        // Clamp the distance at maxRange
-        if (distance > maxRange)
-        {
-            // Find the applied vector from the current position towards the target
-            Vector3 posToTarget = newPos - transform.position;
-
-            // (((b-a) / |b-a|) * r) + a
-            newPos = (posToTarget.normalized * maxRange) + transform.position;
-        }
-        */
-
-
-        // Update the values
-        prevPos = transform.position;
-        transform.position = newPos;
+        // (((b-a) / |b-a|) * r) + a
+        return ((b - a).normalized * scale) + a;
     }
 
 
@@ -100,5 +119,9 @@ public class GroundAnchor : MonoBehaviour
         this.maxRange = maxRange;
     }
 
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawSphere(transform.position + verticalGap, 0.02f);
+    }
 
 }

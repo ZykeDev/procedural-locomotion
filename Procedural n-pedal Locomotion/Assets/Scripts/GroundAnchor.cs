@@ -27,7 +27,6 @@ public class GroundAnchor : MonoBehaviour
         Anchor();
     }
 
-    bool isHittingWall = false;
 
     /// <summary>
     /// Keeps the object anchored to the ground below
@@ -48,53 +47,23 @@ public class GroundAnchor : MonoBehaviour
             direction = -transform.up;
 
             Vector3 target = prevPos;
-            Vector3 perceivedTarget = target;
-
             Vector3 cvo = transform.position + verticalOffset;  // Previous vertical offset position
             Vector3 pvo = prevPos + verticalOffset;             // Current vertical offset position
-            /*
-            // Check if there are obstacles between the previous and next positions
-            bool isThereGround = Physics.Raycast(cvo, direction, out RaycastHit hit, Mathf.Infinity, layerMask);
-            bool isThereObstacle = Physics.Linecast(pvo, transform.position + verticalGap, out RaycastHit obstacle, layerMask);
-            print("-- anchoring --");
-            print("Obstacle from " + pvo + " -> " + transform.position + verticalGap + ": " + isThereObstacle);
-            print("Ground from " + cvo + " -> down: " + isThereObstacle);
 
-            if (isThereObstacle)
-            {
-                Debug.DrawLine(pvo, obstacle.point, Color.white);
-                perceivedTarget = obstacle.point;
-            }
-            else if (isThereGround)
-            {
-                Debug.DrawRay(cvo, direction * hit.distance, Color.yellow);
-                perceivedTarget = hit.point;
-            }
 
+            bool isGroundHit = Physics.Raycast(cvo, direction, out RaycastHit groundHit, Mathf.Infinity, layerMask);
+
+            if (isGroundHit)
+            {
+                Debug.DrawRay(cvo, direction * groundHit.distance, Color.yellow);
+                target = groundHit.point;
+            }
 
             if (transform.position != target)
             {
                 prevPos = transform.position;
                 transform.position = target;
-            }
-            */
-
-
-
-            bool isGroundHit = Physics.Raycast(cvo, direction, out RaycastHit groundHit, Mathf.Infinity, layerMask);
-            bool isObstacleHit = Physics.Linecast(pvo, groundHit.point, out RaycastHit obstacleHit, layerMask);
-
-            if (isGroundHit && isObstacleHit)
-            {
-                perceivedTarget = groundHit.point;
-                target = obstacleHit.point;
-            }
-            else if (isGroundHit)
-            {
-                perceivedTarget = groundHit.point;
-                target = perceivedTarget;
-            }
-
+            }            
         }
     }
 

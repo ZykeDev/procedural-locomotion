@@ -15,7 +15,7 @@ public class ConstraintController : MonoBehaviour
     private float maxRange;                 // Maximum range of the limb chain
     private int layerMask;
 
-    private TwoBoneIKConstraint TwoBoneIKConstraint => GetComponent<TwoBoneIKConstraint>();
+    public TwoBoneIKConstraint TwoBoneIKConstraint => GetComponent<TwoBoneIKConstraint>();
     private Entity ParentEntity => GetComponentInParent<Entity>();
 
     [SerializeField, Min(0.1f), Tooltip("Distance after which to take a step.")]

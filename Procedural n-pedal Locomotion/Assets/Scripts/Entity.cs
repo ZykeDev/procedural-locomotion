@@ -15,7 +15,8 @@ public class Entity : MonoBehaviour
     [SerializeField] private bool useZigzagMotion = true;
     private float zigzagDifference = 1f;
 
-
+    [SerializeField, Tooltip("Automatically add a Capsule Collider to each bone.")] 
+    private bool generateBoneColliders = true;
 
     private List<ConstraintController> limbs;
     public bool IsUpdatingGait { get; private set; }
@@ -43,6 +44,11 @@ public class Entity : MonoBehaviour
             {
                 if (i % 2 != 0) limbs[i].ForwardTarget(zigzagDifference);
             }
+        }
+
+        if (generateBoneColliders)
+        {
+            GenerateBoneColliders(); 
         }
     }
 
@@ -280,12 +286,74 @@ public class Entity : MonoBehaviour
 
         return false;
     }
+    
 
+
+    private void GenerateBoneColliders()
+    {
+        for (int i = 0; i < limbs.Count; i++)
+        {
+            ConstraintController limb = limbs[i];
+            GameObject root = limb.TwoBoneIKConstraint.data.root.gameObject;
+            GameObject mid = limb.TwoBoneIKConstraint.data.mid.gameObject;
+            GameObject end = limb.TwoBoneIKConstraint.data.tip.parent.gameObject;
+            GameObject tip = limb.TwoBoneIKConstraint.data.tip.gameObject;
+
+            Vector3 a = root.transform.localPosition;
+            Vector3 b = mid.transform.localPosition;
+            Vector3 globalScale = root.transform.lossyScale;
+
+
+            Vector3 center = (a + b) / 2;                        // Find the midway point to use as the center
+            float height = Vector3.Distance(a.DivideBy(globalScale), b.DivideBy(globalScale));
+            print(height); 
+            CapsuleCollider collider = root.AddComponent<CapsuleCollider>();
+            collider.center = center;
+            collider.height = height;
+            collider.radius = height / 4;
+        }
+    }
+
+
+    /// <summary>
+    /// Returns the transform's global scale by recursively multiplying all inherited scales
+    /// </summary>
+    /// <param name="child"></param>
+    /// <returns></returns>
+    private Vector3 GetInheritedScale(Transform child)
+    {
+        Vector3 thisScale = child.localScale;
+
+        if (child.parent == null)
+        {
+            return thisScale;
+        }
+        else
+        {
+            Vector3 parentScale = GetInheritedScale(child.parent);
+
+            return Vector3.Scale(thisScale, parentScale);
+        }
+    }
 
 
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.blue;
         Gizmos.DrawSphere(CenterOfMass, .05f);
+        
+        Gizmos.color = Color.yellow;
+        for (int i = 0; i < limbs.Count; i++)
+        {
+            ConstraintController limb = limbs[i];
+            GameObject root = limb.TwoBoneIKConstraint.data.root.gameObject;
+            GameObject mid = limb.TwoBoneIKConstraint.data.mid.gameObject;
+            GameObject end = limb.TwoBoneIKConstraint.data.tip.parent.gameObject;
+            GameObject tip = limb.TwoBoneIKConstraint.data.tip.gameObject;
+
+            Vector3 center = root.GetComponent<CapsuleCollider>().center;
+            float height = root.GetComponent<CapsuleCollider>().height;
+            Gizmos.DrawSphere(center, height * 100);
+        }
     }
 }

@@ -341,19 +341,5 @@ public class Entity : MonoBehaviour
     {
         Gizmos.color = Color.blue;
         Gizmos.DrawSphere(CenterOfMass, .05f);
-        
-        Gizmos.color = Color.yellow;
-        for (int i = 0; i < limbs.Count; i++)
-        {
-            ConstraintController limb = limbs[i];
-            GameObject root = limb.TwoBoneIKConstraint.data.root.gameObject;
-            GameObject mid = limb.TwoBoneIKConstraint.data.mid.gameObject;
-            GameObject end = limb.TwoBoneIKConstraint.data.tip.parent.gameObject;
-            GameObject tip = limb.TwoBoneIKConstraint.data.tip.gameObject;
-
-            Vector3 center = root.GetComponent<CapsuleCollider>().center;
-            float height = root.GetComponent<CapsuleCollider>().height;
-            Gizmos.DrawSphere(center, height * 100);
-        }
     }
 }

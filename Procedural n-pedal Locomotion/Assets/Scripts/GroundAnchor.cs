@@ -67,20 +67,6 @@ public class GroundAnchor : MonoBehaviour
         }
     }
 
-    
-    /// <summary>
-    /// Scales the applied vector from a to b by a factor of scale
-    /// </summary>
-    /// <param name="a"></param>
-    /// <param name="b"></param>
-    /// <param name="scale"></param>
-    /// <returns></returns>
-    private static Vector3 Rescale(Vector3 a, Vector3 b, float scale)
-    {
-        // (((b-a) / |b-a|) * r) + a
-        return ((b - a).normalized * scale) + a;
-    }
-
 
     public void SetData(Transform tip, float maxRange)
     {

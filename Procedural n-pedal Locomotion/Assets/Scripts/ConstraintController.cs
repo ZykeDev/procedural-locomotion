@@ -14,6 +14,7 @@ public class ConstraintController : MonoBehaviour
     private Transform tip;
     private float maxRange;                 // Maximum range of the limb chain
     private int layerMask;
+    [SerializeField] private Settings.Axes limbUpwardsAxis = Settings.Axes.Y;
 
     public TwoBoneIKConstraint TwoBoneIKConstraint => GetComponent<TwoBoneIKConstraint>();
     private Entity ParentEntity => GetComponentInParent<Entity>();
@@ -67,21 +68,20 @@ public class ConstraintController : MonoBehaviour
             // Check if the distance to the target point is too great
             float distanceToTarget = Vector3.Distance(transform.position, target.position);
 
-            // Check if the opposite limb is already moving
-            bool isOppositeMoving = opposite != null && opposite.IsMoving;
+            bool isWithinDistance = distanceToTarget > distanceThreshold;   // TODO also check if the distance is too great (edges)
+            bool isOppositeMoving = opposite != null && opposite.IsMoving;  // Check if the opposite limb is already moving           
+            bool isTraversable = IsTraversable(target.position);            // Check if the destination is traversable
 
-            // TODO also check if the distance is too great (edges)
-            if (distanceToTarget > distanceThreshold && !isOppositeMoving)
+
+            if (isWithinDistance && !isOppositeMoving && isTraversable)
             {
-                int axisIndex = 1; // Make a parabola along the Y axis only
                 // Start moving the limb
-                Coro.Perp(transform, target.position, axisIndex, 1 / speed, OnMovementEnd);
+                Coro.Perp(transform, target.position, (int)limbUpwardsAxis, 1 / speed, OnMovementEnd);
                 IsMoving = true;
             }
             else
             {
-                // Keep anchored
-                transform.position = originalPos;
+                Anchor();
             }
         }
     }
@@ -93,6 +93,11 @@ public class ConstraintController : MonoBehaviour
         originalPos = transform.position;
     }
 
+
+    private void Anchor()
+    {
+        transform.position = originalPos;
+    }
 
     /// <summary>
     /// Anchors the starting tip position to the ground below
@@ -136,6 +141,67 @@ public class ConstraintController : MonoBehaviour
         float midToRoot = Vector3.Distance(mid, root);
 
         return tipToMid + midToRoot;
+    }
+
+    
+    /// <summary>
+    /// Returns true if the point is not inside an Untraversable terrain collider
+    /// </summary>
+    /// <param name="point"></param>
+    /// <returns></returns>
+    private bool IsTraversable(Vector3 point)
+    {
+
+        // Using OverlapSphere
+        /*
+        Collider[] colliders = Physics.OverlapSphere(point, 0);
+
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            if (colliders[i].CompareTag(Settings.Tag_untraversable))
+            {
+                print("untraversable");
+                return false;
+            }
+        }
+
+        return true;*/
+
+
+        // Using Linecast to CoM
+        /*
+        if (Physics.Linecast(point, ParentEntity.CenterOfMass, out RaycastHit hit))
+        {
+            Debug.DrawRay(point, ParentEntity.CenterOfMass - point, Color.cyan);
+            print("hitting: " + hit.transform.gameObject.tag);
+            if (hit.transform.gameObject.CompareTag(Settings.Tag_untraversable))
+            {
+                return false;
+            }
+        }
+
+        return true;
+        */
+        Vector3 com = ParentEntity.CenterOfMass;
+        Vector3 rayDirection = (point - com).Rescale(0.98f);
+        RaycastHit[] hits = Physics.RaycastAll(com, rayDirection, rayDirection.magnitude);
+
+        if (hits.Length > 0)
+        {
+            Debug.DrawRay(com, rayDirection, Color.cyan);
+
+            for (int i = 0; i < hits.Length; i++)
+            {
+                print("hitting " + hits[i].transform.gameObject.tag);
+                Debug.DrawLine(hits[i].point, hits[i].point + Vector3.up);
+                if (hits[i].transform.gameObject.CompareTag(Settings.Tag_untraversable))
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
 

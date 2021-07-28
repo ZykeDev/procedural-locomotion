@@ -20,7 +20,7 @@ public class ConstraintController : MonoBehaviour
     private Entity ParentEntity => GetComponentInParent<Entity>();
 
     [SerializeField, Min(0.1f), Tooltip("Distance after which to take a step.")]
-    private float distanceThreshold = 1.5f;
+    private float minRange = 1.5f;
 
     private float proximityThreshold = 0.01f;
 
@@ -63,19 +63,29 @@ public class ConstraintController : MonoBehaviour
     /// </summary>
     private void Move()
     {
+        Vector3 jointPos = TwoBoneIKConstraint.data.root.transform.position;
+        float distanceFromBody = Vector3.Distance(jointPos, target.position);
+
+        if (distanceFromBody > maxRange) Debug.DrawLine(jointPos, target.position, Color.red);
+        else Debug.DrawLine(jointPos, target.position, Color.green);
+
         if (!IsMoving)
         {
             // Check if the distance to the target point is too great
             float distanceToTarget = Vector3.Distance(transform.position, target.position);
+            //float distanceFromBody = Vector3.Distance(ParentEntity.CenterOfMass, target.position);
 
-            bool isWithinDistance = distanceToTarget > distanceThreshold;   // TODO also check if the distance is too great (edges)
-            bool isOppositeMoving = opposite != null && opposite.IsMoving;  // Check if the opposite limb is already moving           
-            bool isTraversable = IsTraversable(target.position);            // Check if the destination is traversable
+            print(distanceFromBody + ". max: " + maxRange);
+            
+            bool isWithinRange = distanceToTarget > minRange;
+            bool isTargetWithinRange = distanceFromBody < maxRange;
+            bool isOppositeMoving = opposite != null && opposite.IsMoving;      // Check if the opposite limb is already moving           
+            bool isTraversable = IsTraversable(target.position);                // Check if the destination is traversable
 
 
-            if (isWithinDistance && !isOppositeMoving && isTraversable)
+            if (isWithinRange && !isOppositeMoving && isTraversable)
             {
-                // Start moving the limb
+                // Start a coroutine to move the limb
                 Coro.Perp(transform, target.position, (int)limbUpwardsAxis, 1 / speed, OnMovementEnd);
                 IsMoving = true;
             }
@@ -96,7 +106,10 @@ public class ConstraintController : MonoBehaviour
 
     private void Anchor()
     {
-        transform.position = originalPos;
+        if (transform.position != originalPos)
+        {
+            transform.position = originalPos;
+        }
     }
 
     /// <summary>
@@ -108,7 +121,7 @@ public class ConstraintController : MonoBehaviour
 
         if (Physics.Raycast(transform.position, direction, out RaycastHit hit, Mathf.Infinity, layerMask))
         {
-            Debug.DrawRay(transform.position, direction * hit.distance, Color.cyan);
+            //Debug.DrawRay(transform.position, direction * hit.distance, Color.cyan);
             originalPos = hit.point;
         }
     }
@@ -121,7 +134,7 @@ public class ConstraintController : MonoBehaviour
     public void ForwardTarget(float difference)
     {
         // TODO use differnece
-        difference = distanceThreshold / 4;
+        difference = minRange / 4;
         target.parent.position = new Vector3(target.parent.position.x, target.parent.position.y, target.parent.position.z + difference);
     }
 
@@ -151,48 +164,16 @@ public class ConstraintController : MonoBehaviour
     /// <returns></returns>
     private bool IsTraversable(Vector3 point)
     {
-
-        // Using OverlapSphere
-        /*
-        Collider[] colliders = Physics.OverlapSphere(point, 0);
-
-        for (int i = 0; i < colliders.Length; i++)
-        {
-            if (colliders[i].CompareTag(Settings.Tag_untraversable))
-            {
-                print("untraversable");
-                return false;
-            }
-        }
-
-        return true;*/
-
-
-        // Using Linecast to CoM
-        /*
-        if (Physics.Linecast(point, ParentEntity.CenterOfMass, out RaycastHit hit))
-        {
-            Debug.DrawRay(point, ParentEntity.CenterOfMass - point, Color.cyan);
-            print("hitting: " + hit.transform.gameObject.tag);
-            if (hit.transform.gameObject.CompareTag(Settings.Tag_untraversable))
-            {
-                return false;
-            }
-        }
-
-        return true;
-        */
         Vector3 com = ParentEntity.CenterOfMass;
-        Vector3 rayDirection = (point - com).Rescale(0.98f);
+        Vector3 rayDirection = (point - com).Rescale(0.98f);        // Only use 98% of the ray, since we don't want to hit the ground
         RaycastHit[] hits = Physics.RaycastAll(com, rayDirection, rayDirection.magnitude);
 
         if (hits.Length > 0)
         {
-            Debug.DrawRay(com, rayDirection, Color.cyan);
+            //Debug.DrawRay(com, rayDirection, Color.cyan);
 
             for (int i = 0; i < hits.Length; i++)
             {
-                print("hitting " + hits[i].transform.gameObject.tag);
                 Debug.DrawLine(hits[i].point, hits[i].point + Vector3.up);
                 if (hits[i].transform.gameObject.CompareTag(Settings.Tag_untraversable))
                 {
@@ -209,7 +190,7 @@ public class ConstraintController : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(transform.position, target.position);
+        //Gizmos.color = Color.red;
+        //Gizmos.DrawLine(transform.position, target.position);
     }
 }

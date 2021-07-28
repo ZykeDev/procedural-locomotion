@@ -14,7 +14,7 @@ public class ConstraintController : MonoBehaviour
     private Transform tip;
     private float maxRange;                 // Maximum range of the limb chain
     private int layerMask;
-    [SerializeField] private Settings.Axes limbUpwardsAxis = Settings.Axes.Y;
+    
 
     public TwoBoneIKConstraint TwoBoneIKConstraint => GetComponent<TwoBoneIKConstraint>();
     private Entity ParentEntity => GetComponentInParent<Entity>();
@@ -73,9 +73,16 @@ public class ConstraintController : MonoBehaviour
         {
             // Check if the distance to the target point is too great
             float distanceToTarget = Vector3.Distance(transform.position, target.position);
-            //float distanceFromBody = Vector3.Distance(ParentEntity.CenterOfMass, target.position);
-
-            print(distanceFromBody + ". max: " + maxRange);
+            //distanceFromBody = Vector3.Distance(jointPos, target.position);
+            
+            // If the next step would be too far, don't allow the entity to move in that direction.
+            if (distanceFromBody > maxRange)
+            {
+                ParentEntity.LimitMovement(target.position);
+            } else
+            {
+                ParentEntity.MovementController.ResetArcLimit();
+            }
             
             bool isWithinRange = distanceToTarget > minRange;
             bool isTargetWithinRange = distanceFromBody < maxRange;
@@ -86,7 +93,7 @@ public class ConstraintController : MonoBehaviour
             if (isWithinRange && !isOppositeMoving && isTraversable)
             {
                 // Start a coroutine to move the limb
-                Coro.Perp(transform, target.position, (int)limbUpwardsAxis, 1 / speed, OnMovementEnd);
+                Coro.Perp(transform, target.position, (int)ParentEntity.limbUpwardsAxis, 1 / speed, OnMovementEnd);
                 IsMoving = true;
             }
             else

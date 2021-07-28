@@ -5,7 +5,10 @@ using UnityEngine;
 public class Entity : MonoBehaviour
 {
     [SerializeField] private GameObject body;
-    
+
+    [Tooltip("Axis along whitch to elevate the limb during locomotion.")] 
+    public Settings.Axes limbUpwardsAxis = Settings.Axes.Y;
+
     [SerializeField, Range(0.1f, 50f), Tooltip("Speed at which to realign the entity's body when waling on slopes.")] 
     private float realignmentSpeed = 25f;
 
@@ -18,6 +21,7 @@ public class Entity : MonoBehaviour
     [SerializeField, Tooltip("Automatically add a Capsule Collider to each bone.")] 
     private bool generateBoneColliders = true;
 
+    public MovementController MovementController => GetComponent<MovementController>();
     private List<ConstraintController> limbs;
     public bool IsUpdatingGait { get; private set; }
     public bool IsRotating { get; private set; }
@@ -58,6 +62,7 @@ public class Entity : MonoBehaviour
     {
         // Update the center of mass
         UpdateCenterOfMass();
+
 
         // Set the entity's height based on the limb tips.
         // Do we update this only after a limb has reached its target?
@@ -118,8 +123,6 @@ public class Entity : MonoBehaviour
     }
 
 
-
-
     private void UpdateCenterOfMass()
     {
         CenterOfMass = ComputeCenterOfMass();
@@ -131,6 +134,29 @@ public class Entity : MonoBehaviour
 
         return com;
     }
+
+
+
+    public void LimitMovement(Vector3 limitingPos)
+    {
+        // Ignore the Y-axis of the forward vector
+        Vector3 forward = new Vector3(body.transform.forward.x, 0, body.transform.forward.z);
+
+        // Find the applied vector from the CoM to the limb target
+        Vector3 comToTarget = limitingPos - CenterOfMass;
+
+        // Ignore the y-axis and normalize it
+        comToTarget = new Vector3(comToTarget.x, 0, comToTarget.z).normalized;
+
+        // Find the angle between the forward vector and the target vector
+        float angle = Vector3.SignedAngle(forward, comToTarget, body.transform.up);
+
+        // TODO check that the sign is correct?
+
+        MovementController.SetArcLimit((0, angle));
+    }
+
+
 
 
     /// <summary>

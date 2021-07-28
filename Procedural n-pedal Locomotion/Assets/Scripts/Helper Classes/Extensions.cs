@@ -49,5 +49,28 @@ public static class Extensions
     {
         return vector.normalized * (vector.magnitude * scale);
     }
-    
+
+
+    /// <summary>
+    /// Converts an angle into a Vector 2 describing its position on a unit circle.
+    /// </summary>
+    /// <param name="angle"></param>
+    /// <returns></returns>
+    public static Vector2 ToUnitCirclePoint(this float angle)
+    {
+        float x = Mathf.Cos(angle * Mathf.Deg2Rad);
+        float y = Mathf.Sin(angle * Mathf.Deg2Rad);
+
+        x = (float)System.Math.Round(x, 2);
+        y = (float)System.Math.Round(y, 2);
+
+        return new Vector2(x, y);
+    }
+
+
+    public static Color RandomColor()
+    {
+        return new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
+    }
+
 }

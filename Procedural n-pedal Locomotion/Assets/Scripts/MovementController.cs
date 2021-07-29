@@ -10,11 +10,18 @@ public class MovementController : MonoBehaviour
     // i.e. (0, 90) only allows movement in a direction if its forward vector
     // points towards a 90° to 360° range around the entity's center.
     private (float from, float to) arcLimit = (0, 0);
-
-
-    [SerializeField, Range(0.01f, 20f)] private float speed = 10f;
-    [SerializeField, Range(0.1f, 50f)] private float turnSpeed = 5f;
     private float turnVelocity;
+
+
+    [SerializeField, Range(0.01f, 20f)] 
+    private float speed = 10f;
+
+    [SerializeField, Range(0.1f, 50f)] 
+    private float turnSpeed = 5f;
+
+    [SerializeField, Tooltip("Allows the entity to only move in a direction where limb targets are permitted.")] 
+    private bool useDirectionLimiter = false;
+
 
     private void Start()
     {
@@ -43,12 +50,23 @@ public class MovementController : MonoBehaviour
     }
 
 
+
+    /// <summary>
+    /// Returns true if the entity is allowed to move in the given direction.
+    /// </summary>
+    /// <param name="direction"></param>
+    /// <returns></returns>
     private bool CanMove(Vector3 direction)
     {
-        Vector2 unitDirection = new Vector2(direction.x, direction.z);
+        // Ignore if the feature is off
+        if (!useDirectionLimiter) return true;
 
         // Ignore the case with no limits
         if (arcLimit == (0, 0)) return true;
+
+
+        // We only need the X and Z coordinates
+        Vector2 unitDirection = new Vector2(direction.x, direction.z);
 
         // Rotate the arc by 90 degrees to align it with the direction's unit circle
         float from = arcLimit.from + 90;
@@ -58,21 +76,16 @@ public class MovementController : MonoBehaviour
         Vector2 fromV = from.ToUnitCirclePoint();
         Vector2 toV = to.ToUnitCirclePoint();
 
-        print(unitDirection + ", " + fromV + ", " + toV);
-
         // Check if the direction is between the limits
         bool isBetweenX = unitDirection.x >= fromV.x && unitDirection.x <= toV.x;
         bool isBetweenY = unitDirection.y >= fromV.y && unitDirection.y <= toV.y;
 
-        print(unitDirection.x + " > " + fromV.x + ", " + unitDirection.x + " < " + toV.x);
-        print(unitDirection.y + " > " + fromV.y + ", " + unitDirection.y + " < " + toV.y);
-        // If the direction is in the arc limit, DON'T move
+        // If the direction is in the arc limit, DON'T allow movement in said direction
         if (isBetweenX && isBetweenY)
         {
             return false;
         }
-        
-
+    
         return true;
     }
 

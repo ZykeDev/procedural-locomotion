@@ -22,7 +22,7 @@ public class Entity : MonoBehaviour
     private ColliderGeneration generateBoneColliders;
 
     public MovementController MovementController => GetComponent<MovementController>();
-    private List<ConstraintController> limbs;
+    public List<ConstraintController> limbs;
     public bool IsUpdatingGait { get; private set; }
     public bool IsRotating { get; private set; }
     private int groundMask;
@@ -377,6 +377,69 @@ public class Entity : MonoBehaviour
         }
         }
     }
+
+
+    public void GenerateWeights()
+    {
+        // Add a Weight component to the body
+        if (body != null)
+        {
+            if (body.GetComponent<Weight>() == null)
+            {
+                body.AddComponent<Weight>();
+            }
+        }
+
+        // If the limbs have not been set yet, find the automatically
+        if (limbs == null || limbs.Count == 0)
+        {
+            limbs = new List<ConstraintController>(GetComponentsInChildren<ConstraintController>());
+        }
+
+        // Add a Weight component to all limb parts
+        for (int i = 0; i < limbs.Count; i++)
+        {
+            if (limbs[i].gameObject.GetComponent<Weight>() == null)
+            {
+                GameObject root = limbs[i].TwoBoneIKConstraint.data.root.gameObject;
+                GameObject mid = limbs[i].TwoBoneIKConstraint.data.mid.gameObject;
+                GameObject tip = limbs[i].TwoBoneIKConstraint.data.tip.gameObject;
+
+                root.AddComponent<Weight>();
+                mid.AddComponent<Weight>();
+                tip.AddComponent<Weight>();  // Does the tip need a weight?
+            }
+        }
+    }
+
+    public void RemoveWeights()
+    {
+        // Remove the Weight component from the body
+        if (body != null)
+        {
+            Weight w = body.GetComponent<Weight>();
+            if (w != null) DestroyImmediate(w, false);
+        }
+
+        // If the limbs have not been set yet, find the automatically
+        if (limbs == null || limbs.Count == 0)
+        {
+            limbs = new List<ConstraintController>(GetComponentsInChildren<ConstraintController>());
+        }
+
+        // Remove the Weight component from all limb parts
+        for (int i = 0; i < limbs.Count; i++)
+        {
+            Weight rootW = limbs[i].TwoBoneIKConstraint.data.root.gameObject.GetComponent<Weight>();
+            Weight midW = limbs[i].TwoBoneIKConstraint.data.mid.gameObject.GetComponent<Weight>();
+            Weight tipW = limbs[i].TwoBoneIKConstraint.data.tip.gameObject.GetComponent<Weight>();
+
+            if (rootW != null) DestroyImmediate(rootW, false);
+            if (midW != null) DestroyImmediate(midW, false);
+            if (tipW != null) DestroyImmediate(tipW, false);
+        }
+    }
+
 
 
     /// <summary>

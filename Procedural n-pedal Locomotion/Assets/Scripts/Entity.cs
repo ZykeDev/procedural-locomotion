@@ -19,7 +19,7 @@ public class Entity : MonoBehaviour
     private float zigzagDifference = 1f;
 
     [SerializeField, Tooltip("Automatically add a Capsule Collider to each bone.")] 
-    private bool generateBoneColliders = true;
+    private ColliderGeneration generateBoneColliders;
 
     public MovementController MovementController => GetComponent<MovementController>();
     private List<ConstraintController> limbs;
@@ -29,6 +29,10 @@ public class Entity : MonoBehaviour
     private RaycastHit groundHit;
 
     public Vector3 CenterOfMass { get; private set; }
+
+
+    public enum ColliderGeneration { DontGenerate, CompleteBody, EachLimb }
+
 
     void Awake()
     {
@@ -50,9 +54,9 @@ public class Entity : MonoBehaviour
             }
         }
 
-        if (generateBoneColliders)
+        if (generateBoneColliders != ColliderGeneration.DontGenerate)
         {
-            GenerateBoneColliders(); 
+            GenerateBoneColliders();
         }
     }
 
@@ -317,7 +321,40 @@ public class Entity : MonoBehaviour
 
     private void GenerateBoneColliders()
     {
-        for (int i = 0; i < limbs.Count; i++)
+        // Chooses how to add colliders to the Entity depending on the generateBoneCollider enum
+
+        // Adds a single Box Collider to the complete body of the entity
+        if (generateBoneColliders == ColliderGeneration.CompleteBody)
+        {      
+            BoxCollider bodyCollider = gameObject.AddComponent<BoxCollider>();
+
+            // Find the biggest Renderer inside the entity
+            Vector3 biggestSize = Vector3.zero;
+            Vector3 center = Vector3.zero;
+
+            foreach (Renderer r in GetComponentsInChildren<Renderer>())
+            {
+                if (biggestSize == Vector3.zero)
+                {
+                    biggestSize = r.bounds.size;
+                    center = r.bounds.center;
+                }
+                else if (r.bounds.size.IsBiggerThan(biggestSize)) 
+                {
+                    biggestSize = r.bounds.size;
+                    center = r.bounds.center;
+                }
+            }
+
+            // Use its bounds to determine the collider size and center
+            bodyCollider.center = center;
+            bodyCollider.size = biggestSize / 2;
+        }
+
+        // Generate box colliders around each limb bone   TODO
+        else if (generateBoneColliders == ColliderGeneration.EachLimb)
+        {
+            for (int i = 0; i < limbs.Count; i++)
         {
             ConstraintController limb = limbs[i];
             GameObject root = limb.TwoBoneIKConstraint.data.root.gameObject;
@@ -337,6 +374,7 @@ public class Entity : MonoBehaviour
             collider.center = center;
             collider.height = height;
             collider.radius = height / 4;
+        }
         }
     }
 

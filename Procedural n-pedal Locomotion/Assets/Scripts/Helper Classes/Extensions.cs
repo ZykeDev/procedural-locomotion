@@ -50,6 +50,20 @@ public static class Extensions
         return vector.normalized * (vector.magnitude * scale);
     }
 
+    
+    /// <summary>
+    /// Returns true if all components of vector a are >= than those of vector b.
+    /// </summary>
+    /// <param name="a"></param>
+    /// <param name="b"></param>
+    /// <returns></returns>
+    public static bool IsBiggerThan(this Vector3 a, Vector3 b)
+    {
+        return (a.x >= b.x) && (a.y >= b.y) && (a.z >= b.z);
+    }
+
+
+
 
     /// <summary>
     /// Converts an angle into a Vector 2 describing its position on a unit circle.
@@ -68,9 +82,5 @@ public static class Extensions
     }
 
 
-    public static Color RandomColor()
-    {
-        return new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
-    }
-
+ 
 }

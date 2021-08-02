@@ -21,16 +21,15 @@ public class Entity : MonoBehaviour
     [SerializeField, Tooltip("Automatically add a Capsule Collider to each bone.")] 
     private ColliderGeneration generateBoneColliders;
 
+
     public MovementController MovementController => GetComponent<MovementController>();
     public List<ConstraintController> limbs;
+    private int groundMask;
+    public float BodyWeight { get; private set; }
+    public float TotalWeight { get; private set; }
     public bool IsUpdatingGait { get; private set; }
     public bool IsRotating { get; private set; }
-    private int groundMask;
-    private RaycastHit groundHit;
-
     public Vector3 CenterOfMass { get; private set; }
-
-
     public enum ColliderGeneration { DontGenerate, CompleteBody, EachLimb }
 
 
@@ -42,6 +41,8 @@ public class Entity : MonoBehaviour
 
         // Find the center of mass
         CenterOfMass = ComputeCenterOfMass();
+
+        TotalWeight = ComputeWeights();
     }
 
     void Start()
@@ -80,7 +81,7 @@ public class Entity : MonoBehaviour
     {
         Vector3 direction = transform.TransformDirection(Vector3.down);
 
-        if (Physics.Raycast(CenterOfMass, direction, out groundHit, Mathf.Infinity, groundMask))
+        if (Physics.Raycast(CenterOfMass, direction, out RaycastHit groundHit, Mathf.Infinity, groundMask))
         {
             //Debug.DrawRay(CenterOfMass, direction * groundHit.distance, Color.yellow);
 
@@ -139,6 +140,35 @@ public class Entity : MonoBehaviour
         return com;
     }
 
+    private float ComputeWeights()
+    {
+        float w = 0;
+
+        // Add the body's weight
+        if (body)
+        {
+            Weight bodyW = body.GetComponent<Weight>();
+            w += bodyW ? bodyW.weight : 1;
+            
+            // Also update the Body Weight variable
+            BodyWeight = bodyW ? bodyW.weight : 1;
+            if (BodyWeight == 0) BodyWeight = 0.0001f;
+        }
+
+        // Add the weight of each limb
+        for (int i = 0; i < limbs.Count; i++)
+        {
+            Weight root = limbs[i].TwoBoneIKConstraint.data.root.gameObject.GetComponent<Weight>();
+            Weight mid = limbs[i].TwoBoneIKConstraint.data.mid.gameObject.GetComponent<Weight>();
+
+            if (root) w += root.weight;
+            if (mid)  w += mid.weight;  
+        }
+
+        print("total w: " + w);
+
+        return w;
+    }
 
 
     public void LimitMovement(Vector3 limitingPos)
@@ -157,6 +187,7 @@ public class Entity : MonoBehaviour
 
         // TODO check that the sign is correct?
 
+        // Send the values from 0 to angle to the movement controller to limit movement in that direction
         MovementController.SetArcLimit((0, angle));
     }
 
@@ -316,9 +347,11 @@ public class Entity : MonoBehaviour
 
         return false;
     }
-    
 
 
+    /// <summary>
+    /// Adds Collider components to the Entity depending on the choosen ColliderGeneration
+    /// </summary>
     private void GenerateBoneColliders()
     {
         // Chooses how to add colliders to the Entity depending on the generateBoneCollider enum
@@ -399,15 +432,13 @@ public class Entity : MonoBehaviour
         // Add a Weight component to all limb parts
         for (int i = 0; i < limbs.Count; i++)
         {
-            if (limbs[i].gameObject.GetComponent<Weight>() == null)
-            {
-                GameObject root = limbs[i].TwoBoneIKConstraint.data.root.gameObject;
-                GameObject mid = limbs[i].TwoBoneIKConstraint.data.mid.gameObject;
-                GameObject tip = limbs[i].TwoBoneIKConstraint.data.tip.gameObject;
+            GameObject root = limbs[i].TwoBoneIKConstraint.data.root.gameObject;
+            GameObject mid = limbs[i].TwoBoneIKConstraint.data.mid.gameObject;
 
+            if (root.GetComponent<Weight>() == null)
+            {
                 root.AddComponent<Weight>();
                 mid.AddComponent<Weight>();
-                tip.AddComponent<Weight>();  // Does the tip need a weight?
             }
         }
     }
@@ -432,15 +463,16 @@ public class Entity : MonoBehaviour
         {
             Weight rootW = limbs[i].TwoBoneIKConstraint.data.root.gameObject.GetComponent<Weight>();
             Weight midW = limbs[i].TwoBoneIKConstraint.data.mid.gameObject.GetComponent<Weight>();
-            Weight tipW = limbs[i].TwoBoneIKConstraint.data.tip.gameObject.GetComponent<Weight>();
 
             if (rootW != null) DestroyImmediate(rootW, false);
-            if (midW != null) DestroyImmediate(midW, false);
-            if (tipW != null) DestroyImmediate(tipW, false);
+            if (midW != null)  DestroyImmediate(midW, false);
         }
     }
 
 
+
+
+    // Not used ------------------------------------------------------------------------------------
 
     /// <summary>
     /// Returns the transform's global scale by recursively multiplying all inherited scales

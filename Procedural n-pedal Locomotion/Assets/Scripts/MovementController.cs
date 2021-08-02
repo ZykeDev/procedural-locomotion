@@ -10,6 +10,7 @@ public class MovementController : MonoBehaviour
     // i.e. (0, 90) only allows movement in a direction if its forward vector
     // points towards a 90° to 360° range around the entity's center.
     private (float from, float to) arcLimit = (0, 0);
+
     private float turnVelocity;
 
 
@@ -21,6 +22,7 @@ public class MovementController : MonoBehaviour
 
     [SerializeField, Tooltip("Allows the entity to only move in a direction where limb targets are permitted.")] 
     private bool useDirectionLimiter = false;
+
 
 
     private void Start()
@@ -42,10 +44,10 @@ public class MovementController : MonoBehaviour
         if (canMove && direction.magnitude >= 0.1f)
         {
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
-            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnVelocity, 1 / turnSpeed);
+            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnVelocity, 1 / turnSpeed * Entity.BodyWeight);
             transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
-            Controller.Move(direction * speed * Time.deltaTime);           
+            Controller.Move(direction * (speed / Entity.BodyWeight) * Time.deltaTime);
         }
     }
 

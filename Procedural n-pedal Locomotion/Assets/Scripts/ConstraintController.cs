@@ -26,6 +26,7 @@ public class ConstraintController : MonoBehaviour
 
     [SerializeField, Range(0.1f, 10f), Tooltip("Movement Speed.")]
     private float speed = 2f;
+    private float weight;
 
     [SerializeField, Min(0.1f), Tooltip("Maximum height reached by the limb during its limb's arching animation.")]
     private float limbMovementHeight = 0.5f;
@@ -43,6 +44,7 @@ public class ConstraintController : MonoBehaviour
         layerMask = LayerMask.GetMask("Ground");
 
         maxRange = GetChainLength();
+        weight = GetChainWeight(); 
 
         // Pass the tip down to the Anchor for initial positioning
         target.gameObject.GetComponent<GroundAnchor>().SetData(tip, maxRange);
@@ -93,7 +95,7 @@ public class ConstraintController : MonoBehaviour
             if (isWithinRange && !isOppositeMoving && isTraversable)
             {
                 // Start a coroutine to move the limb
-                Coro.Perp(transform, target.position, (int)ParentEntity.limbUpwardsAxis, 1 / speed, OnMovementEnd);
+                Coro.Perp(transform, target.position, (int)ParentEntity.limbUpwardsAxis, weight / speed, OnMovementEnd);
                 IsMoving = true;
             }
             else
@@ -146,7 +148,7 @@ public class ConstraintController : MonoBehaviour
     }
 
 
-    // TODO generalize by changing bones with joints
+    // TODO generalize by changing bones with joints?
     /// <summary>
     /// Returns the length of the entire limb by adding up the distance between bones
     /// </summary>
@@ -163,7 +165,25 @@ public class ConstraintController : MonoBehaviour
         return tipToMid + midToRoot;
     }
 
-    
+
+    /// <summary>
+    /// Returns the average weight of all components that form the associated limb
+    /// </summary>
+    /// <returns></returns>
+    private float GetChainWeight()
+    {
+        Weight root = TwoBoneIKConstraint.data.root.GetComponent<Weight>();
+        Weight mid = TwoBoneIKConstraint.data.mid.GetComponent<Weight>();
+        Weight tip = TwoBoneIKConstraint.data.tip.GetComponent<Weight>();
+
+        float rootW = root ? root.weight : 1;
+        float midW = mid ? mid.weight : 1;
+        float tipW = tip ? tip.weight : 1;
+
+        return (rootW + midW + tipW) / 3;
+    }
+
+
     /// <summary>
     /// Returns true if the point is not inside an Untraversable terrain collider
     /// </summary>
@@ -177,8 +197,6 @@ public class ConstraintController : MonoBehaviour
 
         if (hits.Length > 0)
         {
-            //Debug.DrawRay(com, rayDirection, Color.cyan);
-
             for (int i = 0; i < hits.Length; i++)
             {
                 Debug.DrawLine(hits[i].point, hits[i].point + Vector3.up);
@@ -192,12 +210,4 @@ public class ConstraintController : MonoBehaviour
         return true;
     }
 
-
-
-
-    private void OnDrawGizmos()
-    {
-        //Gizmos.color = Color.red;
-        //Gizmos.DrawLine(transform.position, target.position);
-    }
 }

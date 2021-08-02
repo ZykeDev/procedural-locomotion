@@ -91,9 +91,11 @@ public class Entity : MonoBehaviour
             {
                 // Rotate to match the limb positions
                 Quaternion targetRot = FindRotation();
+                
 
                 // Only rotate if there is enough of a difference in rotations
                 isRotEnough = Mathf.Abs(Quaternion.Angle(body.transform.rotation, targetRot)) <= 1.1f;
+
                 if (!isRotEnough)
                 {
                     body.transform.rotation = Quaternion.Lerp(body.transform.rotation, targetRot, Time.deltaTime * realignmentSpeed);
@@ -103,7 +105,6 @@ public class Entity : MonoBehaviour
                     body.transform.rotation = targetRot;
                 }
             }
-
 
 
             // If there is a difference in height AND its not already rotating
@@ -165,8 +166,6 @@ public class Entity : MonoBehaviour
             if (mid)  w += mid.weight;  
         }
 
-        print("total w: " + w);
-
         return w;
     }
 
@@ -200,8 +199,10 @@ public class Entity : MonoBehaviour
     /// <returns></returns>
     private Quaternion FindRotation()
     {
+        float angleDampening = 0.8f;        // TODO move this to a bigger scope?
+
         List<float> angles = new List<float>();
-        int rotXDirection, rotZDirection;                       // Signs of rotation
+        int rotXDirection, rotZDirection;       // Signs of rotation
 
         // Find the rotation along X
         float rotX;
@@ -247,6 +248,9 @@ public class Entity : MonoBehaviour
 
                 // Adjust the rotation to match the body
                 angle *= rotXDirection;
+
+                // Dampen the angle for a smoother rotation
+                angle *= angleDampening;
 
                 angles.Add(angle);
             }
@@ -305,6 +309,9 @@ public class Entity : MonoBehaviour
 
                 // Adjust the rotation to match the body
                 angle *= rotZDirection;
+
+                // Half the angle for a smoother rotation
+                angle *= angleDampening;
 
                 angles.Add(angle);
             }

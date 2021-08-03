@@ -93,22 +93,25 @@ public class Coro : MonoBehaviour
         _runningCoroutines.Add(self);
 
         Vector3 startingPos = obj.position;
-        Vector3 newPos = Vector3.zero;
+        Vector3 newPos = obj.position;
         float elapsedTime = 0;
 
+        
         while (elapsedTime < duration)
         {
             float step = elapsedTime / duration;
-    
+
             // Perp only over the given axis (usually Y), based on the direction vector
             float parabolicPoint = Interp.Perp(startingPos, targetPos, axisIndex, step);
 
             // Adjust the parabolicPoint to align with the general locomotion direction (Terrain Escalation)
-            float adjustedPoint = parabolicPoint + Mathf.Lerp(startingPos[axisIndex], targetPos[axisIndex], step);
+            float axisDifference = Mathf.Lerp(startingPos[axisIndex], targetPos[axisIndex], step);
+
+            float adjustedPoint = parabolicPoint + axisDifference;
 
             // Assign the new position axis value
             newPos[axisIndex] = adjustedPoint;
-
+          
             // Lerp normally the other two axes
             for (int i = 0; i < 3; i++)
             {
@@ -119,7 +122,6 @@ public class Coro : MonoBehaviour
             }
 
             // Finally update the position
-            //print(Math.Round(step * 100, 0) + " > " + newPos);
             obj.position = newPos;
 
             elapsedTime += Time.deltaTime;

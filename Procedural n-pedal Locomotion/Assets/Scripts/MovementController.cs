@@ -26,7 +26,7 @@ public class MovementController : MonoBehaviour
     [SerializeField]
     private bool enableSprint = true;
 
-    [SerializeField, Min(1)]
+    [SerializeField, Range(1f, 10f)]
     private float sprintMultiplier = 2f;
 
 

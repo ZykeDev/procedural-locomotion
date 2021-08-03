@@ -23,6 +23,12 @@ public class MovementController : MonoBehaviour
     [SerializeField, Tooltip("Allows the entity to only move in a direction where limb targets are permitted.")] 
     private bool useDirectionLimiter = false;
 
+    [SerializeField]
+    private bool enableSprint = true;
+
+    [SerializeField, Min(1)]
+    private float sprintMultiplier = 2f;
+
 
 
     private void Start()
@@ -36,6 +42,7 @@ public class MovementController : MonoBehaviour
     {
         float hor = Input.GetAxisRaw("Horizontal");
         float ver = Input.GetAxisRaw("Vertical");
+        bool isSprinting = Input.GetKey(KeyCode.LeftShift);
 
         Vector3 direction = new Vector3(hor, 0f, ver).normalized;
 
@@ -45,9 +52,16 @@ public class MovementController : MonoBehaviour
         {
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
             float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnVelocity, 1 / turnSpeed * Entity.BodyWeight);
-            transform.rotation = Quaternion.Euler(0f, angle, 0f);
+            float targetSpeed = speed / Entity.BodyWeight;
 
-            Controller.Move(direction * (speed / Entity.BodyWeight) * Time.deltaTime);
+            if (isSprinting && enableSprint)
+            {
+                targetSpeed *= sprintMultiplier;
+            }
+
+            // Rotate and Move
+            transform.rotation = Quaternion.Euler(0f, angle, 0f);
+            Controller.Move(direction * targetSpeed * Time.deltaTime);
         }
     }
 

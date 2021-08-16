@@ -51,7 +51,7 @@ public class MovementController : MonoBehaviour
         if (canMove && direction.magnitude >= 0.1f)
         {
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
-            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnVelocity, 1 / turnSpeed * Entity.BodyWeight);
+            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnVelocity, 1 / (turnSpeed / Entity.BodyWeight));
             float targetSpeed = speed / Entity.BodyWeight;
 
             if (isSprinting && enableSprint)

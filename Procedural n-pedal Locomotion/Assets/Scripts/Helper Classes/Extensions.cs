@@ -82,5 +82,56 @@ public static class Extensions
     }
 
 
- 
+
+    /// <summary>
+    /// Returns the deepest child in a Transform's hierarchy using recursion. Only searches the topmost child.
+    /// </summary>
+    /// <param name="parent"></param>
+    /// <returns></returns>
+    public static Transform GetDeepestChild(this Transform parent)
+    {
+        if (parent.childCount == 0)
+        {
+            return parent;
+        }
+
+        return GetDeepestChild(parent.GetChild(0));
+    }
+
+    /// <summary>
+    /// Returns the generation number of a parent transform: the number of child levels in the hierarchy. Only searches the topmost child.
+    /// </summary>
+    /// <param name="parent"></param>
+    /// <returns></returns>
+    public static int GetGenerationNumber(this Transform parent)
+    {
+        int generation = 1;
+
+        if (parent.childCount == 0)
+        {
+            return generation;
+        }
+
+        return generation + GetGenerationNumber(parent.GetChild(0));
+    }
+
+
+    /// <summary>
+    /// Returns a parent's child at the given depth level. Only searches the topmost child.
+    /// </summary>
+    /// <param name="parent"></param>
+    /// <param name="level"></param>
+    /// <returns></returns>
+    public static Transform GetChildAtLevel(this Transform parent, int level)
+    {
+        if (parent.childCount == 0 || level == 0)
+        {
+            return parent;
+        }
+
+        return GetChildAtLevel(parent.GetChild(0), --level);
+    }
+
+
+
 }

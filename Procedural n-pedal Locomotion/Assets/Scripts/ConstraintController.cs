@@ -4,11 +4,11 @@ using UnityEngine.Animations.Rigging;
 [RequireComponent(typeof(TwoBoneIKConstraint))]
 public class ConstraintController : MonoBehaviour
 {
-    [SerializeField, Tooltip("Reference to the target transform the joint should move towards.")] 
-    private Transform target;
+    [Tooltip("Reference to the target transform the joint should move towards.")] 
+    public Transform target;
 
-    [SerializeField, Tooltip("Reference to the joint opposite to this one with respect to the walking axis.")]
-    private ConstraintController opposite;
+    [Tooltip("Reference to the joint opposite to this one with respect to the walking axis.")]
+    public Transform opposite;
 
     private Vector3 originalPos;
     private Transform tip;
@@ -75,21 +75,23 @@ public class ConstraintController : MonoBehaviour
         {
             // Check if the distance to the target point is too great
             float distanceToTarget = Vector3.Distance(transform.position, target.position);
-            //distanceFromBody = Vector3.Distance(jointPos, target.position);
             
             // If the next step would be too far, don't allow the entity to move in that direction.
             if (distanceFromBody > maxRange)
             {
                 ParentEntity.LimitMovement(target.position);
-            } else
+            } 
+            else
             {
                 ParentEntity.MovementController.ResetArcLimit();
             }
-            
+
+            ConstraintController oppositeCC = opposite.gameObject.GetComponent<ConstraintController>();
+
+            bool isOppositeMoving = oppositeCC != null && oppositeCC.IsMoving;      // Check if the opposite limb is already moving           
             bool isWithinRange = distanceToTarget > minRange;
             bool isTargetWithinRange = distanceFromBody < maxRange;
-            bool isOppositeMoving = opposite != null && opposite.IsMoving;      // Check if the opposite limb is already moving           
-            bool isTraversable = IsTraversable(target.position);                // Check if the destination is traversable
+            bool isTraversable = IsTraversable(target.position);                    // Check if the destination is traversable
 
 
             if (isWithinRange && !isOppositeMoving && isTraversable)

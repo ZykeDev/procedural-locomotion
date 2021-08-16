@@ -10,7 +10,7 @@ public class EntityEditor : Editor
 
         Entity entity = (Entity)target;
 
-
+        GUILayout.Space(10);
         EditorGUILayout.LabelField("Weights", EditorStyles.boldLabel);
 
         // ---------------------------------------------------
@@ -30,5 +30,23 @@ public class EntityEditor : Editor
         // ---------------------------------------------------
 
         GUILayout.Space(10);
+        EditorGUILayout.LabelField("Limb Constraints", EditorStyles.boldLabel);
+
+        // ---------------------------------------------------
+        GUILayout.BeginHorizontal();
+
+        if (GUILayout.Button(new GUIContent("Generate Constraints", "Adds an IK Manager and generates a constriant for each limb.")))
+        {
+            entity.GenerateConstraints();
+        }
+
+        if (GUILayout.Button(new GUIContent("Remove Constraints", "Adds the IK Manager.")))
+        {
+            //entity.();
+        }
+
+        GUILayout.EndHorizontal();
+        // ---------------------------------------------------
+
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 
 [DefaultExecutionOrder(-1)]
 public class Entity : MonoBehaviour
@@ -9,7 +10,7 @@ public class Entity : MonoBehaviour
     [Tooltip("Axis along whitch to elevate the limb during locomotion.")] 
     public Settings.Axes limbUpwardsAxis = Settings.Axes.Y;
 
-    [SerializeField, Range(0.1f, 50f), Tooltip("Speed at which to realign the entity's body when waling on slopes.")] 
+    [SerializeField, Range(0.1f, 50f), Tooltip("Speed at which to realign the entity's body when walking on slopes.")] 
     private float realignmentSpeed = 25f;
 
     [SerializeField, Range(0.01f, 1f), Tooltip("Min height difference above which to start rotating the body.")]
@@ -24,6 +25,7 @@ public class Entity : MonoBehaviour
 
     public MovementController MovementController => GetComponent<MovementController>();
     public List<ConstraintController> limbs;
+    public List<GameObject> limbObjects;
     private int groundMask;
     public float BodyWeight { get; private set; }
     public float TotalWeight { get; private set; }
@@ -39,9 +41,7 @@ public class Entity : MonoBehaviour
 
         limbs = new List<ConstraintController>(GetComponentsInChildren<ConstraintController>());
 
-        // Find the center of mass
         CenterOfMass = ComputeCenterOfMass();
-
         TotalWeight = ComputeWeights();
     }
 
@@ -476,10 +476,76 @@ public class Entity : MonoBehaviour
         }
     }
 
+    public void GenerateConstraints()
+    {
+        // Create an IK Manager as a child of the Body
+        GameObject IKManager = new GameObject();
+        IKManager.transform.parent = body.transform;
+        IKManager.name = transform.name + " IK Manager";
+        Rig IKManagerRig = IKManager.AddComponent<Rig>();
+
+        // Link the new rig to the RigBuilder
+        GetComponent<RigBuilder>().layers = new List<RigLayer>
+        {
+            new RigLayer(IKManagerRig, true)
+        };
+
+        for (int i = 0; i < limbObjects.Count; i++)
+        {
+            GameObject tipTarget = new GameObject();
+            tipTarget.transform.parent = transform;
+            tipTarget.name = "Tip Target " + i;
+            tipTarget.AddComponent<GroundAnchor>();
+
+            GameObject boneC = new GameObject();
+            boneC.transform.parent = IKManager.transform;
+            boneC.name = "Bone Constraint " + i;
+            TwoBoneIKConstraint TBIKC = boneC.AddComponent<TwoBoneIKConstraint>();
+            ConstraintController CC = boneC.AddComponent<ConstraintController>();
+
+            (Transform root, Transform mid, Transform tip) = GetBoneSegments(limbObjects[i]);
+
+            // Set the TBIKC data
+            TBIKC.data.root = root;
+            TBIKC.data.mid = mid;
+            TBIKC.data.tip = tip;
+            TBIKC.data.target = boneC.transform;
+
+            // Align the tip and its target
+            tipTarget.transform.position = tip.transform.position;
+
+            // Set the CC data
+            int oppositeIndex = i % 2 == 0 ? i + 1 : i - 1; // Opposites will always be (0, 1) (2, 3), ...
+            if (oppositeIndex < limbObjects.Count)
+            {
+                CC.opposite = limbObjects[oppositeIndex].transform;
+            }
+            CC.target = tipTarget.transform;
+
+            // Add the CC to the list of limbs
+            limbs.Add(CC);
+        }
+    }
 
 
+    // Returns the root, mid and tip bones of an IK chain gameObject.
+    private (Transform, Transform, Transform) GetBoneSegments(GameObject limb)
+    {
+        // root 
+        Transform root = limb.transform;
 
-    // Not used ------------------------------------------------------------------------------------
+        Transform tip = limb.transform.GetDeepestChild();
+
+        // Find the middle bone in the chain
+        int generations = limb.transform.GetGenerationNumber();
+        int midpoint = generations / 2;
+        Transform mid = limb.transform.GetChildAtLevel(midpoint);
+
+        return (root, mid, tip);
+    }
+
+
+    // Unused ------------------------------------------------------------------------------------
 
     /// <summary>
     /// Returns the transform's global scale by recursively multiplying all inherited scales

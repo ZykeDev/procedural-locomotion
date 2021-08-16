@@ -5,7 +5,7 @@ public class GroundAnchor : MonoBehaviour
     private Entity ParentEntity;
     private Transform tip;                  // Tip of the limb. Should be passed down by the Constraint Controller
     private int layerMask;
-    private bool forceInitPos = true;       // Forces the target position to start exactly where the tip is
+    private bool forceInitPos = false;       // Forces the target position to start exactly where the tip is
 
     private Vector3 verticalOffset = new Vector3(0, 1f, 0);
     private Vector3 verticalGap = new Vector3(0, 0.001f, 0);    // Short vertical vector
@@ -14,7 +14,6 @@ public class GroundAnchor : MonoBehaviour
 
     // TODO Parametrize into upwards: global v3.down / local -t.up
     private bool useGeometricalUpwards = true;
-    private float maxRange;
 
     void Awake()
     {
@@ -67,12 +66,6 @@ public class GroundAnchor : MonoBehaviour
         }
     }
 
-
-    public void SetData(Transform tip, float maxRange)
-    {
-        this.tip = tip;
-        this.maxRange = maxRange;
-    }
 
     private void OnDrawGizmos()
     {

@@ -14,7 +14,7 @@ public class ConstraintController : MonoBehaviour
     private Transform tip;
     private float maxRange;                 // Maximum range of the limb chain
     private int layerMask;
-    
+
 
     public TwoBoneIKConstraint TwoBoneIKConstraint => GetComponent<TwoBoneIKConstraint>();
     private Entity ParentEntity => GetComponentInParent<Entity>();
@@ -45,9 +45,6 @@ public class ConstraintController : MonoBehaviour
 
         maxRange = GetChainLength();
         weight = GetChainWeight(); 
-
-        // Pass the tip down to the Anchor for initial positioning
-        target.gameObject.GetComponent<GroundAnchor>().SetData(tip, maxRange);
     }
 
     void Start()
@@ -142,11 +139,10 @@ public class ConstraintController : MonoBehaviour
     /// Moves the target forward to simulate a quadrupedal locomotion pattern
     /// </summary>
     /// <param name="difference"></param>
-    public void ForwardTarget(float difference)
+    public void ForwardTarget()
     {
-        // TODO use differnece
-        difference = minRange / 4;
-        target.parent.position = new Vector3(target.parent.position.x, target.parent.position.y, target.parent.position.z + difference);
+        float forwardDistance = minRange / 4;
+        target.position = new Vector3(target.position.x, target.position.y, target.position.z + forwardDistance);
     }
 
 

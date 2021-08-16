@@ -49,9 +49,14 @@ public class Entity : MonoBehaviour
     {
         if (useZigzagMotion)
         {
-            for (int i = 0; i < limbs.Count; i++)
+            for (int i = 0; i < limbs.Count;)
             {
-                if (i % 2 != 0) limbs[i].ForwardTarget(zigzagDifference);
+                if (i < limbs.Count)
+                {
+                    limbs[i].ForwardTarget();
+                    
+                    i += i % 2 == 0 ? 3 : 1;        // +3 if even, +1 if odd
+                }
             }
         }
 
@@ -521,6 +526,7 @@ public class Entity : MonoBehaviour
                 CC.opposite = limbObjects[oppositeIndex].transform;
             }
             CC.target = tipTarget.transform;
+            CC.transform.position = tipTarget.transform.position;
 
             // Add the CC to the list of limbs
             limbs.Add(CC);

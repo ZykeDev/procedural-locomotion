@@ -43,6 +43,7 @@ public class EntityEditor : Editor
         if (GUILayout.Button(new GUIContent("Remove Constraints", "Adds the IK Manager.")))
         {
             //entity.();
+            Debug.LogWarning("Unimplemented");
         }
 
         GUILayout.EndHorizontal();

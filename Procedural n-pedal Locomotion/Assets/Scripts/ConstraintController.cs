@@ -24,8 +24,8 @@ public class ConstraintController : MonoBehaviour
 
     private float proximityThreshold = 0.01f;
 
-    [SerializeField, Range(0.1f, 10f), Tooltip("Movement Speed.")]
-    private float speed = 2f;
+    [SerializeField, Range(0.1f, 50f), Tooltip("Movement Speed.")]
+    private float speed = 4f;
     private float weight;
 
     [SerializeField, Min(0.1f), Tooltip("Maximum height reached by the limb during its limb's arching animation.")]
@@ -136,12 +136,20 @@ public class ConstraintController : MonoBehaviour
 
 
     /// <summary>
-    /// Moves the target forward to simulate a quadrupedal locomotion pattern
+    /// Moves the target forward by a random amount to simulate a quadrupedal locomotion patterns
     /// </summary>
-    /// <param name="difference"></param>
-    public void ForwardTarget()
+    public void ForwardTarget(int disparity)
     {
-        float forwardDistance = minRange / 4;
+        float range = minRange / 4;
+        float forwardDistance = Random.Range(0, range);
+
+        if (disparity % 2 != 0)
+        {
+            forwardDistance *= -1;
+        }
+               
+
+        // TODO use forward rather than always Z
         target.position = new Vector3(target.position.x, target.position.y, target.position.z + forwardDistance);
     }
 

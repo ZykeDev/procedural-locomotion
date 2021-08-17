@@ -49,14 +49,11 @@ public class Entity : MonoBehaviour
     {
         if (useZigzagMotion)
         {
-            for (int i = 0; i < limbs.Count;)
+            int disparity = 0;
+            for (int i = 0; i < limbs.Count; i++)
             {
-                if (i < limbs.Count)
-                {
-                    limbs[i].ForwardTarget();
-                    
-                    i += i % 2 == 0 ? 3 : 1;        // +3 if even, +1 if odd
-                }
+                limbs[i].ForwardTarget(disparity);
+                if (i % 2 == 0) disparity++;
             }
         }
 

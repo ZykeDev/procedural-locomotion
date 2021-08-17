@@ -47,7 +47,7 @@ public static class Extensions
     /// <returns></returns>
     public static Vector3 Rescale(this Vector3 vector, float scale)
     {
-        return vector.normalized * (vector.magnitude * scale);
+        return vector.normalized * vector.magnitude * scale;
     }
 
     

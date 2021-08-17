@@ -281,7 +281,7 @@ MonoBehaviour:
   target: {fileID: 2101058843}
   opposite: {fileID: 1256085495}
   minRange: 1.5
-  speed: 2
+  speed: 8
   limbMovementHeight: 0.5
 --- !u!114 &89781806
 MonoBehaviour:
@@ -678,7 +678,7 @@ MonoBehaviour:
   target: {fileID: 1836690517}
   opposite: {fileID: 618284948}
   minRange: 1.5
-  speed: 2
+  speed: 8
   limbMovementHeight: 0.5
 --- !u!114 &250271691
 MonoBehaviour:
@@ -828,7 +828,7 @@ MonoBehaviour:
   target: {fileID: 1511478689}
   opposite: {fileID: 2085741074}
   minRange: 1.5
-  speed: 2
+  speed: 8
   limbMovementHeight: 0.5
 --- !u!114 &279600526
 MonoBehaviour:
@@ -1911,7 +1911,7 @@ MonoBehaviour:
   target: {fileID: 990219461}
   opposite: {fileID: 1791642512}
   minRange: 1.5
-  speed: 2
+  speed: 8
   limbMovementHeight: 0.5
 --- !u!114 &741303662
 MonoBehaviour:
@@ -2291,7 +2291,7 @@ MonoBehaviour:
   target: {fileID: 620433492}
   opposite: {fileID: 1478449172}
   minRange: 1.5
-  speed: 2
+  speed: 8
   limbMovementHeight: 0.5
 --- !u!114 &843319197
 MonoBehaviour:
@@ -2409,7 +2409,7 @@ MonoBehaviour:
   target: {fileID: 40562926}
   opposite: {fileID: 1583888931}
   minRange: 1.5
-  speed: 2
+  speed: 8
   limbMovementHeight: 0.5
 --- !u!114 &859757829
 MonoBehaviour:
@@ -4587,7 +4587,7 @@ MonoBehaviour:
   target: {fileID: 1867214862}
   opposite: {fileID: 1866027280}
   minRange: 1.5
-  speed: 2
+  speed: 8
   limbMovementHeight: 0.5
 --- !u!114 &1516074377
 MonoBehaviour:
@@ -5017,7 +5017,7 @@ MonoBehaviour:
   target: {fileID: 468237303}
   opposite: {fileID: 47720942}
   minRange: 1.5
-  speed: 2
+  speed: 8
   limbMovementHeight: 0.5
 --- !u!114 &1704526117
 MonoBehaviour:

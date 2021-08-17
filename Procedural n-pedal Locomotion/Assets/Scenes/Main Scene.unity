@@ -400,9 +400,9 @@ MonoBehaviour:
   opposite: {fileID: 1583888931}
   ahead: {fileID: 1256085495}
   behind: {fileID: 2085741074}
-  minRange: 1.5
+  minRange: 1
   speed: 8
-  limbMovementHeight: 0.5
+  limbMovementHeight: 0.3
 --- !u!114 &120448265
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1578,9 +1578,9 @@ MonoBehaviour:
   opposite: {fileID: 1478449172}
   ahead: {fileID: 1866027280}
   behind: {fileID: 0}
-  minRange: 1.5
+  minRange: 1
   speed: 8
-  limbMovementHeight: 0.5
+  limbMovementHeight: 0.3
 --- !u!114 &681752746
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2238,9 +2238,9 @@ MonoBehaviour:
   opposite: {fileID: 1256085495}
   ahead: {fileID: 47720942}
   behind: {fileID: 1583888931}
-  minRange: 1.5
+  minRange: 1
   speed: 8
-  limbMovementHeight: 0.5
+  limbMovementHeight: 0.3
 --- !u!114 &821745557
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2720,9 +2720,9 @@ MonoBehaviour:
   opposite: {fileID: 47720942}
   ahead: {fileID: 0}
   behind: {fileID: 1256085495}
-  minRange: 1.5
+  minRange: 1
   speed: 8
-  limbMovementHeight: 0.5
+  limbMovementHeight: 0.3
 --- !u!114 &932191816
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3631,9 +3631,9 @@ MonoBehaviour:
   opposite: {fileID: 1866027280}
   ahead: {fileID: 1791642512}
   behind: {fileID: 1478449172}
-  minRange: 1.5
+  minRange: 1
   speed: 8
-  limbMovementHeight: 0.5
+  limbMovementHeight: 0.3
 --- !u!114 &1131576374
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3708,9 +3708,9 @@ MonoBehaviour:
   opposite: {fileID: 2085741074}
   ahead: {fileID: 1583888931}
   behind: {fileID: 0}
-  minRange: 1.5
+  minRange: 1
   speed: 8
-  limbMovementHeight: 0.5
+  limbMovementHeight: 0.3
 --- !u!114 &1133360324
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4765,9 +4765,9 @@ MonoBehaviour:
   opposite: {fileID: 618284948}
   ahead: {fileID: 0}
   behind: {fileID: 1791642512}
-  minRange: 1.5
+  minRange: 1
   speed: 8
-  limbMovementHeight: 0.5
+  limbMovementHeight: 0.3
 --- !u!114 &1540831641
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5116,9 +5116,9 @@ MonoBehaviour:
   opposite: {fileID: 1791642512}
   ahead: {fileID: 618284948}
   behind: {fileID: 1866027280}
-  minRange: 1.5
+  minRange: 1
   speed: 8
-  limbMovementHeight: 0.5
+  limbMovementHeight: 0.3
 --- !u!114 &1750830467
 MonoBehaviour:
   m_ObjectHideFlags: 0

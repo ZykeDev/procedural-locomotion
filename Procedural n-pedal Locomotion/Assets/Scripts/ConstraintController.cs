@@ -120,7 +120,6 @@ public class ConstraintController : MonoBehaviour
     private void OnMovementEnd()
     {
         IsMoving = false;
-        transform.position = target.position;
         originalPos = transform.position;
     }
 
@@ -153,7 +152,8 @@ public class ConstraintController : MonoBehaviour
     /// </summary>
     public void ForwardTarget(int index, int disparity)
     {
-        float forwardDistance = minRange / 8 + (minRange / 32 * index);
+        int numberOfLimbs = 8;  // TODO automatically detect this
+        float forwardDistance = minRange / (numberOfLimbs * 2) + (minRange / (numberOfLimbs * 4) * index);
 
         if (disparity % 2 != 0)
         {

@@ -97,7 +97,7 @@ public class Coro : MonoBehaviour
         float elapsedTime = 0;
 
         
-        while (elapsedTime < duration)
+        while (elapsedTime <= duration)
         {
             float step = elapsedTime / duration;
 

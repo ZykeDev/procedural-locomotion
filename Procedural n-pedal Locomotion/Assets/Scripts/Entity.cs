@@ -52,7 +52,7 @@ public class Entity : MonoBehaviour
             int disparity = 0;
             for (int i = 0; i < limbs.Count; i++)
             {
-                limbs[i].ForwardTarget(disparity);
+                limbs[i].ForwardTarget(i, disparity);
                 if (i % 2 == 0) disparity++;
             }
         }
@@ -522,6 +522,19 @@ public class Entity : MonoBehaviour
             {
                 CC.opposite = limbObjects[oppositeIndex].transform;
             }
+
+            int aheadIndex = i + 2;
+            if (aheadIndex < limbObjects.Count)
+            {
+                CC.ahead = limbObjects[aheadIndex].transform;
+            }
+
+            int behindIndex = i - 2;
+            if (behindIndex >= 0)
+            {
+                CC.behind = limbObjects[behindIndex].transform;
+            }
+
             CC.target = tipTarget.transform;
             CC.transform.position = tipTarget.transform.position;
 

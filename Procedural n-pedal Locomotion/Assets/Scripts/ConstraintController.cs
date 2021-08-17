@@ -10,11 +10,18 @@ public class ConstraintController : MonoBehaviour
     [Tooltip("Reference to the joint opposite to this one with respect to the walking axis.")]
     public Transform opposite;
 
+    [Tooltip("Reference to the joint ahead along the walking axis.")]
+    public Transform ahead;
+
+    [Tooltip("Reference to the joint behind along the walking axis.")]
+    public Transform behind ;
+
+    private ConstraintController oppositeCC, aheadCC, behindCC;
+
     private Vector3 originalPos;
     private Transform tip;
     private float maxRange;                 // Maximum range of the limb chain
     private int layerMask;
-
 
     public TwoBoneIKConstraint TwoBoneIKConstraint => GetComponent<TwoBoneIKConstraint>();
     private Entity ParentEntity => GetComponentInParent<Entity>();
@@ -43,13 +50,17 @@ public class ConstraintController : MonoBehaviour
         IsMoving = false;
         layerMask = LayerMask.GetMask("Ground");
 
-        maxRange = GetChainLength();
-        weight = GetChainWeight(); 
+        maxRange = GetChainLength() / 1.5f;     // TODO make 1.5f inspector-editable 
+        weight = GetChainWeight();  
     }
 
     void Start()
     {
-        AnchorOriginalPosition();
+        if (opposite != null) oppositeCC = opposite?.gameObject.GetComponent<ConstraintController>();
+        if (ahead != null) aheadCC = ahead.gameObject.GetComponent<ConstraintController>();
+        if (behind != null) behindCC = behind.gameObject.GetComponent<ConstraintController>();
+
+        //AnchorOriginalPosition();
     }
 
     void FixedUpdate()
@@ -83,15 +94,17 @@ public class ConstraintController : MonoBehaviour
                 ParentEntity.MovementController.ResetArcLimit();
             }
 
-            ConstraintController oppositeCC = opposite.gameObject.GetComponent<ConstraintController>();
-
-            bool isOppositeMoving = oppositeCC != null && oppositeCC.IsMoving;      // Check if the opposite limb is already moving           
+            // Check if the opposite, ahead, or behind limbs are already moving
+            bool isOppositeMoving = oppositeCC != null && oppositeCC.IsMoving;      
+            bool isAheadMoving = aheadCC != null && aheadCC.IsMoving;
+            bool isBehindMoving = behindCC != null && behindCC.IsMoving;
+           
             bool isWithinRange = distanceToTarget > minRange;
             bool isTargetWithinRange = distanceFromBody < maxRange;
             bool isTraversable = IsTraversable(target.position);                    // Check if the destination is traversable
 
 
-            if (isWithinRange && !isOppositeMoving && isTraversable)
+            if (isWithinRange && isTraversable && !isOppositeMoving && !isAheadMoving && !isBehindMoving)
             {
                 // Start a coroutine to move the limb
                 Coro.Perp(transform, target.position, (int)ParentEntity.limbUpwardsAxis, weight / speed, OnMovementEnd);
@@ -125,9 +138,9 @@ public class ConstraintController : MonoBehaviour
     /// </summary>
     private void AnchorOriginalPosition()
     {
-        Vector3 direction = transform.TransformDirection(Vector3.down);
+        Vector3 down = transform.TransformDirection(Vector3.down);
 
-        if (Physics.Raycast(transform.position, direction, out RaycastHit hit, Mathf.Infinity, layerMask))
+        if (Physics.Raycast(transform.position, down, out RaycastHit hit, Mathf.Infinity, layerMask))
         {
             //Debug.DrawRay(transform.position, direction * hit.distance, Color.cyan);
             originalPos = hit.point;
@@ -138,17 +151,15 @@ public class ConstraintController : MonoBehaviour
     /// <summary>
     /// Moves the target forward by a random amount to simulate a quadrupedal locomotion patterns
     /// </summary>
-    public void ForwardTarget(int disparity)
+    public void ForwardTarget(int index, int disparity)
     {
-        float range = minRange / 4;
-        float forwardDistance = Random.Range(0, range);
+        float forwardDistance = minRange / 8 + (minRange / 32 * index);
 
         if (disparity % 2 != 0)
         {
             forwardDistance *= -1;
         }
                
-
         // TODO use forward rather than always Z
         target.position = new Vector3(target.position.x, target.position.y, target.position.z + forwardDistance);
     }

@@ -209,13 +209,13 @@ public class Entity : MonoBehaviour
         // Find the rotation along X
         float rotX;
         {
-            // Find the angle differences between different limbs
+            // Find the angle differences between different limbs       
             for (int i = 0; i < limbs.Count - 2; i++)
             {
                 Vector3 a = limbs[i].transform.position;        // Pos of the first limb tip
-                Vector3 b = limbs[i + 2].transform.position;    // Pos of the second limb tip
+                Vector3 b = limbs[i + 2].transform.position;    // Pos of the second limb tip           TODO use last limb, same line, instead
                 Vector3 c;                                      // Pos C to make a right triangle ACB
-
+                
                 // Skip the calculation if the limbs are (almost) at the same height
                 if (Mathf.Abs(a.y - b.y) <= realignmentThreshold)
                 {
@@ -235,6 +235,9 @@ public class Entity : MonoBehaviour
                     rotXDirection = 1;
                 }
 
+                //Debug.DrawLine(a, b);
+                //Debug.DrawLine(b, c);
+                //Debug.DrawLine(a, c);
 
                 // Get the triangle sides
                 float hypotenuse = Vector3.Distance(a, b);

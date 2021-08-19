@@ -24,6 +24,11 @@ public static class Extensions
         return Vector3.Scale(dividend, Reciprocal(divisor));
     }
 
+    public static Vector3 MultiplyBy(this Vector3 multiplier, Vector3 multiplicand)
+    {
+        return Vector3.Scale(multiplier, multiplicand);
+    }
+
 
     /// <summary>
     /// Scales the applied vector from a to b by a factor of scale.
@@ -62,6 +67,16 @@ public static class Extensions
         return (a.x >= b.x) && (a.y >= b.y) && (a.z >= b.z);
     }
 
+
+    /// <summary>
+    /// Rounds to Int all components of a vector.
+    /// </summary>
+    /// <param name="vector"></param>
+    /// <returns></returns>
+    public static Vector3 RoundToInt(this Vector3 vector)
+    {
+        return new Vector3(Mathf.RoundToInt(vector.x), Mathf.RoundToInt(vector.y), Mathf.RoundToInt(vector.z));
+    }
 
 
 

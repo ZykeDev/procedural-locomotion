@@ -206,17 +206,23 @@ public class Entity : MonoBehaviour
         List<float> angles = new List<float>();
         int rotXDirection, rotZDirection;       // Signs of rotation
 
+        //Vector3 forward = transform.position + transform.TransformDirection(transform.forward);
+        Vector3 forward = transform.forward;
+        Debug.DrawLine(CenterOfMass, CenterOfMass + forward, Color.red, 1);
+        
         // Find the rotation along X
         float rotX;
         {
+            Vector3 rotXForward = forward.RoundToInt();
+
             // Find the angle differences between different limbs       
             for (int i = 0; i < limbs.Count - 2; i++)
             {
                 Vector3 a = limbs[i].transform.position;        // Pos of the first limb tip
-                Vector3 b = limbs[i + 2].transform.position;    // Pos of the second limb tip           TODO use last limb, same line, instead
-                Vector3 c;                                      // Pos C to make a right triangle ACB
+                Vector3 b = limbs[i + 2].transform.position;    // Pos of the second limb tip
+                Vector3 c;                                      // Point C to make a right triangle ACB
                 
-                // Skip the calculation if the limbs are (almost) at the same height
+                // Skip this step if the limbs are (almost) at the same height
                 if (Mathf.Abs(a.y - b.y) <= realignmentThreshold)
                 {
                     angles.Add(0);
@@ -227,17 +233,41 @@ public class Entity : MonoBehaviour
                 if (a.y > b.y)
                 {
                     c = new Vector3(a.x, b.y, a.z);
-                    rotXDirection = -1;
                 }
                 else
                 {
                     c = new Vector3(b.x, a.y, b.z);
+                }
+
+                Vector3 aF = a.MultiplyBy(rotXForward);
+                Vector3 bF = b.MultiplyBy(rotXForward);
+                Vector3 ahead, behind;
+
+                if (aF.IsBiggerThan(bF))  // if A is ahead of B (forward)
+                {
+                    ahead = a;
+                    behind = b;
+                }
+                else
+                {
+                    ahead = b;
+                    behind = a;
+                }
+
+                if (ahead.y > behind.y)
+                {
+                    rotXDirection = -1;
+                }
+                else
+                {
                     rotXDirection = 1;
                 }
 
-                //Debug.DrawLine(a, b);
-                //Debug.DrawLine(b, c);
-                //Debug.DrawLine(a, c);
+
+
+                Debug.DrawLine(a, b);
+                Debug.DrawLine(b, c);
+                Debug.DrawLine(a, c);
 
                 // Get the triangle sides
                 float hypotenuse = Vector3.Distance(a, b);
@@ -273,6 +303,8 @@ public class Entity : MonoBehaviour
         // Find the rotation along Z
         float rotZ;
         {
+            Vector3 rotZForward = forward.RoundToInt();
+
             // Find the angle differences between different limbs
             for (int i = 0; i < limbs.Count - 1; i += 2)
             {
@@ -291,12 +323,34 @@ public class Entity : MonoBehaviour
                 if (a.y > b.y)
                 {
                     c = new Vector3(a.x, b.y, a.z);
-                    rotZDirection = -1;
                 }
                 else
                 {
                     c = new Vector3(b.x, a.y, b.z);
+                }
+
+                Vector3 aF = a.MultiplyBy(rotZForward);
+                Vector3 bF = b.MultiplyBy(rotZForward);
+                Vector3 ahead, behind;
+
+                if (aF.IsBiggerThan(bF))  // if A is ahead of B (forward)
+                {
+                    ahead = a;
+                    behind = b;
+                }
+                else
+                {
+                    ahead = b;
+                    behind = a;
+                }
+
+                if (ahead.y > behind.y)
+                {
                     rotZDirection = 1;
+                }
+                else
+                {
+                    rotZDirection = -1;
                 }
 
 

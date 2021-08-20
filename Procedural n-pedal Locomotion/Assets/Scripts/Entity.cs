@@ -93,14 +93,14 @@ public class Entity : MonoBehaviour
             {
                 // Rotate to match the limb positions
                 Quaternion targetRot = FindRotation();
-                
 
                 // Only rotate if there is enough of a difference in rotations
                 isRotEnough = Mathf.Abs(Quaternion.Angle(body.transform.rotation, targetRot)) <= 1.1f;
 
                 if (!isRotEnough)
                 {
-                    body.transform.rotation = Quaternion.Lerp(body.transform.rotation, targetRot, Time.deltaTime * realignmentSpeed);
+                    float weight = body.GetComponent<Weight>() ? body.GetComponent<Weight>().weight : 1;
+                    body.transform.rotation = Quaternion.Lerp(body.transform.rotation, targetRot, Time.deltaTime * (realignmentSpeed / weight));
                 }
                 else
                 {
@@ -119,7 +119,8 @@ public class Entity : MonoBehaviour
                 bool isPosEnough = Mathf.Abs((transform.position - targetPos).magnitude) <= 0.1f;
                 if (!isPosEnough)
                 {
-                    transform.position = Vector3.Lerp(transform.position, targetPos, Time.deltaTime * realignmentSpeed);
+                    float weight = body.GetComponent<Weight>() ? body.GetComponent<Weight>().weight : 1;
+                    transform.position = Vector3.Lerp(transform.position, targetPos, Time.deltaTime * (realignmentSpeed / weight));
                 }
                 else
                 {

@@ -201,8 +201,6 @@ public class Entity : MonoBehaviour
     /// <returns></returns>
     private Quaternion FindRotation()
     {
-        float angleDampening = 0.8f;        // TODO move this to a bigger scope?
-
         List<float> angles = new List<float>();
         int rotXDirection, rotZDirection;       // Signs of rotation
 
@@ -264,7 +262,6 @@ public class Entity : MonoBehaviour
                 }
 
 
-
                 Debug.DrawLine(a, b);
                 Debug.DrawLine(b, c);
                 Debug.DrawLine(a, c);
@@ -275,17 +272,14 @@ public class Entity : MonoBehaviour
                 float adjacent = Vector3.Distance(b, c);
 
                 // Find both angles and use the smalles one (acute)
-                float theta = Mathf.Asin(opposite / hypotenuse) * Mathf.Rad2Deg;
-                float gamma = Mathf.Asin(adjacent / hypotenuse) * Mathf.Rad2Deg;
+                float theta = Mathf.Asin(opposite / hypotenuse);
+                float gamma = Mathf.Asin(adjacent / hypotenuse);
 
                 // Find the lesser angle between the two
                 float angle = theta <= gamma ? theta : gamma;
 
                 // Adjust the rotation to match the body
                 angle *= rotXDirection;
-
-                // Dampen the angle for a smoother rotation
-                angle *= angleDampening;
 
                 angles.Add(angle);
             }
@@ -296,15 +290,13 @@ public class Entity : MonoBehaviour
             {
                 angleSum += angles[i];
             }
-
-            rotX = angleSum / angles.Count;
+            
+            rotX = angleSum * Mathf.Rad2Deg / angles.Count;
         }
 
         // Find the rotation along Z
         float rotZ;
         {
-            Vector3 rotZForward = forward.RoundToInt();
-
             // Find the angle differences between different limbs
             for (int i = 0; i < limbs.Count - 1; i += 2)
             {
@@ -329,30 +321,18 @@ public class Entity : MonoBehaviour
                     c = new Vector3(b.x, a.y, b.z);
                 }
 
-                Vector3 aF = a.MultiplyBy(rotZForward);
-                Vector3 bF = b.MultiplyBy(rotZForward);
-                Vector3 ahead, behind;
-
-                if (aF.IsBiggerThan(bF))  // if A is ahead of B (forward)
-                {
-                    ahead = a;
-                    behind = b;
-                }
-                else
-                {
-                    ahead = b;
-                    behind = a;
-                }
-
-                if (ahead.y > behind.y)
-                {
-                    rotZDirection = 1;
-                }
-                else
+                if (a.y > b.y)
                 {
                     rotZDirection = -1;
                 }
-
+                else
+                {
+                    rotZDirection = 1;
+                }
+                
+                Debug.DrawLine(a, b);
+                Debug.DrawLine(b, c);
+                Debug.DrawLine(a, c);
 
                 // Get the triangle sides
                 float hypotenuse = Vector3.Distance(a, b);
@@ -360,17 +340,14 @@ public class Entity : MonoBehaviour
                 float adjacent = Vector3.Distance(b, c);
 
                 // Find both angles and use the smalles one (acute)
-                float theta = Mathf.Asin(opposite / hypotenuse) * Mathf.Rad2Deg;
-                float gamma = Mathf.Asin(adjacent / hypotenuse) * Mathf.Rad2Deg;
+                float theta = Mathf.Asin(opposite / hypotenuse);
+                float gamma = Mathf.Asin(adjacent / hypotenuse);
 
                 // Find the lesser angle between the two
                 float angle = theta <= gamma ? theta : gamma;
 
                 // Adjust the rotation to match the body
                 angle *= rotZDirection;
-
-                // Half the angle for a smoother rotation
-                angle *= angleDampening;
 
                 angles.Add(angle);
             }
@@ -382,7 +359,7 @@ public class Entity : MonoBehaviour
                 angleSum += angles[i];
             }
 
-            rotZ = angleSum / angles.Count;
+            rotZ = angleSum * Mathf.Rad2Deg / angles.Count;
         }
 
 

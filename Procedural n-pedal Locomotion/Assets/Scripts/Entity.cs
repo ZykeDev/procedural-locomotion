@@ -10,6 +10,9 @@ public class Entity : MonoBehaviour
     [Tooltip("Axis along whitch to elevate the limb during locomotion.")] 
     public Settings.Axes limbUpwardsAxis = Settings.Axes.Y;
 
+    [SerializeField, Min(0.1f), Tooltip("Distance after which to take a step.")]
+    private float stepSize = 0.5f;
+
     [SerializeField, Range(0.1f, 50f), Tooltip("Speed at which to realign the entity's body when walking on slopes.")] 
     private float realignmentSpeed = 25f;
 
@@ -47,6 +50,11 @@ public class Entity : MonoBehaviour
 
     void Start()
     {
+        for (int i = 0; i < limbs.Count; i++)
+        {
+            limbs[i].SetStepSize(stepSize);
+        }
+
         if (useZigzagMotion)
         {
             int disparity = 0;

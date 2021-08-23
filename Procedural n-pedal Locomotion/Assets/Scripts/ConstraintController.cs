@@ -14,7 +14,7 @@ public class ConstraintController : MonoBehaviour
     public Transform ahead;
 
     [Tooltip("Reference to the joint behind along the walking axis.")]
-    public Transform behind ;
+    public Transform behind;
 
     private ConstraintController oppositeCC, aheadCC, behindCC;
 
@@ -26,10 +26,8 @@ public class ConstraintController : MonoBehaviour
     public TwoBoneIKConstraint TwoBoneIKConstraint => GetComponent<TwoBoneIKConstraint>();
     private Entity ParentEntity => GetComponentInParent<Entity>();
 
-    [SerializeField, Min(0.1f), Tooltip("Distance after which to take a step.")]
-    private float minRange = 1.5f;
-
-    private float proximityThreshold = 0.01f;
+    [SerializeField, Min(0.1f), Tooltip("Distance after which to take a step. If this value is set to anything other than 0, it overrides the Step Size defined in the Entity Component.")]
+    private float stepSize;
 
     [SerializeField, Range(0.1f, 50f), Tooltip("Movement Speed.")]
     private float speed = 4f;
@@ -59,8 +57,6 @@ public class ConstraintController : MonoBehaviour
         if (opposite != null) oppositeCC = opposite?.gameObject.GetComponent<ConstraintController>();
         if (ahead != null) aheadCC = ahead.gameObject.GetComponent<ConstraintController>();
         if (behind != null) behindCC = behind.gameObject.GetComponent<ConstraintController>();
-
-        //AnchorOriginalPosition();
     }
 
     void FixedUpdate()
@@ -99,7 +95,7 @@ public class ConstraintController : MonoBehaviour
             bool isAheadMoving = aheadCC != null && aheadCC.IsMoving;
             bool isBehindMoving = behindCC != null && behindCC.IsMoving;
            
-            bool isWithinRange = distanceToTarget > minRange;
+            bool isWithinRange = distanceToTarget > stepSize;
             bool isTargetWithinRange = distanceFromBody < maxRange;
             bool isTraversable = IsTraversable(target.position);                    // Check if the destination is traversable
 
@@ -132,20 +128,6 @@ public class ConstraintController : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Anchors the starting tip position to the ground below
-    /// </summary>
-    private void AnchorOriginalPosition()
-    {
-        Vector3 down = transform.TransformDirection(Vector3.down);
-
-        if (Physics.Raycast(transform.position, down, out RaycastHit hit, Mathf.Infinity, layerMask))
-        {
-            //Debug.DrawRay(transform.position, direction * hit.distance, Color.cyan);
-            originalPos = hit.point;
-        }
-    }
-
 
     /// <summary>
     /// Moves the target forward by a random amount to simulate a quadrupedal locomotion patterns
@@ -153,7 +135,7 @@ public class ConstraintController : MonoBehaviour
     public void ForwardTarget(int index, int disparity)
     {
         int numberOfLimbs = 8;  // TODO automatically detect this
-        float forwardDistance = minRange / (numberOfLimbs * 2) + (minRange / (numberOfLimbs * 4) * index);
+        float forwardDistance = stepSize / (numberOfLimbs * 2) + (stepSize / (numberOfLimbs * 4) * index);
 
         if (disparity % 2 != 0)
         {
@@ -164,6 +146,17 @@ public class ConstraintController : MonoBehaviour
         target.position = new Vector3(target.position.x, target.position.y, target.position.z + forwardDistance);
     }
 
+    /// <summary>
+    /// Sets the Step Size. The new value is ignored if it has been overwritten in this CC component.
+    /// </summary>
+    /// <param name="size"></param>
+    public void SetStepSize(float size)
+    {
+        if (stepSize == 0 || stepSize == default)
+        {
+            stepSize = size;
+        }
+    }
 
     // TODO generalize by changing bones with joints?
     /// <summary>

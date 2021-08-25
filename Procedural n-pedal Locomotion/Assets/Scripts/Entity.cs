@@ -60,7 +60,7 @@ public class Entity : MonoBehaviour
             int disparity = 0;
             for (int i = 0; i < limbs.Count; i++)
             {
-                limbs[i].ForwardTarget(i, disparity);
+                limbs[i].DisplaceTarget(i, disparity);
                 if (i % 2 == 0) disparity++;
             }
         }

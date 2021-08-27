@@ -57,6 +57,8 @@ public class ConstraintController : MonoBehaviour
         if (opposite != null) oppositeCC = opposite?.gameObject.GetComponent<ConstraintController>();
         if (ahead != null) aheadCC = ahead.gameObject.GetComponent<ConstraintController>();
         if (behind != null) behindCC = behind.gameObject.GetComponent<ConstraintController>();
+
+        target.GetComponent<GroundAnchor>().SetTip(tip);
     }
 
     void FixedUpdate()

@@ -213,9 +213,8 @@ public class Entity : MonoBehaviour
         List<float> angles = new List<float>();
         int rotXDirection, rotZDirection;       // Signs of rotation
 
-        //Vector3 forward = transform.position + transform.TransformDirection(transform.forward);
         Vector3 forward = transform.forward;
-        Debug.DrawLine(CenterOfMass, CenterOfMass + forward, Color.red, 1);
+        //Debug.DrawLine(CenterOfMass, CenterOfMass + forward, Color.red, 1);
         
         // Find the rotation along X
         float rotX;

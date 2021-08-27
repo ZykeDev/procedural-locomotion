@@ -10,8 +10,11 @@ public class GroundAnchor : MonoBehaviour
     private Vector3 verticalGap = new Vector3(0, 0.001f, 0);    // Short vertical vector
     private Vector3 prevPos;
 
-    // TODO Parametrize into upwards: global v3.down / local -t.up
-    private bool useGeometricalUpwards = false;
+    [SerializeField, Tooltip("Sets the way the 'upwards' vector is choosen when anchoring the GameObject. Geometrical uses Vector3.down. Local uses -transform.up.")] 
+    private Upwards upwards = Upwards.Geometrical;
+
+    private enum Upwards { Geometrical, Local }
+
 
     void Awake()
     {
@@ -36,7 +39,11 @@ public class GroundAnchor : MonoBehaviour
     {
         if (!ParentEntity.IsRotating)
         {
-            Vector3 direction = useGeometricalUpwards ? Vector3.down : -transform.up;
+            Vector3 direction = Vector3.down;
+
+            if (upwards == Upwards.Geometrical) direction = Vector3.down;
+            else if (upwards == Upwards.Local)  direction = -transform.up;
+            
 
             Vector3 target = prevPos;
             Vector3 cvo = transform.position + verticalOffset;  // Current vertical offset position

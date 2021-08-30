@@ -35,6 +35,9 @@ public class MovementController : MonoBehaviour
         // Use the CoM as the geometrical center
         // TODO for now its only using the Y component
         Controller.center = new Vector3(0, Entity.CenterOfMass.y, 0);
+
+        // Minimize the skin width value
+        Controller.skinWidth = 0.0001f;
     }
 
     void Update()

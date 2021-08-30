@@ -48,7 +48,7 @@ public class ConstraintController : MonoBehaviour
         IsMoving = false;
         layerMask = LayerMask.GetMask("Ground");
 
-        maxRange = GetChainLength() / 1.5f;     // TODO make 1.5f inspector-editable 
+        maxRange = GetChainLength(); 
         weight = GetChainWeight();  
     }
 
@@ -74,8 +74,8 @@ public class ConstraintController : MonoBehaviour
         Vector3 jointPos = TwoBoneIKConstraint.data.root.transform.position;
         float distanceFromBody = Vector3.Distance(jointPos, target.position);
 
-        if (distanceFromBody > maxRange) Debug.DrawLine(jointPos, target.position, Color.red);
-        else Debug.DrawLine(jointPos, target.position, Color.green);
+        if (distanceFromBody > maxRange) Debug.DrawLine(transform.position, jointPos, Color.red);
+        else Debug.DrawLine(transform.position, jointPos, Color.green);
 
         if (!IsMoving)
         {
@@ -96,13 +96,14 @@ public class ConstraintController : MonoBehaviour
             bool isOppositeMoving = oppositeCC != null && oppositeCC.IsMoving;      
             bool isAheadMoving = aheadCC != null && aheadCC.IsMoving;
             bool isBehindMoving = behindCC != null && behindCC.IsMoving;
-           
-            bool isWithinRange = distanceToTarget > stepSize;
-            bool isTargetWithinRange = distanceFromBody < maxRange;
-            bool isTraversable = IsTraversable(target.position);                    // Check if the destination is traversable
 
+            bool isStable = !isOppositeMoving && !isAheadMoving && !isBehindMoving;
+            
+            // Check if the step respects the limb and terrain constriants
+            bool canMove = distanceToTarget > stepSize || distanceFromBody > maxRange;
+            bool isTraversable = IsTraversable(target.position);
 
-            if (isWithinRange && isTraversable && !isOppositeMoving && !isAheadMoving && !isBehindMoving)
+            if (canMove && isTraversable && isStable)
             {
                 // Start a coroutine to move the limb
                 Coro.Perp(transform, target.position, (int)ParentEntity.limbUpwardsAxis, weight / speed, OnMovementEnd);
@@ -174,7 +175,7 @@ public class ConstraintController : MonoBehaviour
         float tipToMid = Vector3.Distance(tip, mid);
         float midToRoot = Vector3.Distance(mid, root);
 
-        return tipToMid + midToRoot;
+        return tipToMid + midToRoot;    
     }
 
 

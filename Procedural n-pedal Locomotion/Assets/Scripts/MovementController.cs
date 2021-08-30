@@ -13,12 +13,11 @@ public class MovementController : MonoBehaviour
 
     private float turnVelocity;
 
-
-    [SerializeField, Range(0.01f, 20f)] 
-    private float speed = 10f;
+    [SerializeField]
+    private float speed = 3f;
 
     [SerializeField, Range(0.1f, 50f)] 
-    private float turnSpeed = 5f;
+    private float turnSpeed = 3f;
 
     [SerializeField, Tooltip("Allows the entity to only move in a direction where limb targets are permitted.")] 
     private bool useDirectionLimiter = false;
@@ -45,6 +44,9 @@ public class MovementController : MonoBehaviour
         bool isSprinting = Input.GetKey(KeyCode.LeftShift);
 
         Vector3 direction = new Vector3(hor, 0f, ver).normalized;
+
+        // Make the direction local to the transform
+        direction = transform.TransformDirection(direction);
 
         bool canMove = CanMove(direction);
 

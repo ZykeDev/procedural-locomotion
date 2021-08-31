@@ -63,8 +63,8 @@ public class Entity : MonoBehaviour
 
         if (randomizeLocomotionPattern)
         {
-            int disparity = 0;
-            for (int i = 0; i < limbs.Count; i++)
+            int disparity = 1;
+            for (int i = 1; i < limbs.Count; i++)
             {
                 limbs[i].DisplaceTarget(i, disparity);
                 if (i % 2 == 0) disparity++;

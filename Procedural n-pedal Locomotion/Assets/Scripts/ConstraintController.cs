@@ -99,9 +99,9 @@ public class ConstraintController : MonoBehaviour
             bool isBehindMoving = behindCC != null && behindCC.IsMoving;
 
             bool isStable = !isOppositeMoving && !isAheadMoving && !isBehindMoving;
-            
+
             // Check if the step respects the limb and terrain constriants
-            bool canMove = distanceToTarget > stepSize || distanceFromBody > maxRange;
+            bool canMove = distanceToTarget > stepSize || (distanceFromBody > maxRange && distanceToTarget > stepSize);
             bool isTraversable = IsTraversable(target.position);
 
             if (canMove && isTraversable && isStable)
@@ -152,9 +152,7 @@ public class ConstraintController : MonoBehaviour
         {
             targetPos.z += 0.002f * sign;
         }
-
-        targetPos.z += 0.004f * sign;
-               
+                       
         // TODO use forward rather than always Z
         target.position = targetPos;
     }
@@ -184,7 +182,6 @@ public class ConstraintController : MonoBehaviour
     }
 
 
-    // TODO generalize by changing bones with joints?
     /// <summary>
     /// Returns the length of the entire limb by adding up the distance between bones
     /// </summary>

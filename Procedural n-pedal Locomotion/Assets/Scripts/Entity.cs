@@ -13,14 +13,19 @@ public class Entity : MonoBehaviour
     [SerializeField, Min(0.1f), Tooltip("Distance after which to take a step.")]
     private float stepSize = 0.5f;
 
+    [SerializeField]
+    private bool useCustomMaxRange = false;
+    [SerializeField]
+    private float customMaxRange = 0f;
+
     [SerializeField, Range(0.1f, 50f), Tooltip("Speed at which to realign the entity's body when walking on slopes.")] 
     private float realignmentSpeed = 25f;
 
     [SerializeField, Range(0.01f, 1f), Tooltip("Min height difference above which to start rotating the body.")]
     private float realignmentThreshold = 0.1f;
 
-    [SerializeField] private bool useZigzagMotion = true;
-    private float zigzagDifference = 1f;
+    [SerializeField, Tooltip("Make the creature limbs start in an asymmetrical distribution.")] 
+    private bool randomizeLocomotionPattern = true;
 
     [SerializeField, Tooltip("Automatically add a Capsule Collider to each bone.")] 
     private ColliderGeneration generateBoneColliders;
@@ -53,9 +58,10 @@ public class Entity : MonoBehaviour
         for (int i = 0; i < limbs.Count; i++)
         {
             limbs[i].SetStepSize(stepSize);
+            if (useCustomMaxRange) limbs[i].SetMaxRange(customMaxRange);
         }
 
-        if (useZigzagMotion)
+        if (randomizeLocomotionPattern)
         {
             int disparity = 0;
             for (int i = 0; i < limbs.Count; i++)

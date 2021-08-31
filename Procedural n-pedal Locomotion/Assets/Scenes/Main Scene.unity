@@ -1215,7 +1215,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!143 &153379589
 CharacterController:
   m_ObjectHideFlags: 0
@@ -1301,9 +1301,11 @@ MonoBehaviour:
   body: {fileID: 1877460153}
   limbUpwardsAxis: 1
   stepSize: 0.5
+  useCustomMaxRange: 0
+  customMaxRange: 0
   realignmentSpeed: 25
   realignmentThreshold: 0.1
-  useZigzagMotion: 1
+  randomizeLocomotionPattern: 1
   generateBoneColliders: 0
   limbs: []
   limbObjects:
@@ -5096,9 +5098,11 @@ MonoBehaviour:
   body: {fileID: 2008738500}
   limbUpwardsAxis: 1
   stepSize: 0.5
+  useCustomMaxRange: 1
+  customMaxRange: 1.18
   realignmentSpeed: 10
   realignmentThreshold: 0.1
-  useZigzagMotion: 1
+  randomizeLocomotionPattern: 1
   generateBoneColliders: 0
   limbs:
   - {fileID: 0}
@@ -6534,7 +6538,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1090714283
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6550,9 +6554,11 @@ MonoBehaviour:
   body: {fileID: 781661903}
   limbUpwardsAxis: 1
   stepSize: 0.5
+  useCustomMaxRange: 0
+  customMaxRange: 0
   realignmentSpeed: 25
   realignmentThreshold: 0.1
-  useZigzagMotion: 1
+  randomizeLocomotionPattern: 1
   generateBoneColliders: 0
   limbs:
   - {fileID: 416535388}
@@ -8537,7 +8543,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!143 &1432680641
 CharacterController:
   m_ObjectHideFlags: 0
@@ -8623,9 +8629,11 @@ MonoBehaviour:
   body: {fileID: 1363844546}
   limbUpwardsAxis: 1
   stepSize: 0.5
+  useCustomMaxRange: 0
+  customMaxRange: 0
   realignmentSpeed: 10
   realignmentThreshold: 0.1
-  useZigzagMotion: 1
+  randomizeLocomotionPattern: 1
   generateBoneColliders: 0
   limbs:
   - {fileID: 0}
@@ -9813,7 +9821,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1577512221
 Transform:
   m_ObjectHideFlags: 0
@@ -9918,9 +9926,11 @@ MonoBehaviour:
   body: {fileID: 932198724}
   limbUpwardsAxis: 1
   stepSize: 0.5
+  useCustomMaxRange: 0
+  customMaxRange: 0
   realignmentSpeed: 25
   realignmentThreshold: 0.1
-  useZigzagMotion: 0
+  randomizeLocomotionPattern: 1
   generateBoneColliders: 0
   limbs:
   - {fileID: 543360468}
@@ -10745,7 +10755,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1782084954}
-  m_LocalRotation: {x: 0.2795708, y: 0.000000028613961, z: -0.00000000833186, w: 0.9601251}
+  m_LocalRotation: {x: 0.2795708, y: 3.1277213e-15, z: -1.2033483e-15, w: 0.9601251}
   m_LocalPosition: {x: 27.75, y: 4.011, z: 37.41}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -12712,7 +12722,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2014397122}
-  m_LocalRotation: {x: 0.2795708, y: 0.000000028613961, z: -0.00000000833186, w: 0.9601251}
+  m_LocalRotation: {x: 0.2795708, y: 3.1277213e-15, z: -1.2033483e-15, w: 0.9601251}
   m_LocalPosition: {x: 27.75, y: 4.011, z: 37.41}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:

@@ -48,7 +48,7 @@ public class ConstraintController : MonoBehaviour
         IsMoving = false;
         layerMask = LayerMask.GetMask("Ground");
 
-        maxRange = GetChainLength(); 
+        maxRange = GetChainLength();
         weight = GetChainWeight();  
     }
 
@@ -155,11 +155,24 @@ public class ConstraintController : MonoBehaviour
     /// <param name="size"></param>
     public void SetStepSize(float size)
     {
-        if (stepSize == 0 || stepSize == default)
+        if (stepSize == default || stepSize <= 0)
         {
             stepSize = size;
         }
     }
+
+    /// <summary>
+    /// Sets the Max stepping Range.
+    /// </summary>
+    /// <param name="range"></param>
+    public void SetMaxRange(float range)
+    {
+        if (range != default && range > 0)
+        {
+            maxRange = range;
+        }
+    }
+
 
     // TODO generalize by changing bones with joints?
     /// <summary>

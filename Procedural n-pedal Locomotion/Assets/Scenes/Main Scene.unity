@@ -5011,7 +5011,7 @@ Transform:
   - {fileID: 1911665005}
   - {fileID: 155139629}
   m_Father: {fileID: 0}
-  m_RootOrder: 24
+  m_RootOrder: 25
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!143 &886636104
 CharacterController:
@@ -5099,7 +5099,7 @@ MonoBehaviour:
   limbUpwardsAxis: 1
   stepSize: 0.5
   useCustomMaxRange: 1
-  customMaxRange: 1.18
+  customMaxRange: 1.2
   realignmentSpeed: 10
   realignmentThreshold: 0.1
   randomizeLocomotionPattern: 1
@@ -10755,7 +10755,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1782084954}
-  m_LocalRotation: {x: 0.2795708, y: 3.1277213e-15, z: -1.2033483e-15, w: 0.9601251}
+  m_LocalRotation: {x: 0.2795708, y: -3.1277213e-15, z: 1.2033483e-15, w: 0.9601251}
   m_LocalPosition: {x: 27.75, y: 4.011, z: 37.41}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -12722,13 +12722,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2014397122}
-  m_LocalRotation: {x: 0.2795708, y: 3.1277213e-15, z: -1.2033483e-15, w: 0.9601251}
+  m_LocalRotation: {x: 0.2795708, y: -3.1277213e-15, z: 1.2033483e-15, w: 0.9601251}
   m_LocalPosition: {x: 27.75, y: 4.011, z: 37.41}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1618148735}
   m_Father: {fileID: 0}
-  m_RootOrder: 25
+  m_RootOrder: 24
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2015191946
 GameObject:

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
@@ -140,13 +141,22 @@ public class ConstraintController : MonoBehaviour
         int numberOfLimbs = 8;  // TODO automatically detect this
         float forwardDistance = stepSize / (numberOfLimbs * 2) + (stepSize / (numberOfLimbs * 4) * index);
 
-        if (disparity % 2 != 0)
+        int sign = Convert.ToInt32(disparity % 2 != 0) * 2 - 1;     // Converts the disparity into a number sign (-1 or +1)
+
+        Vector3 rootPos = TwoBoneIKConstraint.data.root.transform.position;
+        Vector3 targetPos = new Vector3(target.position.x, target.position.y, target.position.z + (forwardDistance * sign));
+        float distFromRoot = Vector3.Distance(targetPos, rootPos);
+
+        // Make sure the initial target distance is shorter than the max range of the limb.
+        while (distFromRoot > maxRange)
         {
-            forwardDistance *= -1;
+            targetPos.z += 0.002f * sign;
         }
+
+        targetPos.z += 0.004f * sign;
                
         // TODO use forward rather than always Z
-        target.position = new Vector3(target.position.x, target.position.y, target.position.z + forwardDistance);
+        target.position = targetPos;
     }
 
     /// <summary>

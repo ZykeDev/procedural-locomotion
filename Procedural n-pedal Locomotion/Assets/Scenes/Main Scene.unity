@@ -1251,7 +1251,6 @@ MonoBehaviour:
   useDirectionLimiter: 0
   enableSprint: 1
   sprintMultiplier: 2
-  isWalking: 0
 --- !u!114 &153379591
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4450,6 +4449,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spider Animated
       objectReference: {fileID: 0}
+    - target: {fileID: 100100, guid: f5a9bd478ca094495a4520e37f57420d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 400100, guid: f5a9bd478ca094495a4520e37f57420d, type: 3}
       propertyPath: m_RootOrder
       value: 26
@@ -4476,7 +4479,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400100, guid: f5a9bd478ca094495a4520e37f57420d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 121.66
+      value: 101.97
       objectReference: {fileID: 0}
     - target: {fileID: 400100, guid: f5a9bd478ca094495a4520e37f57420d, type: 3}
       propertyPath: m_LocalRotation.w
@@ -4711,12 +4714,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9219dffc4d7f064fa9e5d49048e3519, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 3
-  turnSpeed: 1.8
+  speed: 0.8
+  turnSpeed: 1
   useDirectionLimiter: 0
   enableSprint: 1
   sprintMultiplier: 2
-  isWalking: 0
 --- !u!143 &794771713
 CharacterController:
   m_ObjectHideFlags: 0
@@ -4734,7 +4736,7 @@ CharacterController:
   m_StepOffset: 0.3
   m_SkinWidth: 0.0001
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 1.02, z: 0}
 --- !u!1 &809665009
 GameObject:
   m_ObjectHideFlags: 0
@@ -5113,7 +5115,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 886636102}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 27.372, y: 0.56, z: 121.66}
+  m_LocalPosition: {x: 24.93, y: 0.56, z: 101.97}
   m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
   m_Children:
   - {fileID: 2008738501}
@@ -5158,12 +5160,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9219dffc4d7f064fa9e5d49048e3519, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0.4
+  speed: 0.8
   turnSpeed: 1
-  useDirectionLimiter: 1
+  useDirectionLimiter: 0
   enableSprint: 1
-  sprintMultiplier: 5.1
-  isWalking: 0
+  sprintMultiplier: 2
 --- !u!114 &886636106
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6771,7 +6772,6 @@ MonoBehaviour:
   useDirectionLimiter: 0
   enableSprint: 1
   sprintMultiplier: 2
-  isWalking: 0
 --- !u!1 &1128564376
 GameObject:
   m_ObjectHideFlags: 0
@@ -8696,7 +8696,6 @@ MonoBehaviour:
   useDirectionLimiter: 0
   enableSprint: 1
   sprintMultiplier: 2
-  isWalking: 0
 --- !u!114 &1432680643
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9976,7 +9975,6 @@ MonoBehaviour:
   useDirectionLimiter: 0
   enableSprint: 1
   sprintMultiplier: 2
-  isWalking: 0
 --- !u!143 &1577512223
 CharacterController:
   m_ObjectHideFlags: 0
@@ -10489,6 +10487,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1669615745}
   - component: {fileID: 1669615744}
+  - component: {fileID: 1669615746}
   m_Layer: 0
   m_Name: Game Controller
   m_TagString: Untagged
@@ -10523,6 +10522,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1669615746
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1669615743}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0340751b72bdf94f94a34f2154763a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  done: 0
 --- !u!4 &1678790871 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400072, guid: f5a9bd478ca094495a4520e37f57420d, type: 3}
@@ -10874,8 +10886,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1782084954}
-  m_LocalRotation: {x: 0.2795708, y: -1.4166414e-16, z: -1.05056656e-16, w: 0.9601251}
-  m_LocalPosition: {x: 27.372, y: 4.56, z: 115.66}
+  m_LocalRotation: {x: 0.2795708, y: 1.4166414e-16, z: 1.05056656e-16, w: 0.9601251}
+  m_LocalPosition: {x: 24.93, y: 4.56, z: 95.97}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -12841,8 +12853,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2014397122}
-  m_LocalRotation: {x: 0.2795708, y: -1.4166414e-16, z: -1.05056656e-16, w: 0.9601251}
-  m_LocalPosition: {x: 27.372, y: 4.56, z: 115.66}
+  m_LocalRotation: {x: 0.2795708, y: 1.4166414e-16, z: 1.05056656e-16, w: 0.9601251}
+  m_LocalPosition: {x: 24.93, y: 4.56, z: 95.97}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1618148735}

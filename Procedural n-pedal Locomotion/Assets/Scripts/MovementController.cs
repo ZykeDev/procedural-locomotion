@@ -28,7 +28,7 @@ public class MovementController : MonoBehaviour
     [SerializeField, Range(1f, 10f)]
     private float sprintMultiplier = 2f;
 
-    public bool isWalking = false;
+    private Animator anim => GetComponent<Animator>();
 
     private void Start()
     {
@@ -72,10 +72,16 @@ public class MovementController : MonoBehaviour
             // Rotate and Move
             transform.rotation = Quaternion.Euler(0f, angle, 0f);
             Controller.Move(direction * targetSpeed * Time.deltaTime);
-            isWalking = true;
-        }
 
-        isWalking = false;
+            if (anim)
+            {
+                anim.SetBool("isWalking", true);
+            }
+        }
+        else
+        {
+            if (anim) anim.SetBool("isWalking", false);
+        }
     }
 
 

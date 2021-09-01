@@ -28,13 +28,16 @@ public class MovementController : MonoBehaviour
     [SerializeField, Range(1f, 10f)]
     private float sprintMultiplier = 2f;
 
-
+    public bool isWalking = false;
 
     private void Start()
     {
         // Use the CoM as the geometrical center
         // TODO for now its only using the Y component
-        Controller.center = new Vector3(0, Entity.CenterOfMass.y, 0);
+        if (Entity)
+        { 
+            Controller.center = new Vector3(0, Entity.CenterOfMass.y, 0);
+        }
 
         // Minimize the skin width value
         Controller.skinWidth = 0.0001f;
@@ -55,9 +58,11 @@ public class MovementController : MonoBehaviour
 
         if (canMove && direction.magnitude >= 0.1f)
         {
+            float bodyWeight = Entity ? Entity.BodyWeight : 1;
+
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
-            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnVelocity, Entity.BodyWeight / turnSpeed);
-            float targetSpeed = speed / Entity.BodyWeight;
+            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnVelocity, bodyWeight / turnSpeed);
+            float targetSpeed = speed / bodyWeight;
 
             if (isSprinting && enableSprint)
             {
@@ -67,7 +72,10 @@ public class MovementController : MonoBehaviour
             // Rotate and Move
             transform.rotation = Quaternion.Euler(0f, angle, 0f);
             Controller.Move(direction * targetSpeed * Time.deltaTime);
+            isWalking = true;
         }
+
+        isWalking = false;
     }
 
 

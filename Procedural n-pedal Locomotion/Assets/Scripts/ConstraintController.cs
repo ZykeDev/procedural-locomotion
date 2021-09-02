@@ -72,6 +72,7 @@ public class ConstraintController : MonoBehaviour
     /// </summary>
     private void Move()
     {
+        return;
         Vector3 jointPos = TwoBoneIKConstraint.data.root.transform.position;
         float distanceFromBody = Vector3.Distance(jointPos, target.position);
 

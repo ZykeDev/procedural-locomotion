@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
 [DefaultExecutionOrder(-1)]
+[RequireComponent(typeof(RigBuilder))]
 public class Entity : MonoBehaviour
 {
     [SerializeField] private GameObject body;
@@ -24,8 +25,8 @@ public class Entity : MonoBehaviour
     [SerializeField, Range(0.01f, 1f), Tooltip("Min height difference above which to start rotating the body.")]
     private float realignmentThreshold = 0.1f;
 
-    [SerializeField, Tooltip("Make the creature limbs start in an asymmetrical distribution.")] 
-    private bool randomizeLocomotionPattern = true;
+    [SerializeField, Tooltip("Randomizes the starting locomotion pattern of the limb targets.")] 
+    private bool randomizeStartingPattern = true;
 
     [SerializeField, Tooltip("Automatically add a Capsule Collider to each bone.")] 
     private ColliderGeneration generateBoneColliders;
@@ -61,7 +62,7 @@ public class Entity : MonoBehaviour
             if (useCustomMaxRange) limbs[i].SetMaxRange(customMaxRange);
         }
 
-        if (randomizeLocomotionPattern)
+        if (randomizeStartingPattern)
         {
             int disparity = 1;
             for (int i = 1; i < limbs.Count; i++)

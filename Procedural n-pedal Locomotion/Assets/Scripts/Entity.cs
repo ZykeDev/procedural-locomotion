@@ -446,26 +446,26 @@ public class Entity : MonoBehaviour
         else if (generateBoneColliders == ColliderGeneration.EachLimb)
         {
             for (int i = 0; i < limbs.Count; i++)
-        {
-            ConstraintController limb = limbs[i];
-            GameObject root = limb.TwoBoneIKConstraint.data.root.gameObject;
-            GameObject mid = limb.TwoBoneIKConstraint.data.mid.gameObject;
-            GameObject end = limb.TwoBoneIKConstraint.data.tip.parent.gameObject;
-            GameObject tip = limb.TwoBoneIKConstraint.data.tip.gameObject;
+            {
+                ConstraintController limb = limbs[i];
+                GameObject root = limb.TwoBoneIKConstraint.data.root.gameObject;
+                GameObject mid = limb.TwoBoneIKConstraint.data.mid.gameObject;
+                GameObject end = limb.TwoBoneIKConstraint.data.tip.parent.gameObject;
+                GameObject tip = limb.TwoBoneIKConstraint.data.tip.gameObject;
 
-            Vector3 a = root.transform.localPosition;
-            Vector3 b = mid.transform.localPosition;
-            Vector3 globalScale = root.transform.lossyScale;
+                Vector3 a = root.transform.localPosition;
+                Vector3 b = mid.transform.localPosition;
+                Vector3 globalScale = root.transform.lossyScale;
 
 
-            Vector3 center = (a + b) / 2;                        // Find the midway point to use as the center
-            float height = Vector3.Distance(a.DivideBy(globalScale), b.DivideBy(globalScale));
-            print(height); 
-            CapsuleCollider collider = root.AddComponent<CapsuleCollider>();
-            collider.center = center;
-            collider.height = height;
-            collider.radius = height / 4;
-        }
+                Vector3 center = (a + b) / 2;                        // Find the midway point to use as the center
+                float height = Vector3.Distance(a.DivideBy(globalScale), b.DivideBy(globalScale));
+
+                CapsuleCollider collider = root.AddComponent<CapsuleCollider>();
+                collider.center = center;
+                collider.height = height;
+                collider.radius = height / 4;
+            }
         }
     }
 

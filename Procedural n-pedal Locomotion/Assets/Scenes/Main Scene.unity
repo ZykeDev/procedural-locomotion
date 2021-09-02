@@ -8554,7 +8554,7 @@ MonoBehaviour:
     m_HintWeight: 1
     m_MaintainTargetPositionOffset: 0
     m_MaintainTargetRotationOffset: 0
-  m_SourceObjectsGUIToggle: 0
+  m_SourceObjectsGUIToggle: 1
   m_SettingsGUIToggle: 0
 --- !u!1 &1409902002
 GameObject:

@@ -232,7 +232,7 @@ public class ConstraintController : MonoBehaviour
         {
             for (int i = 0; i < hits.Length; i++)
             {
-                Debug.DrawLine(hits[i].point, hits[i].point + Vector3.up);
+                Debug.DrawLine(hits[i].point, hits[i].point + Vector3.up, Color.yellow, 1f);
                 if (hits[i].transform.gameObject.CompareTag(Settings.Tag_untraversable))
                 {
                     return false;

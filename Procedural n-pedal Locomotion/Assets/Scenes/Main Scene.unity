@@ -512,9 +512,12 @@ MonoBehaviour:
   opposite: {fileID: 1783103530}
   ahead: {fileID: 894001325}
   behind: {fileID: 987293718}
+  tip: {fileID: 0}
+  mid: {fileID: 0}
+  root: {fileID: 0}
   stepSize: 0
+  stepHeight: 0.5
   speed: 4
-  limbMovementHeight: 0.5
 --- !u!114 &69556188
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -786,9 +789,12 @@ MonoBehaviour:
   opposite: {fileID: 453139634}
   ahead: {fileID: 0}
   behind: {fileID: 1306397344}
+  tip: {fileID: 0}
+  mid: {fileID: 0}
+  root: {fileID: 0}
   stepSize: 0
+  stepHeight: 0.5
   speed: 8
-  limbMovementHeight: 0.3
 --- !u!114 &113450427
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -989,9 +995,12 @@ MonoBehaviour:
   opposite: {fileID: 1004143737}
   ahead: {fileID: 0}
   behind: {fileID: 598020006}
+  tip: {fileID: 0}
+  mid: {fileID: 0}
+  root: {fileID: 0}
   stepSize: 0
+  stepHeight: 0.5
   speed: 4
-  limbMovementHeight: 0.5
 --- !u!114 &117501688
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1066,9 +1075,12 @@ MonoBehaviour:
   opposite: {fileID: 1583888931}
   ahead: {fileID: 1256085495}
   behind: {fileID: 2085741074}
+  tip: {fileID: 0}
+  mid: {fileID: 0}
+  root: {fileID: 0}
   stepSize: 0
+  stepHeight: 0.5
   speed: 8
-  limbMovementHeight: 0.3
 --- !u!114 &120448265
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1220,7 +1232,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!143 &153379589
 CharacterController:
   m_ObjectHideFlags: 0
@@ -1682,9 +1694,12 @@ MonoBehaviour:
   opposite: {fileID: 33087994}
   ahead: {fileID: 1766521485}
   behind: {fileID: 1876973817}
+  tip: {fileID: 0}
+  mid: {fileID: 0}
+  root: {fileID: 0}
   stepSize: 0
+  stepHeight: 0.5
   speed: 4
-  limbMovementHeight: 0.5
 --- !u!114 &200289799
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2342,7 +2357,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 351814644}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 24.74, y: 0.9, z: 104.6}
+  m_LocalPosition: {x: 24.7, y: 0.914, z: 112.32}
   m_LocalScale: {x: 10.607, y: 3.2773638, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -2503,9 +2518,12 @@ MonoBehaviour:
   opposite: {fileID: 1876973817}
   ahead: {fileID: 33087994}
   behind: {fileID: 0}
+  tip: {fileID: 0}
+  mid: {fileID: 0}
+  root: {fileID: 0}
   stepSize: 0
+  stepHeight: 0.5
   speed: 4
-  limbMovementHeight: 0.5
 --- !u!114 &391752525
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2606,9 +2624,12 @@ MonoBehaviour:
   opposite: {fileID: 1463264458}
   ahead: {fileID: 0}
   behind: {fileID: 0}
+  tip: {fileID: 0}
+  mid: {fileID: 0}
+  root: {fileID: 0}
   stepSize: 0
+  stepHeight: 0.5
   speed: 8
-  limbMovementHeight: 1
 --- !u!1 &440761408
 GameObject:
   m_ObjectHideFlags: 0
@@ -2850,9 +2871,12 @@ MonoBehaviour:
   opposite: {fileID: 614930493}
   ahead: {fileID: 0}
   behind: {fileID: 0}
+  tip: {fileID: 0}
+  mid: {fileID: 0}
+  root: {fileID: 0}
   stepSize: 0
+  stepHeight: 0.5
   speed: 8
-  limbMovementHeight: 1
 --- !u!1 &498164326
 GameObject:
   m_ObjectHideFlags: 0
@@ -2901,9 +2925,12 @@ MonoBehaviour:
   opposite: {fileID: 442457871}
   ahead: {fileID: 1306397344}
   behind: {fileID: 1291834695}
+  tip: {fileID: 0}
+  mid: {fileID: 0}
+  root: {fileID: 0}
   stepSize: 0
+  stepHeight: 0.5
   speed: 8
-  limbMovementHeight: 0.3
 --- !u!114 &498164329
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3022,9 +3049,12 @@ MonoBehaviour:
   opposite: {fileID: 598020006}
   ahead: {fileID: 1004143737}
   behind: {fileID: 576844627}
+  tip: {fileID: 0}
+  mid: {fileID: 0}
+  root: {fileID: 0}
   stepSize: 0
+  stepHeight: 0.5
   speed: 4
-  limbMovementHeight: 0.5
 --- !u!114 &510383899
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3375,9 +3405,12 @@ MonoBehaviour:
   opposite: {fileID: 0}
   ahead: {fileID: 0}
   behind: {fileID: 0}
+  tip: {fileID: 0}
+  mid: {fileID: 0}
+  root: {fileID: 0}
   stepSize: 0
+  stepHeight: 0.5
   speed: 8
-  limbMovementHeight: 1
 --- !u!114 &543360469
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3740,9 +3773,12 @@ MonoBehaviour:
   opposite: {fileID: 495101737}
   ahead: {fileID: 0}
   behind: {fileID: 0}
+  tip: {fileID: 0}
+  mid: {fileID: 0}
+  root: {fileID: 0}
   stepSize: 0
+  stepHeight: 0.5
   speed: 8
-  limbMovementHeight: 1
 --- !u!1 &618284947 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100058, guid: f5a9bd478ca094495a4520e37f57420d, type: 3}
@@ -4036,9 +4072,12 @@ MonoBehaviour:
   opposite: {fileID: 1605250569}
   ahead: {fileID: 0}
   behind: {fileID: 1376788501}
+  tip: {fileID: 0}
+  mid: {fileID: 0}
+  root: {fileID: 0}
   stepSize: 0
+  stepHeight: 0.5
   speed: 4
-  limbMovementHeight: 0.5
 --- !u!114 &650200340
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4123,9 +4162,12 @@ MonoBehaviour:
   opposite: {fileID: 1478449172}
   ahead: {fileID: 1866027280}
   behind: {fileID: 0}
+  tip: {fileID: 0}
+  mid: {fileID: 0}
+  root: {fileID: 0}
   stepSize: 0
+  stepHeight: 0.5
   speed: 8
-  limbMovementHeight: 0.3
 --- !u!114 &681752746
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4305,9 +4347,12 @@ MonoBehaviour:
   opposite: {fileID: 1876973809}
   ahead: {fileID: 1830665721}
   behind: {fileID: 0}
+  tip: {fileID: 0}
+  mid: {fileID: 0}
+  root: {fileID: 0}
   stepSize: 0
+  stepHeight: 0.5
   speed: 4
-  limbMovementHeight: 0.5
 --- !u!114 &732204019
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4964,9 +5009,12 @@ MonoBehaviour:
   opposite: {fileID: 1256085495}
   ahead: {fileID: 47720942}
   behind: {fileID: 1583888931}
+  tip: {fileID: 0}
+  mid: {fileID: 0}
+  root: {fileID: 0}
   stepSize: 0
+  stepHeight: 0.5
   speed: 8
-  limbMovementHeight: 0.3
 --- !u!114 &821745557
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5265,9 +5313,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9219dffc4d7f064fa9e5d49048e3519, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0.8
+  speed: 3
   turnSpeed: 1
-  useDirectionLimiter: 0
+  useDirectionLimiter: 1
   enableSprint: 1
   sprintMultiplier: 2
 --- !u!114 &886636106
@@ -5501,9 +5549,12 @@ MonoBehaviour:
   opposite: {fileID: 1830665721}
   ahead: {fileID: 987293718}
   behind: {fileID: 1876973809}
+  tip: {fileID: 0}
+  mid: {fileID: 0}
+  root: {fileID: 0}
   stepSize: 0
+  stepHeight: 0.5
   speed: 4
-  limbMovementHeight: 0.5
 --- !u!114 &925345758
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5622,9 +5673,12 @@ MonoBehaviour:
   opposite: {fileID: 47720942}
   ahead: {fileID: 0}
   behind: {fileID: 1256085495}
+  tip: {fileID: 0}
+  mid: {fileID: 0}
+  root: {fileID: 0}
   stepSize: 0
+  stepHeight: 0.5
   speed: 8
-  limbMovementHeight: 0.3
 --- !u!114 &932191816
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6133,9 +6187,12 @@ MonoBehaviour:
   opposite: {fileID: 987293718}
   ahead: {fileID: 1783103530}
   behind: {fileID: 1830665721}
+  tip: {fileID: 0}
+  mid: {fileID: 0}
+  root: {fileID: 0}
   stepSize: 0
+  stepHeight: 0.5
   speed: 4
-  limbMovementHeight: 0.5
 --- !u!114 &957916425
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6318,9 +6375,12 @@ MonoBehaviour:
   opposite: {fileID: 1912929546}
   ahead: {fileID: 576844627}
   behind: {fileID: 1766521485}
+  tip: {fileID: 0}
+  mid: {fileID: 0}
+  root: {fileID: 0}
   stepSize: 0
+  stepHeight: 0.5
   speed: 4
-  limbMovementHeight: 0.5
 --- !u!114 &998875659
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6760,7 +6820,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1090714283
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6955,9 +7015,12 @@ MonoBehaviour:
   opposite: {fileID: 1866027280}
   ahead: {fileID: 1791642512}
   behind: {fileID: 1478449172}
+  tip: {fileID: 0}
+  mid: {fileID: 0}
+  root: {fileID: 0}
   stepSize: 0
+  stepHeight: 0.5
   speed: 8
-  limbMovementHeight: 0.3
 --- !u!114 &1131576374
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7032,9 +7095,12 @@ MonoBehaviour:
   opposite: {fileID: 2085741074}
   ahead: {fileID: 1583888931}
   behind: {fileID: 0}
+  tip: {fileID: 0}
+  mid: {fileID: 0}
+  root: {fileID: 0}
   stepSize: 0
+  stepHeight: 0.5
   speed: 8
-  limbMovementHeight: 0.3
 --- !u!114 &1133360324
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7370,9 +7436,12 @@ MonoBehaviour:
   opposite: {fileID: 0}
   ahead: {fileID: 0}
   behind: {fileID: 0}
+  tip: {fileID: 0}
+  mid: {fileID: 0}
+  root: {fileID: 0}
   stepSize: 0
+  stepHeight: 0.5
   speed: 8
-  limbMovementHeight: 1
 --- !u!114 &1160402810
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7846,9 +7915,12 @@ MonoBehaviour:
   opposite: {fileID: 576844627}
   ahead: {fileID: 598020006}
   behind: {fileID: 1912929546}
+  tip: {fileID: 0}
+  mid: {fileID: 0}
+  root: {fileID: 0}
   stepSize: 0
+  stepHeight: 0.5
   speed: 4
-  limbMovementHeight: 0.5
 --- !u!114 &1260632352
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8305,9 +8377,12 @@ MonoBehaviour:
   opposite: {fileID: 1766521485}
   ahead: {fileID: 1912929546}
   behind: {fileID: 33087994}
+  tip: {fileID: 0}
+  mid: {fileID: 0}
+  root: {fileID: 0}
   stepSize: 0
+  stepHeight: 0.5
   speed: 4
-  limbMovementHeight: 0.5
 --- !u!114 &1346659688
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8545,9 +8620,12 @@ MonoBehaviour:
   opposite: {fileID: 894001325}
   ahead: {fileID: 1376788501}
   behind: {fileID: 1783103530}
+  tip: {fileID: 0}
+  mid: {fileID: 0}
+  root: {fileID: 0}
   stepSize: 0
+  stepHeight: 0.5
   speed: 4
-  limbMovementHeight: 0.5
 --- !u!114 &1401332834
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8622,9 +8700,12 @@ MonoBehaviour:
   opposite: {fileID: 1291834695}
   ahead: {fileID: 442457871}
   behind: {fileID: 0}
+  tip: {fileID: 0}
+  mid: {fileID: 0}
+  root: {fileID: 0}
   stepSize: 0
+  stepHeight: 0.5
   speed: 8
-  limbMovementHeight: 0.3
 --- !u!114 &1409562511
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8770,7 +8851,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!143 &1432680641
 CharacterController:
   m_ObjectHideFlags: 0
@@ -9168,9 +9249,12 @@ MonoBehaviour:
   opposite: {fileID: 416535386}
   ahead: {fileID: 0}
   behind: {fileID: 0}
+  tip: {fileID: 0}
+  mid: {fileID: 0}
+  root: {fileID: 0}
   stepSize: 0
+  stepHeight: 0.5
   speed: 8
-  limbMovementHeight: 1
 --- !u!1 &1470940569 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100080, guid: 5779b1a41ccf45b45bfc238034373133, type: 3}
@@ -9837,9 +9921,12 @@ MonoBehaviour:
   opposite: {fileID: 618284948}
   ahead: {fileID: 0}
   behind: {fileID: 1791642512}
+  tip: {fileID: 0}
+  mid: {fileID: 0}
+  root: {fileID: 0}
   stepSize: 0
+  stepHeight: 0.5
   speed: 8
-  limbMovementHeight: 0.3
 --- !u!114 &1540831641
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10048,7 +10135,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1577512221
 Transform:
   m_ObjectHideFlags: 0
@@ -10694,9 +10781,12 @@ MonoBehaviour:
   opposite: {fileID: 1306397344}
   ahead: {fileID: 453139634}
   behind: {fileID: 442457871}
+  tip: {fileID: 0}
+  mid: {fileID: 0}
+  root: {fileID: 0}
   stepSize: 0
+  stepHeight: 0.5
   speed: 8
-  limbMovementHeight: 0.3
 --- !u!114 &1707629186
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10806,9 +10896,12 @@ MonoBehaviour:
   opposite: {fileID: 1791642512}
   ahead: {fileID: 618284948}
   behind: {fileID: 1866027280}
+  tip: {fileID: 0}
+  mid: {fileID: 0}
+  root: {fileID: 0}
   stepSize: 0
+  stepHeight: 0.5
   speed: 8
-  limbMovementHeight: 0.3
 --- !u!114 &1750830467
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10987,7 +11080,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1782084954}
-  m_LocalRotation: {x: 0.2795708, y: 1.4166414e-16, z: 1.05056656e-16, w: 0.9601251}
+  m_LocalRotation: {x: 0.2795708, y: -3.1277213e-15, z: 1.2033483e-15, w: 0.9601251}
   m_LocalPosition: {x: 24.93, y: 4.56, z: 95.97}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -12238,9 +12331,12 @@ MonoBehaviour:
   opposite: {fileID: 0}
   ahead: {fileID: 0}
   behind: {fileID: 0}
+  tip: {fileID: 0}
+  mid: {fileID: 0}
+  root: {fileID: 0}
   stepSize: 0
+  stepHeight: 0.5
   speed: 8
-  limbMovementHeight: 1
 --- !u!114 &1912797248
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12346,9 +12442,12 @@ MonoBehaviour:
   opposite: {fileID: 527345460}
   ahead: {fileID: 938820122}
   behind: {fileID: 1882103596}
+  tip: {fileID: 0}
+  mid: {fileID: 0}
+  root: {fileID: 0}
   stepSize: 0
+  stepHeight: 0.5
   speed: 8
-  limbMovementHeight: 0.3
 --- !u!114 &1913727699
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12454,9 +12553,12 @@ MonoBehaviour:
   opposite: {fileID: 1401263731}
   ahead: {fileID: 0}
   behind: {fileID: 938820122}
+  tip: {fileID: 0}
+  mid: {fileID: 0}
+  root: {fileID: 0}
   stepSize: 0
+  stepHeight: 0.5
   speed: 8
-  limbMovementHeight: 0.3
 --- !u!114 &1960456169
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12800,9 +12902,12 @@ MonoBehaviour:
   opposite: {fileID: 1882103596}
   ahead: {fileID: 527345460}
   behind: {fileID: 0}
+  tip: {fileID: 0}
+  mid: {fileID: 0}
+  root: {fileID: 0}
   stepSize: 0
+  stepHeight: 0.5
   speed: 8
-  limbMovementHeight: 0.3
 --- !u!114 &1983406414
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12869,6 +12974,19 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 400100, guid: f5a9bd478ca094495a4520e37f57420d, type: 3}
   m_PrefabInstance: {fileID: 1145454809}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2008738502
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2008738500}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa6e5ed3235afce429b910bd9743b737, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weight: 4.33
 --- !u!1 &2012535149
 GameObject:
   m_ObjectHideFlags: 0
@@ -12959,7 +13077,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2014397122}
-  m_LocalRotation: {x: 0.2795708, y: 1.4166414e-16, z: 1.05056656e-16, w: 0.9601251}
+  m_LocalRotation: {x: 0.2795708, y: -3.1277213e-15, z: 1.2033483e-15, w: 0.9601251}
   m_LocalPosition: {x: 24.93, y: 4.56, z: 95.97}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -13320,9 +13438,12 @@ MonoBehaviour:
   opposite: {fileID: 0}
   ahead: {fileID: 0}
   behind: {fileID: 0}
+  tip: {fileID: 0}
+  mid: {fileID: 0}
+  root: {fileID: 0}
   stepSize: 0
+  stepHeight: 0.5
   speed: 8
-  limbMovementHeight: 1
 --- !u!114 &2077096478
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13603,9 +13724,12 @@ MonoBehaviour:
   opposite: {fileID: 938820122}
   ahead: {fileID: 1401263731}
   behind: {fileID: 527345460}
+  tip: {fileID: 0}
+  mid: {fileID: 0}
+  root: {fileID: 0}
   stepSize: 0
+  stepHeight: 0.5
   speed: 8
-  limbMovementHeight: 0.3
 --- !u!114 &2110028028
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13680,9 +13804,12 @@ MonoBehaviour:
   opposite: {fileID: 1376788501}
   ahead: {fileID: 1605250569}
   behind: {fileID: 894001325}
+  tip: {fileID: 0}
+  mid: {fileID: 0}
+  root: {fileID: 0}
   stepSize: 0
+  stepHeight: 0.5
   speed: 4
-  limbMovementHeight: 0.5
 --- !u!114 &2113175586
 MonoBehaviour:
   m_ObjectHideFlags: 0

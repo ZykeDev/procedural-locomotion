@@ -32,12 +32,7 @@ public class MovementController : MonoBehaviour
 
     private void Start()
     {
-        // Use the CoM as the geometrical center
-        // TODO for now its only using the Y component
-        if (Entity)
-        { 
-            Controller.center = new Vector3(0, Entity.CenterOfMass.y, 0);
-        }
+        UpdateCenter();
 
         // Minimize the skin width value
         Controller.skinWidth = 0.0001f;
@@ -45,6 +40,8 @@ public class MovementController : MonoBehaviour
 
     void Update()
     {
+        UpdateCenter();
+
         float hor = Input.GetAxisRaw("Horizontal");
         float ver = Input.GetAxisRaw("Vertical");
         bool isSprinting = Input.GetKey(KeyCode.LeftShift);
@@ -81,6 +78,15 @@ public class MovementController : MonoBehaviour
         else
         {
             if (anim) anim.SetBool("isWalking", false);
+        }
+    }
+
+    private void UpdateCenter()
+    {
+        // Use the CoM as the geometrical center
+        if (Entity)
+        {
+            Controller.center = new Vector3(0, Entity.CenterOfMass.y, 0);
         }
     }
 

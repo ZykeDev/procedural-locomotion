@@ -49,13 +49,13 @@ public class Entity : MonoBehaviour
         groundMask = LayerMask.GetMask("Ground");
 
         limbs = new List<ConstraintController>(GetComponentsInChildren<ConstraintController>());
-
-        CenterOfMass = ComputeCenterOfMass();
-        TotalWeight = ComputeWeights();
     }
 
     void Start()
     {
+        TotalWeight = ComputeWeights();
+        CenterOfMass = ComputeCenterOfMass();
+
         for (int i = 0; i < limbs.Count; i++)
         {
             limbs[i].SetStepSize(stepSize);
@@ -131,7 +131,7 @@ public class Entity : MonoBehaviour
                 Vector3 targetPos = new Vector3(transform.position.x, groundHit.point.y, transform.position.z);
 
                 // Only update it if there is enough of a difference
-                bool isPosEnough = Mathf.Abs((transform.position - targetPos).magnitude) <= 0.1f;
+                bool isPosEnough = Mathf.Abs((transform.position - targetPos).magnitude) <= 0.05f;
                 if (!isPosEnough)
                 {
                     float weight = body.GetComponent<Weight>() ? body.GetComponent<Weight>().weight : 1;
@@ -149,15 +149,47 @@ public class Entity : MonoBehaviour
 
     private void UpdateCenterOfMass()
     {
-        CenterOfMass = ComputeCenterOfMass();
+        // Get all limb and body positions and weights
+        List<Vector3> positions = new List<Vector3>();
+        List<float> weights = new List<float>();
+
+        positions.Add(body.transform.position);
+        weights.Add(body.GetComponent<Weight>() ? body.GetComponent<Weight>().weight : 1);
+        
+        for (int i = 0; i < limbs.Count; i++)
+        {
+            positions.Add(limbs[i].root.position);
+            positions.Add(limbs[i].mid.position);
+            positions.Add(limbs[i].tip.position);
+
+            (float rootW, float midW, float tipW) = limbs[i].GetChainWeights();
+
+            weights.Add(rootW);
+            weights.Add(midW);
+            weights.Add(tipW);
+        }
+
+
+        // Make all weights add up to 1
+        for (int i = 0; i < weights.Count; i++)
+        {
+            weights[i] /= TotalWeight;
+        }
+        
+        
+
+        // Use a weighted avg to find the position for the center of mass
+        Vector3 avg = Extensions.WeightedAverage(positions, weights);
+
+        CenterOfMass = avg;
     }
 
     private Vector3 ComputeCenterOfMass()
     {
-        Vector3 com = transform.position + Vector3.up * 1f;
-
+        Vector3 com = transform.position;
         return com;
     }
+
 
     private float ComputeWeights()
     {
@@ -170,18 +202,22 @@ public class Entity : MonoBehaviour
             w += bodyW ? bodyW.weight : 1;
             
             // Also update the Body Weight variable
-            BodyWeight = bodyW ? bodyW.weight : 1;
-            if (BodyWeight == 0) BodyWeight = 0.0001f;
+            BodyWeight = w;
+
+            if (BodyWeight == 0)
+            {
+                Debug.LogError("Body weight cannot be 0.");
+            }
         }
 
         // Add the weight of each limb
         for (int i = 0; i < limbs.Count; i++)
         {
-            Weight root = limbs[i].TwoBoneIKConstraint.data.root.gameObject.GetComponent<Weight>();
-            Weight mid = limbs[i].TwoBoneIKConstraint.data.mid.gameObject.GetComponent<Weight>();
+            (float rootW, float midW, float tipW) = limbs[i].GetChainWeights();
 
-            if (root) w += root.weight;
-            if (mid)  w += mid.weight;  
+            w += rootW;
+            w += midW;
+            w += tipW;
         }
 
         return w;
@@ -256,7 +292,7 @@ public class Entity : MonoBehaviour
                 Vector3 bF = b.MultiplyBy(rotXForward);
                 Vector3 ahead, behind;
 
-                if (aF.IsBiggerThan(bF))  // if A is ahead of B (forward)
+                if (aF.IsGreaterThan(bF))  // if A is ahead of B (forward)
                 {
                     ahead = a;
                     behind = b;
@@ -430,7 +466,7 @@ public class Entity : MonoBehaviour
                     biggestSize = r.bounds.size;
                     center = r.bounds.center;
                 }
-                else if (r.bounds.size.IsBiggerThan(biggestSize)) 
+                else if (r.bounds.size.IsGreaterThan(biggestSize)) 
                 {
                     biggestSize = r.bounds.size;
                     center = r.bounds.center;

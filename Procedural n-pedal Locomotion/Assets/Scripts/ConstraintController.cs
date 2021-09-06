@@ -20,9 +20,8 @@ public class ConstraintController : MonoBehaviour
     private ConstraintController oppositeCC, aheadCC, behindCC;
 
     private Vector3 originalPos;
-    private Transform tip;
+    public Transform tip, mid, root;
     private float maxRange;                 // Maximum range of the limb chain
-    private int layerMask;
 
     public TwoBoneIKConstraint TwoBoneIKConstraint => GetComponent<TwoBoneIKConstraint>();
     private Entity ParentEntity => GetComponentInParent<Entity>();
@@ -30,27 +29,26 @@ public class ConstraintController : MonoBehaviour
     [SerializeField, Min(0.1f), Tooltip("Distance after which to take a step. If this value is set to anything other than 0, it overrides the Step Size defined in the Entity Component.")]
     private float stepSize;
 
+    [SerializeField, Min(0.1f), Tooltip("Maximum height reached by the limb during its limb's arching animation.")]
+    private float stepHeight = 0.5f;
+
     [SerializeField, Range(0.1f, 50f), Tooltip("Movement Speed.")]
     private float speed = 4f;
-    private float weight;
-
-    [SerializeField, Min(0.1f), Tooltip("Maximum height reached by the limb during its limb's arching animation.")]
-    private float limbMovementHeight = 0.5f;
+    private float chainWeight;
 
     public bool IsMoving { get; private set; }
-    public Transform TipTransform { get; private set; }
-
 
     void Awake()
     {
+        root = TwoBoneIKConstraint.data.root;
+        mid = TwoBoneIKConstraint.data.mid;
         tip = TwoBoneIKConstraint.data.tip;
-        TipTransform = tip.transform;
+        
         originalPos = transform.position;
         IsMoving = false;
-        layerMask = LayerMask.GetMask("Ground");
 
         maxRange = GetChainLength();
-        weight = GetChainWeight();  
+        chainWeight = GetAvgChainWeight();  
     }
 
     void Start()
@@ -72,11 +70,11 @@ public class ConstraintController : MonoBehaviour
     /// </summary>
     private void Move()
     {
-        Vector3 jointPos = TwoBoneIKConstraint.data.root.transform.position;
+        Vector3 jointPos = root.transform.position;
         float distanceFromBody = Vector3.Distance(jointPos, target.position);
 
-        if (distanceFromBody > maxRange) Debug.DrawLine(transform.position, jointPos, Color.red);
-        else Debug.DrawLine(transform.position, jointPos, Color.green);
+        //if (distanceFromBody > maxRange) Debug.DrawLine(transform.position, jointPos, Color.red);
+        //else Debug.DrawLine(transform.position, jointPos, Color.green);
 
         if (!IsMoving)
         {
@@ -107,7 +105,7 @@ public class ConstraintController : MonoBehaviour
             if (canMove && isTraversable && isStable)
             {
                 // Start a coroutine to move the limb
-                Coro.Perp(transform, target.position, (int)ParentEntity.limbUpwardsAxis, weight / speed, OnMovementEnd);
+                Coro.Perp(transform, target.position, (int)ParentEntity.limbUpwardsAxis, chainWeight / speed, OnMovementEnd);
                 IsMoving = true;
             }
             else
@@ -143,7 +141,7 @@ public class ConstraintController : MonoBehaviour
 
         int sign = Convert.ToInt32(disparity % 2 != 0) * 2 - 1;     // Converts the disparity into a number sign (-1 or +1)
 
-        Vector3 rootPos = TwoBoneIKConstraint.data.root.transform.position;
+        Vector3 rootPos = root.transform.position;
         Vector3 targetPos = new Vector3(target.position.x, target.position.y, target.position.z + (forwardDistance * sign));
         float distFromRoot = Vector3.Distance(targetPos, rootPos);
 
@@ -188,12 +186,13 @@ public class ConstraintController : MonoBehaviour
     /// <returns></returns>
     public float GetChainLength()
     {
+        /*
         Vector3 root = TwoBoneIKConstraint.data.root.transform.position;
         Vector3 mid = TwoBoneIKConstraint.data.mid.transform.position;
         Vector3 tip = TwoBoneIKConstraint.data.tip.transform.position;
-
-        float tipToMid = Vector3.Distance(tip, mid);
-        float midToRoot = Vector3.Distance(mid, root);
+        */
+        float tipToMid = Vector3.Distance(tip.position, mid.position);
+        float midToRoot = Vector3.Distance(mid.position, root.position);
 
         return tipToMid + midToRoot;    
     }
@@ -203,17 +202,20 @@ public class ConstraintController : MonoBehaviour
     /// Returns the average weight of all components that form the associated limb
     /// </summary>
     /// <returns></returns>
-    private float GetChainWeight()
+    private float GetAvgChainWeight()
     {
-        Weight root = TwoBoneIKConstraint.data.root.GetComponent<Weight>();
-        Weight mid = TwoBoneIKConstraint.data.mid.GetComponent<Weight>();
-        Weight tip = TwoBoneIKConstraint.data.tip.GetComponent<Weight>();
-
-        float rootW = root ? root.weight : 1;
-        float midW = mid ? mid.weight : 1;
-        float tipW = tip ? tip.weight : 1;
+        (float rootW, float midW, float tipW) = GetChainWeights();
 
         return (rootW + midW + tipW) / 3;
+    }
+
+    public (float root, float mid, float tip) GetChainWeights()
+    {
+        float rootW = root.GetComponent<Weight>() ? root.GetComponent<Weight>().weight : 1;
+        float midW = mid.GetComponent<Weight>() ? mid.GetComponent<Weight>().weight : 1;
+        float tipW = tip.GetComponent<Weight>() ? tip.GetComponent<Weight>().weight : 1;
+
+        return (rootW, midW, tipW);
     }
 
 

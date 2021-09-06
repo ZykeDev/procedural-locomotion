@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public static class Extensions
@@ -27,6 +28,62 @@ public static class Extensions
     public static Vector3 MultiplyBy(this Vector3 multiplier, Vector3 multiplicand)
     {
         return Vector3.Scale(multiplier, multiplicand);
+    }
+
+
+    public static Vector3 Average(List<Vector3> vectors)
+    {
+        if (vectors.Count == 0) return Vector3.zero;
+
+        float x = 0f;
+        float y = 0f;
+        float z = 0f;
+
+        foreach (Vector3 pos in vectors)
+        {
+            x += pos.x;
+            y += pos.y;
+            z += pos.z;
+        }
+
+        return new Vector3(x / vectors.Count, y / vectors.Count, z / vectors.Count);
+    }
+
+    public static Vector3 WeightedAverage(List<Vector3> vectors, List<float> weights)
+    {
+        if (vectors.Count != weights.Count)
+        {
+            Debug.LogError("Vectors and Weights are of different lengths.");
+            return Vector3.one;
+        }
+
+        float sum = weights.Sum();
+        if (sum < 0.99f || sum > 1.01f)
+        {
+            Debug.LogError("Weights do not sum up to 1. (" + sum + ")");
+            return Vector3.one;
+        }
+
+        Vector3 avg = Vector3.zero;
+
+        for (int i = 0; i < vectors.Count; i++)
+        {
+            avg += vectors[i] * weights[i];
+        }
+
+        return avg;
+
+    }
+
+    public static float Sum(this List<float> items)
+    {
+        float total = 0;
+        for (int i = 0; i < items.Count; i++)
+        {
+            total += items[i];
+        }
+
+        return total;
     }
 
 
@@ -62,7 +119,7 @@ public static class Extensions
     /// <param name="a"></param>
     /// <param name="b"></param>
     /// <returns></returns>
-    public static bool IsBiggerThan(this Vector3 a, Vector3 b)
+    public static bool IsGreaterThan(this Vector3 a, Vector3 b)
     {
         return (a.x >= b.x) && (a.y >= b.y) && (a.z >= b.z);
     }

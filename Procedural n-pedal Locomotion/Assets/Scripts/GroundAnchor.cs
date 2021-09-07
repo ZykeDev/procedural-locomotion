@@ -52,7 +52,7 @@ public class GroundAnchor : MonoBehaviour
 
             if (isGroundHit)
             {
-                Debug.DrawRay(cvo, direction * groundHit.distance, Color.yellow);
+                //Debug.DrawRay(cvo, direction * groundHit.distance, Color.yellow);
                 target = groundHit.point;
             }
             else

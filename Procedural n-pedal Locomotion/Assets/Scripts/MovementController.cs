@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
@@ -8,8 +9,9 @@ public class MovementController : MonoBehaviour
 
     // Pair of degrees between which to limit directional movement.
     // i.e. (0, 90) only allows movement in a direction if its forward vector
-    // points towards a 90° to 360° range around the entity's center.
-    private (float from, float to) arcLimit = (0, 0);
+    // points towards a 90° to 360° range around the center.
+    private List<(float from, float to)> ArcLimits = new List<(float from, float to)>();
+
 
     private float turnVelocity;
 
@@ -79,6 +81,13 @@ public class MovementController : MonoBehaviour
         {
             if (anim) anim.SetBool("isWalking", false);
         }
+
+        string s = "";
+        for (int i = 0; i < ArcLimits.Count; i++)
+        {
+            s += ArcLimits[i] + " ";
+        }
+        //print(s);
     }
 
     private void UpdateCenter()
@@ -102,65 +111,78 @@ public class MovementController : MonoBehaviour
         // Ignore if the feature is off
         if (!useDirectionLimiter) return true;
 
-        // Ignore the case with no limits
-        if (arcLimit == (0, 0)) return true;
-
-
-        // We only need the X and Z coordinates
+        // Convert the direction Vector3 to Vector2
+        // TODO this only works for movement on a xz-plane.
+        // Might be useful to take into account the y-component for vertical motion.
         Vector2 unitDirection = new Vector2(direction.x, direction.z);
 
-        // Rotate the arc by 90 degrees to align it with the direction's unit circle
-        float from = arcLimit.from + 90;
-        float to = arcLimit.to + 90;
-
-        // Convert the angles to unit-circle coordinates
-        Vector2 fromV = from.ToUnitCirclePoint();
-        Vector2 toV = to.ToUnitCirclePoint();
-
-        // Check if the direction is between the limits
-        bool isBetweenX = unitDirection.x >= fromV.x && unitDirection.x <= toV.x;
-        bool isBetweenY = unitDirection.y >= fromV.y && unitDirection.y <= toV.y;
-
-        // If the direction is in the arc limit, DON'T allow movement in said direction
-        if (isBetweenX && isBetweenY)
+        for (int i = 0; i < ArcLimits.Count; i++)
         {
-            return false;
+            (float from, float to) arc = ArcLimits[i];
+
+            // Skip if there is no limit
+            if (arc == (0, 0)) continue;
+
+            // From <= To needs to always be true
+            if (arc.from > arc.to) arc = (arc.to, arc.from);
+
+            //arc = arc.ShortestArc();
+
+            // Convert the direction into an angle
+            float dirAngle = Mathf.Atan2(unitDirection.x, unitDirection.y) * Mathf.Rad2Deg;
+  
+            // Rotate everything by 90 degrees to align with the direction's unit circle
+            float from = -arc.from + 90;
+            float to = -arc.to + 90;
+            dirAngle = -dirAngle + 90;
+
+            print((from, to));
+
+            bool isBetween = from <= dirAngle && dirAngle <= to;
+
+            // If the direction is in the arc limit, DON'T allow movement in said direction
+            if (isBetween)
+            {
+                return false;
+            }
         }
     
         return true;
     }
 
 
-
+    public void ResetArcLimit(int id) => SetArcLimit((0, 0), id);
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="form"></param>
     /// <param name="to"></param>
-    public void SetArcLimit(float form, float to) => SetArcLimit((form, to));
+    public void SetArcLimit(float form, float to, int id) => SetArcLimit((form, to), id);
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="arc">Float tuple</param>
-    public void SetArcLimit((float from, float to) arc)
+    public void SetArcLimit((float from, float to) arc, int id)
     {
-        // Improve angles TODO
-        //print("settign limit " + arc.from + " -> " + arc.to);
-
-        arcLimit = (arc.from, arc.to);
-        arcLimit = (arc.to, arc.from); // TODo remove temp
-
-    }
-
-    public void ResetArcLimit() => SetArcLimit(0, 0);
-
-    public void SetArcLimits((float from, float to)[] arcs)
-    {
-        for (int i = 0; i < arcs.Length; i++)
+        // Add empty limits to the list until it can fit the given ID
+        if (ArcLimits.Count <= id)
         {
-            SetArcLimit(arcs[i]);
+            for (int i = ArcLimits.Count; i <= id; i++)
+            {
+                ArcLimits.Add((0, 0));
+            }
         }
+
+        // Add the set limit to the list, at the same index as the limb
+        ArcLimits[id] = arc;
     }
+
+
+    private void OnDrawGizmos()
+    {
+        UnityEditor.Handles.DrawWireDisc(Entity.CenterOfMass, Vector3.up, 1.5f);
+    }
+
 }

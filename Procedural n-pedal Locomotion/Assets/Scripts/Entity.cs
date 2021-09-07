@@ -8,7 +8,7 @@ public class Entity : MonoBehaviour
 {
     [SerializeField] private GameObject body;
 
-    [Tooltip("Axis along whitch to elevate the limb during locomotion.")] 
+    [Tooltip("Axis along whitch to elevate the limb during locomotion.")]
     public Settings.Axes limbUpwardsAxis = Settings.Axes.Y;
 
     [SerializeField, Min(0.1f), Tooltip("Distance after which to take a step.")]
@@ -19,16 +19,16 @@ public class Entity : MonoBehaviour
     [SerializeField]
     private float customMaxRange = 0f;
 
-    [SerializeField, Range(0.1f, 50f), Tooltip("Speed at which to realign the entity's body when walking on slopes.")] 
+    [SerializeField, Range(0.1f, 50f), Tooltip("Speed at which to realign the entity's body when walking on slopes.")]
     private float realignmentSpeed = 25f;
 
     [SerializeField, Range(0.01f, 1f), Tooltip("Min height difference above which to start rotating the body.")]
     private float realignmentThreshold = 0.1f;
 
-    [SerializeField, Tooltip("Randomizes the starting locomotion pattern of the limb targets.")] 
+    [SerializeField, Tooltip("Randomizes the starting locomotion pattern of the limb targets.")]
     private bool randomizeStartingPattern = true;
 
-    [SerializeField, Tooltip("Automatically add a Capsule Collider to each bone.")] 
+    [SerializeField, Tooltip("Automatically add a Capsule Collider to each bone.")]
     private ColliderGeneration generateBoneColliders;
 
 
@@ -58,6 +58,7 @@ public class Entity : MonoBehaviour
 
         for (int i = 0; i < limbs.Count; i++)
         {
+            limbs[i].id = i;
             limbs[i].SetStepSize(stepSize);
             if (useCustomMaxRange) limbs[i].SetMaxRange(customMaxRange);
         }
@@ -155,7 +156,7 @@ public class Entity : MonoBehaviour
 
         positions.Add(body.transform.position);
         weights.Add(body.GetComponent<Weight>() ? body.GetComponent<Weight>().weight : 1);
-        
+
         for (int i = 0; i < limbs.Count; i++)
         {
             positions.Add(limbs[i].root.position);
@@ -175,8 +176,8 @@ public class Entity : MonoBehaviour
         {
             weights[i] /= TotalWeight;
         }
-        
-        
+
+
 
         // Use a weighted avg to find the position for the center of mass
         Vector3 avg = Extensions.WeightedAverage(positions, weights);
@@ -200,7 +201,7 @@ public class Entity : MonoBehaviour
         {
             Weight bodyW = body.GetComponent<Weight>();
             w += bodyW ? bodyW.weight : 1;
-            
+
             // Also update the Body Weight variable
             BodyWeight = w;
 
@@ -224,10 +225,11 @@ public class Entity : MonoBehaviour
     }
 
 
-    public void LimitMovement(Vector3 limitingPos)
+    public void LimitMovement(Vector3 limitingPos, int id)
     {
-        // Ignore the Y-axis of the forward vector
-        Vector3 forward = new Vector3(body.transform.forward.x, 0, body.transform.forward.z);
+        // Ignore the y-axis of the forward vector
+        Vector3 forward = body.transform.forward;
+        forward.y = 0;
 
         // Find the applied vector from the CoM to the limb target
         Vector3 comToTarget = limitingPos - CenterOfMass;
@@ -237,14 +239,24 @@ public class Entity : MonoBehaviour
 
         // Find the angle between the forward vector and the target vector
         float angle = Vector3.SignedAngle(forward, comToTarget, body.transform.up);
+        float offset = angle / 2;
 
-        // TODO check that the sign is correct?
+        // Skip if the angle is 0
+        if (angle == 0) return;
 
-        // Send the values from 0 to angle to the movement controller to limit movement in that direction
-        MovementController.SetArcLimit((0, angle));
+
+        // Send the values to the movement controller to limit movement in that direction
+        if (angle < 0)
+        {
+            MovementController.SetArcLimit((offset, angle + (angle-offset) / 2), id);
+        }
+        if (angle > 0)
+        {
+            MovementController.SetArcLimit((offset, angle - (angle - offset) / 2), id);
+        }
     }
 
-
+    
 
 
     /// <summary>

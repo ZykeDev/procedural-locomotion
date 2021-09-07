@@ -5,6 +5,9 @@ using UnityEngine.Animations.Rigging;
 [RequireComponent(typeof(TwoBoneIKConstraint))]
 public class ConstraintController : MonoBehaviour
 {
+    [HideInInspector]
+    public int id;  // Index of this CC and its corresponding limb in the Entity's list
+
     [Tooltip("Reference to the target transform the joint should move towards.")] 
     public Transform target;
 
@@ -78,30 +81,30 @@ public class ConstraintController : MonoBehaviour
 
         if (!IsMoving)
         {
-            // Check if the distance to the target point is too great
-            float distanceToTarget = Vector3.Distance(transform.position, target.position);
-            
-            // If the next step would be too far, don't allow the entity to move in that direction.
-            if (distanceFromBody > maxRange)
+            // Check if the step respects the terrain constriants
+            bool isTraversable = IsTraversable(target.position);
+            if (!isTraversable)
             {
-                ParentEntity.LimitMovement(target.position);
+                ParentEntity.LimitMovement(target.position, id);
             } 
             else
             {
-                ParentEntity.MovementController.ResetArcLimit();
+                ParentEntity.MovementController.ResetArcLimit(id);
             }
+
+            // Check if the distance to the target point is too great
+            float distanceToTarget = Vector3.Distance(transform.position, target.position);
 
             // Check if the opposite, ahead, or behind limbs are already moving
             bool isOppositeMoving = oppositeCC != null && oppositeCC.IsMoving;      
             bool isAheadMoving = aheadCC != null && aheadCC.IsMoving;
             bool isBehindMoving = behindCC != null && behindCC.IsMoving;
 
+            // Check if the step is legal
             bool isStable = !isOppositeMoving && !isAheadMoving && !isBehindMoving;
-
-            // Check if the step respects the limb and terrain constriants
             bool canMove = distanceToTarget > stepSize || (distanceFromBody > maxRange && distanceToTarget > stepSize);
-            bool isTraversable = IsTraversable(target.position);
-
+            
+            // If all checks are successful, move the limb
             if (canMove && isTraversable && isStable)
             {
                 // Start a coroutine to move the limb
@@ -186,11 +189,6 @@ public class ConstraintController : MonoBehaviour
     /// <returns></returns>
     public float GetChainLength()
     {
-        /*
-        Vector3 root = TwoBoneIKConstraint.data.root.transform.position;
-        Vector3 mid = TwoBoneIKConstraint.data.mid.transform.position;
-        Vector3 tip = TwoBoneIKConstraint.data.tip.transform.position;
-        */
         float tipToMid = Vector3.Distance(tip.position, mid.position);
         float midToRoot = Vector3.Distance(mid.position, root.position);
 
@@ -234,9 +232,9 @@ public class ConstraintController : MonoBehaviour
         {
             for (int i = 0; i < hits.Length; i++)
             {
-                Debug.DrawLine(hits[i].point, hits[i].point + Vector3.up, Color.yellow, 1f);
                 if (hits[i].transform.gameObject.CompareTag(Settings.Tag_untraversable))
                 {
+                    Debug.DrawLine(com, hits[i].point, Color.red, 1f);
                     return false;
                 }
             }

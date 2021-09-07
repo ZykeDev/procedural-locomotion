@@ -153,6 +153,15 @@ public static class Extensions
         return new Vector2(x, y);
     }
 
+    public static (float from, float to) ShortestArc(this (float from, float to) arc)
+    {
+        // If they are both positive, the arch si
+        //if (arc.from >= 0 && arc.to >= 0)
+
+
+        return arc;
+    }
+
 
 
     /// <summary>

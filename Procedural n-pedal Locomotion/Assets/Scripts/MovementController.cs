@@ -123,10 +123,8 @@ public class MovementController : MonoBehaviour
             // Skip if there is no limit
             if (arc == (0, 0)) continue;
 
-            // From <= To needs to always be true
+            // From <= To
             if (arc.from > arc.to) arc = (arc.to, arc.from);
-
-            //arc = arc.ShortestArc();
 
             // Convert the direction into an angle
             float dirAngle = Mathf.Atan2(unitDirection.x, unitDirection.y) * Mathf.Rad2Deg;
@@ -136,11 +134,11 @@ public class MovementController : MonoBehaviour
             float to = -arc.to + 90;
             dirAngle = -dirAngle + 90;
 
-            print((from, to));
+            //print((from, dirAngle, to));
 
             bool isBetween = from <= dirAngle && dirAngle <= to;
 
-            // If the direction is in the arc limit, DON'T allow movement in said direction
+            // If the direction point is in the arc segment, DON'T move in that direction
             if (isBetween)
             {
                 return false;

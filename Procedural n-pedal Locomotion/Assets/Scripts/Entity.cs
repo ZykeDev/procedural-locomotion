@@ -239,21 +239,35 @@ public class Entity : MonoBehaviour
 
         // Find the angle between the forward vector and the target vector
         float angle = Vector3.SignedAngle(forward, comToTarget, body.transform.up);
-        float offset = angle / 2;
 
         // Skip if the angle is 0
         if (angle == 0) return;
 
 
+        float theta = 30;               // Min angle of the arc
+        float from = angle - theta;
+        float to = angle + theta;
+
+        // Find the closest 90-divisible sector point
+        float closestFrom = 90 * (int)(from / 90);
+        if (Mathf.Abs(from) % 90 > 45) closestFrom += 90;
+
+        float closestTo = 90 * (int)(to / 90);
+        if (Mathf.Abs(to) % 90 > 45) closestTo += 90;
+
+        // Only choose the clostestest point
+        if (Mathf.Abs(closestFrom - from) < Mathf.Abs(closestTo - to))
+        {
+            from = closestFrom;
+        }
+        else
+        {
+            to = closestTo;
+        }
+
+
         // Send the values to the movement controller to limit movement in that direction
-        if (angle < 0)
-        {
-            MovementController.SetArcLimit((offset, angle + (angle-offset) / 2), id);
-        }
-        if (angle > 0)
-        {
-            MovementController.SetArcLimit((offset, angle - (angle - offset) / 2), id);
-        }
+        MovementController.SetArcLimit((from, to), id);
     }
 
     

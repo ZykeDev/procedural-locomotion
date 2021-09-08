@@ -5330,7 +5330,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 3
-  turnSpeed: 1
+  turnSpeed: 2.4
   useDirectionLimiter: 1
   enableSprint: 1
   sprintMultiplier: 2
@@ -11111,7 +11111,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1782084954}
-  m_LocalRotation: {x: 0.2795708, y: -3.1277213e-15, z: 1.2033483e-15, w: 0.9601251}
+  m_LocalRotation: {x: 0.2795708, y: -0.000000028613957, z: 0.000000008331859, w: 0.9601251}
   m_LocalPosition: {x: 24.93, y: 4.56, z: 95.97}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -13112,7 +13112,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2014397122}
-  m_LocalRotation: {x: 0.2795708, y: -3.1277213e-15, z: 1.2033483e-15, w: 0.9601251}
+  m_LocalRotation: {x: 0.2795708, y: -0.000000028613957, z: 0.000000008331859, w: 0.9601251}
   m_LocalPosition: {x: 24.93, y: 4.56, z: 95.97}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:

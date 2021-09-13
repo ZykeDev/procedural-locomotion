@@ -339,9 +339,9 @@ public class Entity : MonoBehaviour
                 }
 
 
-                Debug.DrawLine(a, b);
-                Debug.DrawLine(b, c);
-                Debug.DrawLine(a, c);
+                //Debug.DrawLine(a, b);
+                //Debug.DrawLine(b, c);
+                //Debug.DrawLine(a, c);
 
                 // Get the triangle sides
                 float hypotenuse = Vector3.Distance(a, b);
@@ -407,9 +407,9 @@ public class Entity : MonoBehaviour
                     rotZDirection = 1;
                 }
                 
-                Debug.DrawLine(a, b);
-                Debug.DrawLine(b, c);
-                Debug.DrawLine(a, c);
+                //Debug.DrawLine(a, b);
+                //Debug.DrawLine(b, c);
+                //Debug.DrawLine(a, c);
 
                 // Get the triangle sides
                 float hypotenuse = Vector3.Distance(a, b);

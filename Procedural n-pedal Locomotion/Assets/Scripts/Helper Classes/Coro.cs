@@ -20,6 +20,12 @@ public class Coro : MonoBehaviour
             _instance = this;
         }
     }
+    
+    void Update()
+    {
+        Time.timeScale = t;
+    }
+    public float t = 1;
 
     public float timescale = 1f;
     public void Slow() => Time.timeScale = timescale;

@@ -76,7 +76,7 @@ public class GroundAnchor : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.blue;
-        Gizmos.DrawSphere(transform.position + verticalGap, 0.025f);
+        Gizmos.DrawSphere(transform.position + verticalGap, 0.03f);
     }
 
 }

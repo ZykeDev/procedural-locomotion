@@ -81,13 +81,6 @@ public class MovementController : MonoBehaviour
         {
             if (anim) anim.SetBool("isWalking", false);
         }
-
-        string s = "";
-        for (int i = 0; i < ArcLimits.Count; i++)
-        {
-            s += ArcLimits[i] + " ";
-        }
-        //print(s);
     }
 
     private void UpdateCenter()
@@ -178,7 +171,7 @@ public class MovementController : MonoBehaviour
     private void OnDrawGizmos()
     {
         //Circle
-        //UnityEditor.Handles.DrawWireDisc(Entity.CenterOfMass, Vector3.up, 1.5f);
+        UnityEditor.Handles.DrawWireDisc(Entity.CenterOfMass, Vector3.up, 1.5f);
     }
 
 }

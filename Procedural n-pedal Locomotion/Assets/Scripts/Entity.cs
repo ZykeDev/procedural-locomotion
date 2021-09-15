@@ -339,9 +339,9 @@ public class Entity : MonoBehaviour
                 }
 
 
-                //Debug.DrawLine(a, b);
-                //Debug.DrawLine(b, c);
-                //Debug.DrawLine(a, c);
+                //Debug.DrawLine(a, b, Color.white);
+                //Debug.DrawLine(b, c, Color.white);
+                //Debug.DrawLine(a, c, Color.white);
 
                 // Get the triangle sides
                 float hypotenuse = Vector3.Distance(a, b);
@@ -699,6 +699,6 @@ public class Entity : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.blue;
-        Gizmos.DrawSphere(CenterOfMass, .05f);
+        Gizmos.DrawSphere(CenterOfMass, .04f);
     }
 }

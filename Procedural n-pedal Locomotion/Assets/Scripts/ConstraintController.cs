@@ -76,8 +76,8 @@ public class ConstraintController : MonoBehaviour
         Vector3 jointPos = root.transform.position;
         float distanceFromBody = Vector3.Distance(jointPos, target.position);
 
-        if (distanceFromBody > maxRange) Debug.DrawLine(transform.position, jointPos, Color.red);
-        else Debug.DrawLine(transform.position, jointPos, Color.green);
+        //if (distanceFromBody > maxRange) Debug.DrawLine(transform.position, jointPos, Color.red);
+        //else Debug.DrawLine(transform.position, jointPos, Color.green);
 
         if (!IsMoving)
         {
@@ -94,7 +94,7 @@ public class ConstraintController : MonoBehaviour
 
             // Check if the distance to the target point is too great
             float distanceToTarget = Vector3.Distance(transform.position, target.position);
-            Debug.DrawLine(transform.position + new Vector3(0, 0.001f, 0f), target.position + new Vector3(0, 0.001f, 0f));
+            //Debug.DrawLine(transform.position + new Vector3(0, 0.001f, 0f), target.position + new Vector3(0, 0.001f, 0f));
 
             // Check if the opposite, ahead, or behind limbs are already moving
             bool isOppositeMoving = oppositeCC != null && oppositeCC.IsMoving;      
@@ -235,7 +235,7 @@ public class ConstraintController : MonoBehaviour
             {
                 if (hits[i].transform.gameObject.CompareTag(Settings.Tag_untraversable))
                 {
-                    Debug.DrawLine(com, hits[i].point, Color.red, 1f);
+                    //Debug.DrawLine(com, hits[i].point, Color.red, 1f);
                     return false;
                 }
             }

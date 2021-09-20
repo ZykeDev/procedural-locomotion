@@ -12,7 +12,7 @@ public class Entity : MonoBehaviour
     public Settings.Axes limbUpwardsAxis = Settings.Axes.Y;
 
     [SerializeField, Min(0.1f), Tooltip("Distance after which to take a step.")]
-    private float stepSize = 0.5f;
+    private float stepSize = 1f;
 
     [SerializeField]
     private bool useCustomMaxRange = false;
@@ -54,7 +54,7 @@ public class Entity : MonoBehaviour
     void Start()
     {
         TotalWeight = ComputeWeights();
-        CenterOfMass = ComputeCenterOfMass();
+        CenterOfMass = transform.position;
 
         for (int i = 0; i < limbs.Count; i++)
         {
@@ -175,13 +175,11 @@ public class Entity : MonoBehaviour
             weights.Add(tipW);
         }
 
-
         // Make all weights add up to 1
         for (int i = 0; i < weights.Count; i++)
         {
             weights[i] /= TotalWeight;
         }
-
 
         // Use a weighted avg to find the position for the center of mass
         Vector3 avg = Extensions.WeightedAverage(positions, weights);
@@ -189,11 +187,6 @@ public class Entity : MonoBehaviour
         CenterOfMass = avg;
     }
 
-    private Vector3 ComputeCenterOfMass()
-    {
-        Vector3 com = transform.position;
-        return com;
-    }
 
 
     private float ComputeWeights()

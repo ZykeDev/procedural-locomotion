@@ -30,6 +30,18 @@ public static class Extensions
         return Vector3.Scale(multiplier, multiplicand);
     }
 
+    public static Vector3 Min(this List<Vector3> vectors, Settings.Axes axisComp)
+    {
+        int axis = (int)axisComp;
+        Vector3 min = vectors[0];
+
+        for (int i = 0; i < vectors.Count; i++)
+        {
+            if (vectors[0][axis] < min[axis]) min = vectors[0];
+        }
+
+        return min;
+    }
 
     public static Vector3 Average(List<Vector3> vectors)
     {

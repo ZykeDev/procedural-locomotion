@@ -80,10 +80,8 @@ public class MovementController : MonoBehaviour
         // Use the CoM as the geometrical center
         if (Entity)
         {
-            // Distance from the object center to its CoM
-            Vector3 dist = Entity.CenterOfMass - transform.position;
-
-            Controller.center = dist;
+            // Transform the CoM to Local Coordinates
+            Controller.center = transform.InverseTransformPoint(Entity.CenterOfMass);
         }
     }
 

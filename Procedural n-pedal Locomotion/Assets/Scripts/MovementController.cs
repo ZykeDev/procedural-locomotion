@@ -30,14 +30,15 @@ public class MovementController : MonoBehaviour
     [SerializeField, Range(1f, 10f)]
     private float sprintMultiplier = 2f;
 
-    private Animator anim => GetComponent<Animator>();
-
     private void Start()
     {
         UpdateCenter();
 
         // Minimize the skin width value
         Controller.skinWidth = 0.0001f;
+
+        // Set the pill height to 1 to not interfere with ground bobbing
+        Controller.height = 1;
     }
 
     void Update()
@@ -71,15 +72,6 @@ public class MovementController : MonoBehaviour
             // Rotate and Move
             transform.rotation = Quaternion.Euler(0f, angle, 0f);
             Controller.Move(direction * targetSpeed * Time.deltaTime);
-
-            if (anim)
-            {
-                anim.SetBool("isWalking", true);
-            }
-        }
-        else
-        {
-            if (anim) anim.SetBool("isWalking", false);
         }
     }
 

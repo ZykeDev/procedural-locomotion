@@ -58,9 +58,14 @@ public class Entity : MonoBehaviour
 
         for (int i = 0; i < limbs.Count; i++)
         {
-            limbs[i].id = i;
-            limbs[i].SetStepSize(stepSize);
-            if (useCustomMaxRange) limbs[i].SetMaxRange(customMaxRange);
+            ConstraintController limb = limbs[i];
+            limb.id = i;
+            limb.SetStepSize(stepSize);
+
+            if (useCustomMaxRange)
+            {
+                limb.SetMaxRange(customMaxRange);
+            }
         }
 
         if (randomizeStartingPattern)
@@ -176,7 +181,6 @@ public class Entity : MonoBehaviour
         {
             weights[i] /= TotalWeight;
         }
-
 
 
         // Use a weighted avg to find the position for the center of mass

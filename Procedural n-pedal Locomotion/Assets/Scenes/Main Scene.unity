@@ -6411,8 +6411,8 @@ MonoBehaviour:
   body: {fileID: 781661903}
   limbUpwardsAxis: 1
   stepSize: 2
-  useCustomMaxRange: 0
-  customMaxRange: 1
+  useCustomMaxRange: 1
+  customMaxRange: 2
   realignmentSpeed: 25
   realignmentThreshold: 0.1
   randomizeStartingPattern: 1
@@ -6431,7 +6431,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1090714282}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 17.1, y: 0, z: 98.3}
+  m_LocalPosition: {x: 17.1, y: -0.6, z: 98.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 928477319}
@@ -6494,7 +6494,7 @@ CharacterController:
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 1.13, z: 0}
 --- !u!114 &1090714288
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10389,7 +10389,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1782084954}
   m_LocalRotation: {x: -0.000000003277086, y: 0.9601251, z: -0.2795708, w: -0.00000001125444}
-  m_LocalPosition: {x: 17.1, y: 8, z: 110.3}
+  m_LocalPosition: {x: 17.1, y: 7.4, z: 110.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -12294,7 +12294,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2014397122}
   m_LocalRotation: {x: -0.000000003277086, y: 0.9601251, z: -0.2795708, w: -0.00000001125444}
-  m_LocalPosition: {x: 17.1, y: 8, z: 110.3}
+  m_LocalPosition: {x: 17.1, y: 7.4, z: 110.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1618148735}

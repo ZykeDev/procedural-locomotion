@@ -53,14 +53,14 @@ public static class Extensions
     {
         if (vectors.Count != weights.Count)
         {
-            Debug.LogError("Vectors and Weights are of different lengths.");
+            Debug.LogError("Error computing the Center of Mass. Vectors and Weights are of different lengths.");
             return Vector3.one;
         }
 
         float sum = weights.Sum();
-        if (sum < 0.99f || sum > 1.01f)
+        if (sum < 0.99f || sum > 1.01f) // 1 ± 0.1
         {
-            Debug.LogError("Weights do not sum up to 1. (" + sum + ")");
+            Debug.LogError("Error computing the Center of Mass. Weights do not sum up to 1. (" + sum + ")");
             return Vector3.one;
         }
 

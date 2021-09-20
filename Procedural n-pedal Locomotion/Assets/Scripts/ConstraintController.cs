@@ -49,7 +49,7 @@ public class ConstraintController : MonoBehaviour
         
         originalPos = transform.position;
         IsMoving = false;
-
+        
         maxRange = GetChainLength();
         chainWeight = GetAvgChainWeight();  
     }
@@ -150,9 +150,11 @@ public class ConstraintController : MonoBehaviour
         float distFromRoot = Vector3.Distance(targetPos, rootPos);
 
         // Make sure the initial target distance is shorter than the max range of the limb.
-        while (distFromRoot > maxRange)
+        int maxIterations = 10;
+        while (distFromRoot > maxRange && maxIterations > 0)
         {
             targetPos.z += 0.002f * sign;
+            maxIterations--;
         }
                        
         // TODO use forward rather than always Z
@@ -177,7 +179,7 @@ public class ConstraintController : MonoBehaviour
     /// <param name="range"></param>
     public void SetMaxRange(float range)
     {
-        if (range != default && range > 0)
+        if (range > 0)
         {
             maxRange = range;
         }

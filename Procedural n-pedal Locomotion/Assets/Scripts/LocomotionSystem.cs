@@ -77,8 +77,8 @@ public class LocomotionSystem : MonoBehaviour
 
         if (randomizeStartingPattern)
         {
-            int disparity = 1;
-            for (int i = 1; i < limbs.Count; i++)
+            int disparity = 0;
+            for (int i = 0; i < limbs.Count; i++)
             {
                 limbs[i].DisplaceTarget(i, disparity, limbs.Count);
                 if (i % 2 == 0) disparity++;

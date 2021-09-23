@@ -16,8 +16,11 @@ public class LocomotionSystem : MonoBehaviour
     private float stepSize = 1f;
 
     [Space]
-    [SerializeField] private bool useCustomMaxRange = false;
-    [SerializeField] private float customMaxRange = 0f;
+    [SerializeField, Tooltip("Enable to override the maximum step range.")]
+    private bool useCustomMaxRange = false;
+
+    [SerializeField, Tooltip("Maximum stepping distance.")]
+    private float customMaxRange = 0f;
     [Space]
 
     [SerializeField, Range(0.1f, 50f), Tooltip("Speed at which to realign the character's body when walking on slopes.")]

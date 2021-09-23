@@ -658,12 +658,16 @@ public class LocomotionSystem : MonoBehaviour
         // Add a Weight component to all limb parts
         for (int i = 0; i < limbs.Count; i++)
         {
-            GameObject root = limbs[i].TwoBoneIKConstraint.data.root.gameObject;
-            GameObject mid = limbs[i].TwoBoneIKConstraint.data.mid.gameObject;
+            GameObject root = limbs[i].TwoBoneIKConstraint.data.root?.gameObject;
+            GameObject mid = limbs[i].TwoBoneIKConstraint.data.mid?.gameObject;
 
-            if (root.GetComponent<Weight>() == null)
+            if (root && root.GetComponent<Weight>() == null)
             {
                 root.AddComponent<Weight>();
+            }
+
+            if (mid && mid.GetComponent<Weight>() == null)
+            {
                 mid.AddComponent<Weight>();
             }
         }

@@ -18,7 +18,7 @@ public class MovementController : MonoBehaviour
     [SerializeField]
     private float speed = 3f;
 
-    [SerializeField, Range(0.1f, 50f)] 
+    [SerializeField, Range(0.1f, 10f)] 
     private float turnSpeed = 3f;
 
     [SerializeField, Tooltip("Allows the character to only move in a direction where limb targets are permitted.")] 

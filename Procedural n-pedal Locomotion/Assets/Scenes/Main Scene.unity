@@ -8616,10 +8616,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 3
-  turnSpeed: 3
+  turnSpeed: 2.5
   useDirectionLimiter: 0
   enableSprint: 1
-  sprintMultiplier: 2
+  sprintMultiplier: 3
 --- !u!114 &1432680643
 MonoBehaviour:
   m_ObjectHideFlags: 0

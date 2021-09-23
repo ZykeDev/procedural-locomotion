@@ -33,8 +33,13 @@ public class Entity : MonoBehaviour
 
 
     public MovementController MovementController => GetComponent<MovementController>();
+
+    [HideInInspector] 
     public List<ConstraintController> limbs;
+
+    [Tooltip("References to every limb root of the model. Add them before clicking Setup.")]
     public List<GameObject> limbObjects;
+
     private int groundMask;
     public float BodyWeight { get; private set; }
     public float TotalWeight { get; private set; }
@@ -528,6 +533,108 @@ public class Entity : MonoBehaviour
         }
     }
 
+    public void SetupModel()
+    {
+        if (limbObjects.Count < 1)
+        {
+            Debug.LogError("No limbs detected in the Limb Objects list. Add them if you have not already done so.");
+            return;
+        }
+
+        if (body == null)
+        {
+            Debug.LogError("Missing the main Body object reference. Add it if you have not already done so.");
+            return;
+        }
+
+
+        // Create an IK Manager as a child of the Body
+        GameObject IKManager = new GameObject();
+        IKManager.transform.parent = body.transform;
+        IKManager.name = transform.name + " IK Manager";
+        Rig IKManagerRig = IKManager.AddComponent<Rig>();
+
+        // Link the new rig to the RigBuilder
+        GetComponent<RigBuilder>().layers = new List<RigLayer>
+        {
+            new RigLayer(IKManagerRig, true)
+        };
+
+        // Empty the limbs list. It will be refilled with the limbObjects below.
+        limbs.Clear();
+
+        for (int i = 0; i < limbObjects.Count; i++)
+        {
+            GameObject tipTarget = new GameObject();
+            tipTarget.transform.parent = transform;
+            tipTarget.name = "Tip Target " + i;
+            tipTarget.AddComponent<GroundAnchor>();
+
+            GameObject boneC = new GameObject();
+            boneC.transform.parent = IKManager.transform;
+            boneC.name = "Bone Constraint " + i;
+            TwoBoneIKConstraint TBIKC = boneC.AddComponent<TwoBoneIKConstraint>();
+            ConstraintController CC = boneC.AddComponent<ConstraintController>();
+
+            (Transform root, Transform mid, Transform tip) = GetBoneSegments(limbObjects[i]);
+
+            // Set the TBIKC data
+            TBIKC.data.root = root;
+            TBIKC.data.mid = mid;
+            TBIKC.data.tip = tip;
+            TBIKC.data.target = boneC.transform;
+
+            // Align the tip and its target
+            tipTarget.transform.position = tip.transform.position;
+
+            // Set the CC data
+            int oppositeIndex = i % 2 == 0 ? i + 1 : i - 1; // Opposites will always be (0, 1) (2, 3), ...
+            if (oppositeIndex < limbObjects.Count)
+            {
+                CC.opposite = limbObjects[oppositeIndex].transform;
+            }
+
+            int aheadIndex = i + 2;
+            if (aheadIndex < limbObjects.Count)
+            {
+                CC.ahead = limbObjects[aheadIndex].transform;
+            }
+
+            int behindIndex = i - 2;
+            if (behindIndex >= 0)
+            {
+                CC.behind = limbObjects[behindIndex].transform;
+            }
+
+            CC.target = tipTarget.transform;
+            CC.transform.position = tipTarget.transform.position;
+
+            // Add the CC to the list of limbs
+            limbs.Add(CC);
+        }
+    }
+
+
+    public void ResetModel()
+    {
+        // Clear the Rig references
+        RigBuilder rb = GetComponent<RigBuilder>();
+        DestroyImmediate(rb.layers[0].rig.gameObject);
+        rb.layers = new List<RigLayer>();
+
+        // Destroy all ground anchors
+        GroundAnchor[] anchors = GetComponentsInChildren<GroundAnchor>();
+        for (int i = anchors.Length - 1; i >= 0; i--)
+        {
+            DestroyImmediate(anchors[i].gameObject);
+        }
+
+        // Empty the limbs list
+        limbs.Clear();
+
+        body = null;
+    }
+
 
     public void GenerateWeights()
     {
@@ -586,70 +693,8 @@ public class Entity : MonoBehaviour
         }
     }
 
-    public void GenerateConstraints()
-    {
-        // Create an IK Manager as a child of the Body
-        GameObject IKManager = new GameObject();
-        IKManager.transform.parent = body.transform;
-        IKManager.name = transform.name + " IK Manager";
-        Rig IKManagerRig = IKManager.AddComponent<Rig>();
 
-        // Link the new rig to the RigBuilder
-        GetComponent<RigBuilder>().layers = new List<RigLayer>
-        {
-            new RigLayer(IKManagerRig, true)
-        };
 
-        for (int i = 0; i < limbObjects.Count; i++)
-        {
-            GameObject tipTarget = new GameObject();
-            tipTarget.transform.parent = transform;
-            tipTarget.name = "Tip Target " + i;
-            tipTarget.AddComponent<GroundAnchor>();
-
-            GameObject boneC = new GameObject();
-            boneC.transform.parent = IKManager.transform;
-            boneC.name = "Bone Constraint " + i;
-            TwoBoneIKConstraint TBIKC = boneC.AddComponent<TwoBoneIKConstraint>();
-            ConstraintController CC = boneC.AddComponent<ConstraintController>();
-
-            (Transform root, Transform mid, Transform tip) = GetBoneSegments(limbObjects[i]);
-
-            // Set the TBIKC data
-            TBIKC.data.root = root;
-            TBIKC.data.mid = mid;
-            TBIKC.data.tip = tip;
-            TBIKC.data.target = boneC.transform;
-
-            // Align the tip and its target
-            tipTarget.transform.position = tip.transform.position;
-
-            // Set the CC data
-            int oppositeIndex = i % 2 == 0 ? i + 1 : i - 1; // Opposites will always be (0, 1) (2, 3), ...
-            if (oppositeIndex < limbObjects.Count)
-            {
-                CC.opposite = limbObjects[oppositeIndex].transform;
-            }
-
-            int aheadIndex = i + 2;
-            if (aheadIndex < limbObjects.Count)
-            {
-                CC.ahead = limbObjects[aheadIndex].transform;
-            }
-
-            int behindIndex = i - 2;
-            if (behindIndex >= 0)
-            {
-                CC.behind = limbObjects[behindIndex].transform;
-            }
-
-            CC.target = tipTarget.transform;
-            CC.transform.position = tipTarget.transform.position;
-
-            // Add the CC to the list of limbs
-            limbs.Add(CC);
-        }
-    }
 
 
     // Returns the root, mid and tip bones of an IK chain gameObject.

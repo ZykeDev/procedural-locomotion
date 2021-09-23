@@ -271,7 +271,7 @@ public class LocomotionSystem : MonoBehaviour
 
 
         // Send the values to the movement controller to limit movement in that direction
-        MovementController.SetArcLimit((from, to), id);
+        MovementController?.SetArcLimit((from, to), id);
     }
 
     

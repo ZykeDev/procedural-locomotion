@@ -90,7 +90,7 @@ public class ConstraintController : MonoBehaviour
             } 
             else
             {
-                Character.MovementController.ResetArcLimit(id);
+                Character.MovementController?.ResetArcLimit(id);
             }
 
             // Check if the distance to the target point is too great

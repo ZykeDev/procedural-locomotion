@@ -6,7 +6,7 @@ using UnityEngine.Animations.Rigging;
 public class ConstraintController : MonoBehaviour
 {
     [HideInInspector]
-    public int id;  // Index of this CC and its corresponding limb in the Entity's list
+    public int id;  // Index of this CC and its corresponding limb in the character's list
 
     [Tooltip("Reference to the target transform the joint should move towards.")] 
     public Transform target;
@@ -27,9 +27,9 @@ public class ConstraintController : MonoBehaviour
     private float maxRange;                 // Maximum range of the limb chain
 
     public TwoBoneIKConstraint TwoBoneIKConstraint => GetComponent<TwoBoneIKConstraint>();
-    private Entity ParentEntity => GetComponentInParent<Entity>();
+    private LocomotionSystem Character => GetComponentInParent<LocomotionSystem>();
 
-    [SerializeField, Min(0.1f), Tooltip("Distance after which to take a step. If this value is set to anything other than 0, it overrides the Step Size defined in the Entity Component.")]
+    [SerializeField, Min(0.1f), Tooltip("Distance after which to take a step. If this value is set to anything other than 0, it overrides the Step Size defined in the Locomotion System Component.")]
     private float stepSize;
 
     [SerializeField, Min(0.1f), Tooltip("Maximum height reached by the limb during its limb's arching animation.")]
@@ -85,11 +85,11 @@ public class ConstraintController : MonoBehaviour
             bool isTraversable = IsTraversable(target.position);
             if (!isTraversable)
             {
-                ParentEntity.LimitMovement(target.position, id);
+                Character.LimitMovement(target.position, id);
             } 
             else
             {
-                ParentEntity.MovementController.ResetArcLimit(id);
+                Character.MovementController.ResetArcLimit(id);
             }
 
             // Check if the distance to the target point is too great
@@ -109,7 +109,7 @@ public class ConstraintController : MonoBehaviour
             if (canMove && isTraversable && isStable)
             {
                 // Start a coroutine to move the limb
-                Coro.Perp(transform, target.position, (int)ParentEntity.limbUpwardsAxis, chainWeight / speed, OnMovementEnd);
+                Coro.Perp(transform, target.position, (int)Character.limbUpwardsAxis, chainWeight / speed, OnMovementEnd);
                 IsMoving = true;
             }
             else
@@ -226,7 +226,7 @@ public class ConstraintController : MonoBehaviour
     /// <returns></returns>
     private bool IsTraversable(Vector3 point)
     {
-        Vector3 com = ParentEntity.CenterOfMass;
+        Vector3 com = Character.CenterOfMass;
         Vector3 rayDirection = (point - com).Rescale(0.98f);        // Only use 98% of the ray, since we don't want to hit the ground
         RaycastHit[] hits = Physics.RaycastAll(com, rayDirection, rayDirection.magnitude);
 

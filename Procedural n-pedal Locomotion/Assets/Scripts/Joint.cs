@@ -21,8 +21,6 @@ public class Joint : MonoBehaviour
 
     public void Rotate(Vector3 rotation)
     {
-        //transform.Rotate(Vector3.forward * angle);
-        //transform.rotation = (Quaternion.Euler(x, y, z));
         transform.Rotate(rotation);
     }
 }

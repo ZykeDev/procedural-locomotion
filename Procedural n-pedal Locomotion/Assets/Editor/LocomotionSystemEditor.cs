@@ -1,14 +1,14 @@
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(Entity))]
-public class EntityEditor : Editor
+[CustomEditor(typeof(LocomotionSystem))]
+public class LocomotionSystemEditor : Editor
 {
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
 
-        Entity entity = (Entity)target;
+        LocomotionSystem locomotionSystem = (LocomotionSystem)target;
 
         GUILayout.Space(10);
         EditorGUILayout.LabelField("Setup", EditorStyles.boldLabel);
@@ -18,12 +18,12 @@ public class EntityEditor : Editor
 
         if (GUILayout.Button(new GUIContent("Setup Model", "Setups the model so that it can be used by the Procedural Locomotion system.")))
         {
-            entity.SetupModel();
+            locomotionSystem.SetupModel();
         }
 
         if (GUILayout.Button(new GUIContent("Reset Model", "Resets the model and removes the modules added by the Procedural Locomotion system.")))
         {
-            entity.ResetModel();
+            locomotionSystem.ResetModel();
         }
 
         
@@ -37,14 +37,14 @@ public class EntityEditor : Editor
         // ---------------------------------------------------
         GUILayout.BeginHorizontal();
 
-        if (GUILayout.Button(new GUIContent("Generate Weights", "Adds a Weight component to the Entity's body and each of its limbs.")))
+        if (GUILayout.Button(new GUIContent("Generate Weights", "Adds a Weight component to the Character's body and each of its limbs.")))
         {
-            entity.GenerateWeights();
+            locomotionSystem.GenerateWeights();
         }
 
-        if (GUILayout.Button(new GUIContent("Remove Weights", "Removes the Weight component from the Entity's body and each of its limbs.")))
+        if (GUILayout.Button(new GUIContent("Remove Weights", "Removes the Weight component from the Character's body and each of its limbs.")))
         {
-            entity.RemoveWeights();
+            locomotionSystem.RemoveWeights();
         }
 
         GUILayout.EndHorizontal();

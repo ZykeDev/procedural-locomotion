@@ -5,7 +5,7 @@ using UnityEngine;
 public class MovementController : MonoBehaviour
 {
     private CharacterController Controller => GetComponent<CharacterController>();
-    private Entity Entity => GetComponent<Entity>();
+    private LocomotionSystem LocomotionSystem => GetComponent<LocomotionSystem>();
 
     // Pair of degrees between which to limit directional movement.
     // i.e. (0, 90) only allows movement in a direction if its forward vector
@@ -21,7 +21,7 @@ public class MovementController : MonoBehaviour
     [SerializeField, Range(0.1f, 50f)] 
     private float turnSpeed = 3f;
 
-    [SerializeField, Tooltip("Allows the entity to only move in a direction where limb targets are permitted.")] 
+    [SerializeField, Tooltip("Allows the character to only move in a direction where limb targets are permitted.")] 
     private bool useDirectionLimiter = false;
 
     [SerializeField]
@@ -58,7 +58,7 @@ public class MovementController : MonoBehaviour
 
         if (canMove && direction.magnitude >= 0.1f)
         {
-            float bodyWeight = Entity ? Entity.BodyWeight : 1;
+            float bodyWeight = LocomotionSystem ? LocomotionSystem.BodyWeight : 1;
 
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
             float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnVelocity, bodyWeight / turnSpeed);
@@ -78,17 +78,17 @@ public class MovementController : MonoBehaviour
     private void UpdateCenter()
     {
         // Use the CoM as the geometrical center
-        if (Entity)
+        if (LocomotionSystem)
         {
             // Transform the CoM to Local Coordinates
-            Controller.center = transform.InverseTransformPoint(Entity.CenterOfMass);
+            Controller.center = transform.InverseTransformPoint(LocomotionSystem.CenterOfMass);
         }
     }
 
 
 
     /// <summary>
-    /// Returns true if the entity is allowed to move in the given direction.
+    /// Returns true if the character is allowed to move in the given direction.
     /// </summary>
     /// <param name="direction"></param>
     /// <returns></returns>
@@ -164,7 +164,7 @@ public class MovementController : MonoBehaviour
     private void OnDrawGizmos()
     {
         //Circle
-        UnityEditor.Handles.DrawWireDisc(Entity.CenterOfMass, Vector3.up, 1.5f);
+        UnityEditor.Handles.DrawWireDisc(LocomotionSystem.CenterOfMass, Vector3.up, 1.5f);
     }
 
 }

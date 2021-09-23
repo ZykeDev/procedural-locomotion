@@ -4,7 +4,7 @@ using UnityEngine.Animations.Rigging;
 
 [DefaultExecutionOrder(-1)]
 [RequireComponent(typeof(RigBuilder))]
-public class Entity : MonoBehaviour
+public class LocomotionSystem : MonoBehaviour
 {
     [SerializeField] private GameObject body;
 
@@ -19,7 +19,7 @@ public class Entity : MonoBehaviour
     [SerializeField]
     private float customMaxRange = 0f;
 
-    [SerializeField, Range(0.1f, 50f), Tooltip("Speed at which to realign the entity's body when walking on slopes.")]
+    [SerializeField, Range(0.1f, 50f), Tooltip("Speed at which to realign the character's body when walking on slopes.")]
     private float realignmentSpeed = 25f;
 
     [SerializeField, Range(0.01f, 1f), Tooltip("Min height difference above which to start rotating the body.")]
@@ -97,7 +97,7 @@ public class Entity : MonoBehaviour
         UpdateCenterOfMass();
 
 
-        // Set the entity's height based on the limb tips.
+        // Set the character's height based on the limb tips.
         // Do we update this only after a limb has reached its target?
         UpdateGait();
     }
@@ -472,18 +472,18 @@ public class Entity : MonoBehaviour
 
 
     /// <summary>
-    /// Adds Collider components to the Entity depending on the choosen ColliderGeneration
+    /// Adds Collider components to the character depending on the choosen ColliderGeneration
     /// </summary>
     private void GenerateBoneColliders()
     {
-        // Chooses how to add colliders to the Entity depending on the generateBoneCollider enum
+        // Chooses how to add colliders to the character depending on the generateBoneCollider enum
 
-        // Adds a single Box Collider to the complete body of the entity
+        // Adds a single Box Collider to the complete body of the character
         if (generateBoneColliders == ColliderGeneration.CompleteBody)
         {      
             BoxCollider bodyCollider = gameObject.AddComponent<BoxCollider>();
 
-            // Find the biggest Renderer inside the entity
+            // Find the biggest Renderer inside the character
             Vector3 biggestSize = Vector3.zero;
             Vector3 center = Vector3.zero;
 

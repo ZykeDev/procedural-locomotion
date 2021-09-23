@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class GroundAnchor : MonoBehaviour
 {
-    private Entity ParentEntity;
+    private LocomotionSystem Character;
     private Transform tip;                  // Tip of the limb. Should be passed down by the Constraint Controller
     private int layerMask;
 
@@ -19,7 +19,7 @@ public class GroundAnchor : MonoBehaviour
     void Awake()
     {
         layerMask = LayerMask.GetMask("Ground");
-        ParentEntity = GetComponentInParent<Entity>();
+        Character = GetComponentInParent<LocomotionSystem>();
     }
 
     void FixedUpdate()
@@ -37,7 +37,7 @@ public class GroundAnchor : MonoBehaviour
     /// </summary>
     private void Anchor()
     {
-        if (!ParentEntity.IsRotating)
+        if (!Character.IsRotating)
         {
             Vector3 direction = Vector3.down;
 

@@ -73,7 +73,7 @@ public class Entity : MonoBehaviour
             int disparity = 1;
             for (int i = 1; i < limbs.Count; i++)
             {
-                limbs[i].DisplaceTarget(i, disparity);
+                limbs[i].DisplaceTarget(i, disparity, limbs.Count);
                 if (i % 2 == 0) disparity++;
             }
         }

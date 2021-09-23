@@ -138,9 +138,8 @@ public class ConstraintController : MonoBehaviour
     /// <summary>
     /// Moves the target forward by a random amount to simulate a quadrupedal locomotion patterns
     /// </summary>
-    public void DisplaceTarget(int index, int disparity)
+    public void DisplaceTarget(int index, int disparity, int numberOfLimbs)
     {
-        int numberOfLimbs = 8;  // TODO automatically detect this
         float forwardDistance = stepSize / (numberOfLimbs * 2) + (stepSize / (numberOfLimbs * 4) * index);
 
         int sign = Convert.ToInt32(disparity % 2 != 0) * 2 - 1;     // Converts the disparity into a number sign (-1 or +1)

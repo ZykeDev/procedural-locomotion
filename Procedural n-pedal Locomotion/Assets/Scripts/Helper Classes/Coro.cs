@@ -48,11 +48,11 @@ public class Coro : MonoBehaviour
         box.coroutine = _instance.StartCoroutine(coro);
     }
 
-    public static void Perp(Transform obj, Vector3 targetPos, int axis, float duration, Action callback)
+    public static void Perp(Transform obj, Vector3 targetPos, int axis, float stepHeight, float duration, Action callback)
     {
         CoroutineBox box = new CoroutineBox();
 
-        IEnumerator coro = _instance.Perp(box, obj, targetPos, axis, duration, callback);
+        IEnumerator coro = _instance.Perp(box, obj, targetPos, axis, stepHeight, duration, callback);
         box.coroutine = _instance.StartCoroutine(coro);
     }
 
@@ -91,7 +91,7 @@ public class Coro : MonoBehaviour
     /// <summary>
     /// Parabolically Interpolates the obj's position towards the target position.
     /// </summary>
-    private IEnumerator Perp(CoroutineBox box, Transform obj, Vector3 targetPos, int axisIndex, float duration, Action callback)
+    private IEnumerator Perp(CoroutineBox box, Transform obj, Vector3 targetPos, int axisIndex, float stepHeight, float duration, Action callback)
     {
         yield return new WaitForEndOfFrame();
 
@@ -108,7 +108,7 @@ public class Coro : MonoBehaviour
             float step = elapsedTime / duration;
 
             // Perp only over the given axis (usually Y), based on the direction vector
-            float parabolicPoint = Interp.Perp(startingPos, targetPos, axisIndex, step);
+            float parabolicPoint = Interp.Perp(startingPos, targetPos, axisIndex, step, stepHeight);
 
             // Adjust the parabolicPoint to align with the general locomotion direction (Terrain Escalation)
             float axisDifference = Mathf.Lerp(startingPos[axisIndex], targetPos[axisIndex], step);

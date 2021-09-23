@@ -8,16 +8,17 @@ public class LocomotionSystem : MonoBehaviour
 {
     [SerializeField] private GameObject body;
 
+    [Space]
     [Tooltip("Axis along whitch to elevate the limb during locomotion.")]
     public Settings.Axes limbUpwardsAxis = Settings.Axes.Y;
 
     [SerializeField, Min(0.1f), Tooltip("Distance after which to take a step.")]
     private float stepSize = 1f;
 
-    [SerializeField]
-    private bool useCustomMaxRange = false;
-    [SerializeField]
-    private float customMaxRange = 0f;
+    [Space]
+    [SerializeField] private bool useCustomMaxRange = false;
+    [SerializeField] private float customMaxRange = 0f;
+    [Space]
 
     [SerializeField, Range(0.1f, 50f), Tooltip("Speed at which to realign the character's body when walking on slopes.")]
     private float realignmentSpeed = 25f;
@@ -28,7 +29,8 @@ public class LocomotionSystem : MonoBehaviour
     [SerializeField, Tooltip("Randomizes the starting locomotion pattern of the limb targets.")]
     private bool randomizeStartingPattern = true;
 
-    [SerializeField, Tooltip("Automatically add a Capsule Collider to each bone.")]
+    [Space]
+    [SerializeField, Tooltip("Automatically adds a Capsule Collider to each bone on startup.")]
     private ColliderGeneration generateBoneColliders;
 
 

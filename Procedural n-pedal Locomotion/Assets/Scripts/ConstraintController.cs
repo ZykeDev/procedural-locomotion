@@ -29,6 +29,7 @@ public class ConstraintController : MonoBehaviour
     public TwoBoneIKConstraint TwoBoneIKConstraint => GetComponent<TwoBoneIKConstraint>();
     private LocomotionSystem Character => GetComponentInParent<LocomotionSystem>();
 
+    [Space]
     [SerializeField, Min(0.1f), Tooltip("Distance after which to take a step. If this value is set to anything other than 0, it overrides the Step Size defined in the Locomotion System Component.")]
     private float stepSize;
 
@@ -109,7 +110,7 @@ public class ConstraintController : MonoBehaviour
             if (canMove && isTraversable && isStable)
             {
                 // Start a coroutine to move the limb
-                Coro.Perp(transform, target.position, (int)Character.limbUpwardsAxis, chainWeight / speed, OnMovementEnd);
+                Coro.Perp(transform, target.position, (int)Character.limbUpwardsAxis, stepHeight, chainWeight / speed, OnMovementEnd);
                 IsMoving = true;
             }
             else

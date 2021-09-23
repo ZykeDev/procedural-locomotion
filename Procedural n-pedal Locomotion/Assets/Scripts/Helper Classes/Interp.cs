@@ -3,8 +3,6 @@ using UnityEngine;
 public class Interp
 {
     private static readonly float distThreshold = 0.01f;    // Minimum target distance. If lower, the object snaps to the target.
-    // TODO make this editable
-    private static readonly float stepHeight = 0.5f;        // Parametrical height of the global max (peak of the stepping arc)
 
     /// <summary>
     /// Returns the Parabolically Interpolated value for p along the given axis, scaled over the distance from "from" to "to".
@@ -14,17 +12,16 @@ public class Interp
     /// <param name="axis">Index of the axis along which to interpolate. Clamped on the interval 0, 1, 2.</param>
     /// <param name="step">Step value between 0 and 1</param>
     /// <returns></returns>
-    public static float Perp(Vector3 from, Vector3 to, int axis, float step)
+    public static float Perp(Vector3 from, Vector3 to, int axis, float step, float stepHeight)
     {
         /* 
         Using the following parametrised parabola function: https://www.desmos.com/calculator/7ptdgoi9ri
 
-        y = (-s^2 * ds) * m
+        y = (-x^2 * dx) * m
         
         Where:
-        s = x
         d = |f - t|
-        m = 4h/d^2
+        m = 4h / d^2
 
         */
 

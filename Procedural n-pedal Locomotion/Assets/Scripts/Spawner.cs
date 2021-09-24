@@ -4,6 +4,7 @@
  */
 
 using Cinemachine;
+using System.Collections.Generic;
 using UnityEngine;
 
 // Class to swap the currently selected model at run-time.
@@ -38,19 +39,17 @@ public class Spawner : MonoBehaviour
 
     private void Spawn(GameObject go)
     {
-        // Deactivate current
-        current?.SetActive(false);
+        Destroy(current);
 
-        // Place choosen
+        go = Instantiate(go);
+
+        // Place it
         go.transform.position = startPos;
         go.transform.rotation = Quaternion.Euler(startRot);
 
         // Update Cinemachine references
         CMcamera.Follow = go.transform;
         CMcamera.LookAt = go.transform;
-
-        // Activate choosen
-        go.SetActive(true);
 
         current = go;
     }

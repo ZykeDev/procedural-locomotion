@@ -85,20 +85,9 @@ public class LocomotionSystem : MonoBehaviour
             }
         }
 
-        if (randomizeStartingPattern)
-        {
-            int disparity = 0;
-            for (int i = 0; i < limbs.Count; i++)
-            {
-                limbs[i].DisplaceTarget(i, disparity, limbs.Count, transform.forward);
-                if (i % 2 == 0) disparity++;
-            }
-        }
+        RandomizeStartingPattern();
 
-        if (generateBoneColliders != ColliderGeneration.DontGenerate)
-        {
-            GenerateBoneColliders();
-        }
+        GenerateBoneColliders();
     }
 
 
@@ -115,6 +104,18 @@ public class LocomotionSystem : MonoBehaviour
     }
 
 
+    public void RandomizeStartingPattern()
+    {
+        if (randomizeStartingPattern)
+        {
+            int disparity = 0;
+            for (int i = 0; i < limbs.Count; i++)
+            {
+                limbs[i].DisplaceTarget(i, disparity, limbs.Count, transform.forward);
+                if (i % 2 == 0) disparity++;
+            }
+        }
+    }
 
 
     private void UpdateGait()
@@ -488,59 +489,62 @@ public class LocomotionSystem : MonoBehaviour
     /// </summary>
     private void GenerateBoneColliders()
     {
-        // Chooses how to add colliders to the character depending on the generateBoneCollider enum
+        if (generateBoneColliders != ColliderGeneration.DontGenerate)
+        {
+            // Chooses how to add colliders to the character depending on the generateBoneCollider enum
 
-        // Adds a single Box Collider to the complete body of the character
-        if (generateBoneColliders == ColliderGeneration.CompleteBody)
-        {      
-            BoxCollider bodyCollider = gameObject.AddComponent<BoxCollider>();
-
-            // Find the biggest Renderer inside the character
-            Vector3 biggestSize = Vector3.zero;
-            Vector3 center = Vector3.zero;
-
-            foreach (Renderer r in GetComponentsInChildren<Renderer>())
+            // Adds a single Box Collider to the complete body of the character
+            if (generateBoneColliders == ColliderGeneration.CompleteBody)
             {
-                if (biggestSize == Vector3.zero)
+                BoxCollider bodyCollider = gameObject.AddComponent<BoxCollider>();
+
+                // Find the biggest Renderer inside the character
+                Vector3 biggestSize = Vector3.zero;
+                Vector3 center = Vector3.zero;
+
+                foreach (Renderer r in GetComponentsInChildren<Renderer>())
                 {
-                    biggestSize = r.bounds.size;
-                    center = r.bounds.center;
+                    if (biggestSize == Vector3.zero)
+                    {
+                        biggestSize = r.bounds.size;
+                        center = r.bounds.center;
+                    }
+                    else if (r.bounds.size.IsGreaterThan(biggestSize))
+                    {
+                        biggestSize = r.bounds.size;
+                        center = r.bounds.center;
+                    }
                 }
-                else if (r.bounds.size.IsGreaterThan(biggestSize)) 
-                {
-                    biggestSize = r.bounds.size;
-                    center = r.bounds.center;
-                }
+
+                // Use its bounds to determine the collider size and center
+                bodyCollider.center = center;
+                bodyCollider.size = biggestSize / 2;
             }
 
-            // Use its bounds to determine the collider size and center
-            bodyCollider.center = center;
-            bodyCollider.size = biggestSize / 2;
-        }
-
-        // Generate box colliders around each limb bone   TODO
-        else if (generateBoneColliders == ColliderGeneration.EachLimb)
-        {
-            for (int i = 0; i < limbs.Count; i++)
+            // Generate box colliders around each limb bone   TODO
+            else if (generateBoneColliders == ColliderGeneration.EachLimb)
             {
-                ConstraintController limb = limbs[i];
-                GameObject root = limb.TwoBoneIKConstraint.data.root.gameObject;
-                GameObject mid = limb.TwoBoneIKConstraint.data.mid.gameObject;
-                GameObject end = limb.TwoBoneIKConstraint.data.tip.parent.gameObject;
-                GameObject tip = limb.TwoBoneIKConstraint.data.tip.gameObject;
+                for (int i = 0; i < limbs.Count; i++)
+                {
+                    ConstraintController limb = limbs[i];
+                    GameObject root = limb.TwoBoneIKConstraint.data.root.gameObject;
+                    GameObject mid = limb.TwoBoneIKConstraint.data.mid.gameObject;
+                    GameObject end = limb.TwoBoneIKConstraint.data.tip.parent.gameObject;
+                    GameObject tip = limb.TwoBoneIKConstraint.data.tip.gameObject;
 
-                Vector3 a = root.transform.localPosition;
-                Vector3 b = mid.transform.localPosition;
-                Vector3 globalScale = root.transform.lossyScale;
+                    Vector3 a = root.transform.localPosition;
+                    Vector3 b = mid.transform.localPosition;
+                    Vector3 globalScale = root.transform.lossyScale;
 
 
-                Vector3 center = (a + b) / 2;                        // Find the midway point to use as the center
-                float height = Vector3.Distance(a.DivideBy(globalScale), b.DivideBy(globalScale));
+                    Vector3 center = (a + b) / 2;                        // Find the midway point to use as the center
+                    float height = Vector3.Distance(a.DivideBy(globalScale), b.DivideBy(globalScale));
 
-                CapsuleCollider collider = root.AddComponent<CapsuleCollider>();
-                collider.center = center;
-                collider.height = height;
-                collider.radius = height / 4;
+                    CapsuleCollider collider = root.AddComponent<CapsuleCollider>();
+                    collider.center = center;
+                    collider.height = height;
+                    collider.radius = height / 4;
+                }
             }
         }
     }
@@ -549,13 +553,17 @@ public class LocomotionSystem : MonoBehaviour
     {
         if (limbObjects.Count < 1)
         {
+#if UNITY_EDITOR
             Debug.LogError("No limbs detected in the Limb Objects list. Add them if you have not already done so.");
+#endif
             return;
         }
 
         if (body == null)
         {
+#if UNITY_EDITOR
             Debug.LogError("Missing the main Body object reference. Add it if you have not already done so.");
+#endif
             return;
         }
 

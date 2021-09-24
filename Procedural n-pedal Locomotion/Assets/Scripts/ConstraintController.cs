@@ -120,7 +120,7 @@ public class ConstraintController : MonoBehaviour
             {
                 float stepSpeed = speed;
 
-                bool isSprinting = Input.GetKey(KeyCode.LeftShift);
+                bool isSprinting = Input.GetKey(Settings.Sprint_Key);
                 if (isSprintEnabled && isSprinting)
                 {
                     stepSpeed *= Character.MovementController.sprintMultiplier;
@@ -175,10 +175,10 @@ public class ConstraintController : MonoBehaviour
 
         while (distFromRoot > maxRange && iterations > 0)
         {
-            target.position -= (forwardDirection * 0.005f * sign);
+            targetPos -= (forwardDirection * 0.005f * sign);
             iterations--;
         }
-                       
+        
         target.position = targetPos;
     }
 

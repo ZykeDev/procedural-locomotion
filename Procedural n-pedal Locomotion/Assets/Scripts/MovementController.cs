@@ -56,7 +56,7 @@ public class MovementController : MonoBehaviour
 
         float hor = Input.GetAxisRaw("Horizontal");
         float ver = Input.GetAxisRaw("Vertical");
-        bool isSprinting = Input.GetKey(KeyCode.LeftShift);
+        bool isSprinting = Input.GetKey(Settings.Sprint_Key);
 
         Vector3 direction = new Vector3(hor, 0f, ver).normalized;
 

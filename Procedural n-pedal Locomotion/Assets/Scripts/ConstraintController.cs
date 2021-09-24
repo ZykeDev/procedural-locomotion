@@ -29,9 +29,10 @@ public class ConstraintController : MonoBehaviour
 
     private ConstraintController oppositeCC, aheadCC, behindCC;
 
-    private Vector3 originalPos;
-    public Transform tip, mid, root;
+    [HideInInspector] public Transform tip, mid, root;
+
     private float maxRange;                 // Maximum range of the limb chain
+    private Vector3 originalPos;            // Initial position of the constraint
 
     public TwoBoneIKConstraint TwoBoneIKConstraint => GetComponent<TwoBoneIKConstraint>();
     private LocomotionSystem Character => GetComponentInParent<LocomotionSystem>();

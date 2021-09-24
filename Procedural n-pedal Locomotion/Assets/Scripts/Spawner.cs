@@ -11,7 +11,7 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    [SerializeField]
+    [SerializeField, Tooltip("Prefab.")]
     private GameObject mech, crab, spider, centipede;
     private GameObject current;
 

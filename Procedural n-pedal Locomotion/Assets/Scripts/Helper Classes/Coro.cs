@@ -21,14 +21,6 @@ public class Coro : MonoBehaviour
         }
     }
     
-    void Update()
-    {
-        Time.timeScale = t;
-    }
-    public float t = 1;
-
-    public float timescale = 1f;
-    public void Slow() => Time.timeScale = timescale;
 
     #region Calls
 

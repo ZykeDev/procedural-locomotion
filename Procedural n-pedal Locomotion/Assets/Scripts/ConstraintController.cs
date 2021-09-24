@@ -139,25 +139,28 @@ public class ConstraintController : MonoBehaviour
     /// <summary>
     /// Moves the target forward by a random amount to simulate a quadrupedal locomotion patterns
     /// </summary>
-    public void DisplaceTarget(int index, int disparity, int numberOfLimbs)
+    public void DisplaceTarget(int index, int disparity, int numberOfLimbs, Vector3 forwardDirection)
     {
+        // Find a forward distance relative to the step size and the number of limbs
         float forwardDistance = stepSize / (numberOfLimbs * 2) + (stepSize / (numberOfLimbs * 4) * index);
 
-        int sign = Convert.ToInt32(disparity % 2 != 0) * 2 - 1;     // Converts the disparity into a number sign (-1 or +1)
-
+        // Converts the disparity into a number sign (-1 or +1)
+        int sign = Convert.ToInt32(disparity % 2 != 0) * 2 - 1;
+        
+        // Shift the target position by direction and distance
+        Vector3 targetPos = target.position + (forwardDirection * forwardDistance * sign);
+        
+        // Make sure the initial target distance is shorter than the max range of the limb
         Vector3 rootPos = root.transform.position;
-        Vector3 targetPos = new Vector3(target.position.x, target.position.y, target.position.z + (forwardDistance * sign));
         float distFromRoot = Vector3.Distance(targetPos, rootPos);
+        int iterations = 10;
 
-        // Make sure the initial target distance is shorter than the max range of the limb.
-        int maxIterations = 10;
-        while (distFromRoot > maxRange && maxIterations > 0)
+        while (distFromRoot > maxRange && iterations > 0)
         {
-            targetPos.z += 0.002f * sign;
-            maxIterations--;
+            target.position -= (forwardDirection * 0.005f * sign);
+            iterations--;
         }
                        
-        // TODO use forward rather than always Z
         target.position = targetPos;
     }
 

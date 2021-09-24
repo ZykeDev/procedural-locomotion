@@ -83,7 +83,7 @@ public class LocomotionSystem : MonoBehaviour
             int disparity = 0;
             for (int i = 0; i < limbs.Count; i++)
             {
-                limbs[i].DisplaceTarget(i, disparity, limbs.Count);
+                limbs[i].DisplaceTarget(i, disparity, limbs.Count, transform.forward);
                 if (i % 2 == 0) disparity++;
             }
         }

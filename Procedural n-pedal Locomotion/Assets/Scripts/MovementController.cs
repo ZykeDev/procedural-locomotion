@@ -165,10 +165,11 @@ public class MovementController : MonoBehaviour
     }
 
 
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        //Circle
         UnityEditor.Handles.DrawWireDisc(LocomotionSystem.CenterOfMass, Vector3.up, 1.5f);
     }
+#endif
 
 }

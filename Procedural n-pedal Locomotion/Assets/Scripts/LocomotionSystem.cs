@@ -746,10 +746,11 @@ public class LocomotionSystem : MonoBehaviour
         }
     }
 
-
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.blue;
         Gizmos.DrawSphere(CenterOfMass, .04f);
     }
+#endif
 }

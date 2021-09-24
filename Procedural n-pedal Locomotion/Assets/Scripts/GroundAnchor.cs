@@ -6,7 +6,7 @@ public class GroundAnchor : MonoBehaviour
     private Transform tip;                  // Tip of the limb. Should be passed down by the Constraint Controller
     private int layerMask;
 
-    private Vector3 verticalOffset = new Vector3(0, 1f, 0);
+    private Vector3 verticalOffset = new Vector3(0, 2f, 0);
     private Vector3 verticalGap = new Vector3(0, 0.001f, 0);    // Short vertical vector
     private Vector3 prevPos;
 

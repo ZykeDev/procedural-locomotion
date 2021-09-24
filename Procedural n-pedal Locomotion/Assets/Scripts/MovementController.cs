@@ -12,23 +12,27 @@ public class MovementController : MonoBehaviour
     // points towards a 90° to 360° range around the center.
     private List<(float from, float to)> ArcLimits = new List<(float from, float to)>();
 
-
-    private float turnVelocity;
-
-    [SerializeField]
-    private float speed = 3f;
-
-    [SerializeField, Range(0.1f, 10f)] 
-    private float turnSpeed = 3f;
-
     [SerializeField, Tooltip("Allows the character to only move in a direction where limb targets are permitted.")] 
     private bool useDirectionLimiter = false;
 
-    [SerializeField]
+    [Space]
+    [SerializeField, Tooltip("Speed at which the character moves")]
+    private float speed = 3f;
+
+    [SerializeField, Range(0.1f, 10f), Tooltip("Speed at which the character turns on itself.")] 
+    private float turnSpeed = 3f;
+    private float turnVelocity;
+
+
+    [SerializeField, Tooltip("Enables the sprint feature. Sprint can be used by holding the Shift key.")]
     private bool enableSprint = true;
 
     [SerializeField, Range(1f, 10f)]
     private float sprintMultiplier = 2f;
+
+    [Space]
+    [SerializeField, Tooltip("Shifts the position of the Character Controller's center.")]
+    private Vector3 centerShift = Vector3.zero; 
 
     private void Start()
     {
@@ -81,7 +85,7 @@ public class MovementController : MonoBehaviour
         if (LocomotionSystem)
         {
             // Transform the CoM to Local Coordinates
-            Controller.center = transform.InverseTransformPoint(LocomotionSystem.CenterOfMass);
+            Controller.center = transform.InverseTransformPoint(LocomotionSystem.CenterOfMass + centerShift);
         }
     }
 

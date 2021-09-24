@@ -1,9 +1,12 @@
+/* 
+ * This file is part of the Procedural-Locomotion repo on github.com/ZykeDev 
+ * Marco Vincenzi - 2021
+ */
+
 using UnityEngine;
 
-public class Interp
+public static class Interp
 {
-    private static readonly float distThreshold = 0.01f;    // Minimum target distance. If lower, the object snaps to the target.
-
     /// <summary>
     /// Returns the Parabolically Interpolated value for p along the given axis, scaled over the distance from "from" to "to".
     /// </summary>
@@ -11,6 +14,7 @@ public class Interp
     /// <param name="to">Target coordinate</param>
     /// <param name="axis">Index of the axis along which to interpolate. Clamped on the interval 0, 1, 2.</param>
     /// <param name="step">Step value between 0 and 1</param>
+    /// <param name="stepHeight">Peak height of the parabola</param>
     /// <returns></returns>
     public static float Perp(Vector3 from, Vector3 to, int axis, float step, float stepHeight)
     {
@@ -29,7 +33,7 @@ public class Interp
         float dist = Vector3.Distance(from, to);    // Distance in 3D space
 
         // If the distance is too short, return the destination directly
-        if (dist <= distThreshold)
+        if (dist <= Settings.Step_Distance_Thresh)
         {
             return to[axis];
         }

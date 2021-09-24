@@ -1,5 +1,12 @@
+/* 
+ * This file is part of the Procedural-Locomotion repo on github.com/ZykeDev 
+ * Marco Vincenzi - 2021
+ */
+
 using UnityEngine;
 using UnityEditor;
+
+// Editor class to include the Setup and Weight buttons into the Locomotion System component.
 
 [CustomEditor(typeof(LocomotionSystem))]
 public class LocomotionSystemEditor : Editor
@@ -27,7 +34,6 @@ public class LocomotionSystemEditor : Editor
         }
 
         
-
         GUILayout.EndHorizontal();
         // ---------------------------------------------------
 

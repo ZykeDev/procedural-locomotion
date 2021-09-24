@@ -1,5 +1,12 @@
+/* 
+ * This file is part of the Procedural-Locomotion repo on github.com/ZykeDev 
+ * Marco Vincenzi - 2021
+ */
+
 using Cinemachine;
 using UnityEngine;
+
+// Class to swap the currently selected model at run-time.
 
 public class Spawner : MonoBehaviour
 {

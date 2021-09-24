@@ -1,7 +1,14 @@
+/* 
+ * This file is part of the Procedural-Locomotion repo on github.com/ZykeDev 
+ * Marco Vincenzi - 2021
+ */
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+// Coro class to handle and self-terminate coroutines.
 
 public class Coro : MonoBehaviour
 {

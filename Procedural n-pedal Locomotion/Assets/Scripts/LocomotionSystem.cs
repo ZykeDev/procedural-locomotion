@@ -1,6 +1,13 @@
+/* 
+ * This file is part of the Procedural-Locomotion repo on github.com/ZykeDev 
+ * Marco Vincenzi - 2021
+ */
+
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
+
+// Handles the procedural locomotion system of a model.
 
 [DefaultExecutionOrder(-1)]
 [RequireComponent(typeof(RigBuilder))]
@@ -56,7 +63,7 @@ public class LocomotionSystem : MonoBehaviour
 
     void Awake()
     {
-        groundMask = LayerMask.GetMask("Ground");
+        groundMask = LayerMask.GetMask(Settings.Layer_Ground);
 
         limbs = new List<ConstraintController>(GetComponentsInChildren<ConstraintController>());
     }

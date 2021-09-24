@@ -1,6 +1,13 @@
+/* 
+ * This file is part of the Procedural-Locomotion repo on github.com/ZykeDev 
+ * Marco Vincenzi - 2021
+ */
+
 using System;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
+
+// Controls the movement of a single limb through a TwoBone IK Constraint.
 
 [RequireComponent(typeof(TwoBoneIKConstraint))]
 public class ConstraintController : MonoBehaviour
@@ -249,7 +256,7 @@ public class ConstraintController : MonoBehaviour
         {
             for (int i = 0; i < hits.Length; i++)
             {
-                if (hits[i].transform.gameObject.CompareTag(Settings.Tag_untraversable))
+                if (hits[i].transform.gameObject.CompareTag(Settings.Tag_Untraversable))
                 {
                     //Debug.DrawLine(com, hits[i].point, Color.red, 1f);
                     return false;

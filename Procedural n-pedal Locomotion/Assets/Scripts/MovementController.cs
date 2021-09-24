@@ -1,3 +1,8 @@
+/* 
+ * This file is part of the Procedural-Locomotion repo on github.com/ZykeDev 
+ * Marco Vincenzi - 2021
+ */
+
 using System.Collections.Generic;
 using UnityEngine;
 

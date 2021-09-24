@@ -1,4 +1,11 @@
+/* 
+ * This file is part of the Procedural-Locomotion repo on github.com/ZykeDev 
+ * Marco Vincenzi - 2021
+ */
+
 using UnityEngine;
+
+// Keeps the attached Game Object on the ground below.
 
 public class GroundAnchor : MonoBehaviour
 {
@@ -18,7 +25,7 @@ public class GroundAnchor : MonoBehaviour
 
     void Awake()
     {
-        layerMask = LayerMask.GetMask("Ground");
+        layerMask = LayerMask.GetMask(Settings.Layer_Ground);
         Character = GetComponentInParent<LocomotionSystem>();
     }
 

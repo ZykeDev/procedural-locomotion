@@ -24,11 +24,11 @@ public class MovementController : MonoBehaviour
     private float turnVelocity;
 
 
-    [SerializeField, Tooltip("Enables the sprint feature. Sprint can be used by holding the Shift key.")]
-    private bool enableSprint = true;
+    [Tooltip("Enables the sprint feature. Sprint can be used by holding the Shift key.")]
+    public bool enableSprint = true;
 
-    [SerializeField, Range(1f, 10f)]
-    private float sprintMultiplier = 2f;
+    [Range(1f, 10f)]
+    public float sprintMultiplier = 2f;
 
     [Space]
     [SerializeField, Tooltip("Shifts the position of the Character Controller's center.")]

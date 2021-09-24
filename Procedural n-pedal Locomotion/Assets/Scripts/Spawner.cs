@@ -19,6 +19,10 @@ public class Spawner : MonoBehaviour
         Spawn(spider);
     }
 
+
+    public void Quit() => Application.Quit();   
+    
+
     public void SwapMech() => Spawn(mech);
     public void SwapCrab() => Spawn(crab);
     public void SwapSpider() => Spawn(spider);

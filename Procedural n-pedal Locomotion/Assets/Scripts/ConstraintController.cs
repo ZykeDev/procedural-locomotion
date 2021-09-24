@@ -105,12 +105,23 @@ public class ConstraintController : MonoBehaviour
             // Check if the step is legal
             bool isStable = !isOppositeMoving && !isAheadMoving && !isBehindMoving;
             bool canMove = distanceToTarget > stepSize || (distanceFromBody > maxRange && distanceToTarget > stepSize);
-            
+
+            bool isSprintEnabled = Character.MovementController.enableSprint;
+
             // If all checks are successful, move the limb
             if (canMove && isTraversable && isStable)
             {
+                float stepSpeed = speed;
+
+                bool isSprinting = Input.GetKey(KeyCode.LeftShift);
+                if (isSprintEnabled && isSprinting)
+                {
+                    stepSpeed *= Character.MovementController.sprintMultiplier;
+                    stepSpeed = Mathf.Pow(stepSpeed, 1 / 1.4f);
+                }
+
                 // Start a coroutine to move the limb
-                Coro.Perp(transform, target.position, (int)Character.limbUpwardsAxis, stepHeight, chainWeight / speed, OnMovementEnd);
+                Coro.Perp(transform, target.position, (int)Character.limbUpwardsAxis, stepHeight, chainWeight / stepSpeed, OnMovementEnd);
                 IsMoving = true;
             }
             else

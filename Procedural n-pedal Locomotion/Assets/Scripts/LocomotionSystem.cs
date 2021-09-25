@@ -492,10 +492,9 @@ public class LocomotionSystem : MonoBehaviour
         if (generateBoneColliders != ColliderGeneration.DontGenerate)
         {
             // Chooses how to add colliders to the character depending on the generateBoneCollider enum
-
-            // Adds a single Box Collider to the complete body of the character
             if (generateBoneColliders == ColliderGeneration.CompleteBody)
             {
+                // Adds a single Box Collider to the complete body of the character
                 BoxCollider bodyCollider = gameObject.AddComponent<BoxCollider>();
 
                 // Find the biggest Renderer inside the character
@@ -521,33 +520,47 @@ public class LocomotionSystem : MonoBehaviour
                 bodyCollider.size = biggestSize / 2;
             }
 
-            // Generate box colliders around each limb bone   TODO
+            // Generate box colliders around each limb bone
             else if (generateBoneColliders == ColliderGeneration.EachLimb)
             {
                 for (int i = 0; i < limbs.Count; i++)
                 {
                     ConstraintController limb = limbs[i];
                     GameObject root = limb.TwoBoneIKConstraint.data.root.gameObject;
-                    GameObject mid = limb.TwoBoneIKConstraint.data.mid.gameObject;
-                    GameObject end = limb.TwoBoneIKConstraint.data.tip.parent.gameObject;
-                    GameObject tip = limb.TwoBoneIKConstraint.data.tip.gameObject;
 
-                    Vector3 a = root.transform.localPosition;
-                    Vector3 b = mid.transform.localPosition;
-                    Vector3 globalScale = root.transform.lossyScale;
+                    // Add colliders to all limb parts under the root
+                    GameObject current = root;
+                    while (current.transform.childCount > 0)
+                    {
+                        SetLimbCollider(current);
 
-
-                    Vector3 center = (a + b) / 2;                        // Find the midway point to use as the center
-                    float height = Vector3.Distance(a.DivideBy(globalScale), b.DivideBy(globalScale));
-
-                    CapsuleCollider collider = root.AddComponent<CapsuleCollider>();
-                    collider.center = center;
-                    collider.height = height;
-                    collider.radius = height / 4;
+                        current = current.transform.GetChild(0).gameObject;
+                    }
                 }
             }
         }
     }
+
+    private CapsuleCollider SetLimbCollider(GameObject go)
+    {
+        CapsuleCollider collider = go.AddComponent<CapsuleCollider>();
+        collider.direction = (int)Settings.Axes.X;
+
+        // Find the next child
+        Transform child = go.transform.GetChild(0);
+  
+        // Set the collider height and shift its center position
+        float height = Vector3.Distance(go.transform.position, child.transform.position);
+        float centerOffsetX = height / 2;
+
+        collider.center -= new Vector3(centerOffsetX, 0, 0);
+        collider.height = height;
+        collider.radius = height / 8;
+
+        return collider;
+    }
+
+
 
     public void SetupModel()
     {

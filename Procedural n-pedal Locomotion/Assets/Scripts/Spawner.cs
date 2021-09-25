@@ -4,14 +4,13 @@
  */
 
 using Cinemachine;
-using System.Collections.Generic;
 using UnityEngine;
 
 // Class to swap the currently selected model at run-time.
 
 public class Spawner : MonoBehaviour
 {
-    [SerializeField, Tooltip("Prefab.")]
+    [SerializeField, Tooltip("Model Prefab.")]
     private GameObject mech, crab, spider, centipede;
     private GameObject current;
 
@@ -37,6 +36,10 @@ public class Spawner : MonoBehaviour
     public void SwapCentipede() => Spawn(centipede);
 
 
+    /// <summary>
+    /// Spawns the given game object at the starting position.
+    /// </summary>
+    /// <param name="go"></param>
     private void Spawn(GameObject go)
     {
         Destroy(current);

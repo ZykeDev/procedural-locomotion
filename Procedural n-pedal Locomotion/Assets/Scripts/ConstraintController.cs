@@ -65,11 +65,12 @@ public class ConstraintController : MonoBehaviour
 
     void Start()
     {
+        // Set the references to the opposite, ahead and behind Constraint Controllers
         if (opposite != null) oppositeCC = opposite?.gameObject.GetComponent<ConstraintController>();
         if (ahead != null) aheadCC = ahead.gameObject.GetComponent<ConstraintController>();
         if (behind != null) behindCC = behind.gameObject.GetComponent<ConstraintController>();
 
-        target.GetComponent<GroundAnchor>().SetTip(tip);
+        target.GetComponent<GroundAnchor>().tip = tip;
     }
 
     void FixedUpdate()
@@ -144,7 +145,6 @@ public class ConstraintController : MonoBehaviour
         IsMoving = false;
         originalPos = transform.position;
     }
-
 
     private void Anchor()
     {

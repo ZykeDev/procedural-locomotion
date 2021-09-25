@@ -10,7 +10,7 @@ using UnityEngine;
 public class GroundAnchor : MonoBehaviour
 {
     private LocomotionSystem Character;
-    private Transform tip;                  // Tip of the limb. Should be passed down by the Constraint Controller
+    [HideInInspector] public Transform tip;                  // Tip of the limb. Should be set from the Constraint Controller
     private int layerMask;
 
     private Vector3 verticalOffset = new Vector3(0, 2f, 0);
@@ -32,11 +32,6 @@ public class GroundAnchor : MonoBehaviour
     void FixedUpdate()
     {
         Anchor();
-    }
-
-    public void SetTip(Transform tip)
-    {
-        this.tip = tip;
     }
 
     /// <summary>
@@ -78,6 +73,7 @@ public class GroundAnchor : MonoBehaviour
             }            
         }
     }
+
 
 #if UNITY_EDITOR
     private void OnDrawGizmos()

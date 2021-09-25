@@ -42,6 +42,7 @@ public class LocomotionSystem : MonoBehaviour
     [Space]
     [SerializeField, Tooltip("Automatically adds a Capsule Collider to each bone on startup.")]
     private ColliderGeneration generateBoneColliders;
+
     [SerializeField, Tooltip("If the Collider Generation mode is set to Each Limb, the Collider Axis indicates the direction along which the limbs are connected.")]
     private Settings.Axes6 colliderAxis;
 
@@ -117,7 +118,9 @@ public class LocomotionSystem : MonoBehaviour
         }
     }
 
-
+    /// <summary>
+    /// Updates the Position and Rotation of the character.
+    /// </summary>
     private void UpdateGait()
     {
         Vector3 direction = transform.TransformDirection(Vector3.down);
@@ -171,6 +174,9 @@ public class LocomotionSystem : MonoBehaviour
     }
 
 
+    /// <summary>
+    /// Upadates the position of the CoM by averaging the positions of all weighted elements.
+    /// </summary>
     private void UpdateCenterOfMass()
     {
         // Get all limb and body positions and weights
@@ -206,7 +212,10 @@ public class LocomotionSystem : MonoBehaviour
     }
 
 
-
+    /// <summary>
+    /// Returns the total weight of all model components
+    /// </summary>
+    /// <returns></returns>
     private float ComputeWeights()
     {
         float w = 0;
@@ -222,7 +231,9 @@ public class LocomotionSystem : MonoBehaviour
 
             if (BodyWeight == 0)
             {
+#if UNITY_EDITOR
                 Debug.LogError("Body weight cannot be 0.");
+#endif
             }
         }
 
@@ -239,7 +250,11 @@ public class LocomotionSystem : MonoBehaviour
         return w;
     }
 
-
+    /// <summary>
+    /// Finds the limiting arc around the awarenss cricle and sends it to the Movement Controller.
+    /// </summary>
+    /// <param name="limitingPos">Position of the illegaly-placed target.</param>
+    /// <param name="id">Limb index</param>
     public void LimitMovement(Vector3 limitingPos, int id)
     {
         // Ignore the y-axis of the forward vector
@@ -540,9 +555,14 @@ public class LocomotionSystem : MonoBehaviour
         }
     }
 
-    private CapsuleCollider SetLimbCollider(GameObject go)
+    /// <summary>
+    /// Adds a collider to the given game object.
+    /// </summary>
+    /// <param name="limb"></param>
+    /// <returns></returns>
+    private CapsuleCollider SetLimbCollider(GameObject limb)
     {
-        CapsuleCollider collider = go.AddComponent<CapsuleCollider>();
+        CapsuleCollider collider = limb.AddComponent<CapsuleCollider>();
 
         int axis = (int)colliderAxis;
         int sign = -1;
@@ -555,13 +575,13 @@ public class LocomotionSystem : MonoBehaviour
         collider.direction = axis;
 
         // Find the next child
-        Transform child = go.transform.GetChild(0);
+        Transform child = limb.transform.GetChild(0);
 
         // Set the collider height and shift its center position
-        float height = Vector3.Distance(go.transform.position, child.transform.position);
+        float height = Vector3.Distance(limb.transform.position, child.transform.position);
 
         // Scale it using the total global scale
-        height /= go.transform.lossyScale[collider.direction];
+        height /= limb.transform.lossyScale[collider.direction];
 
         Vector3 offset = Vector3.zero;
         offset[collider.direction] = height / 2;
@@ -574,7 +594,9 @@ public class LocomotionSystem : MonoBehaviour
     }
 
 
-
+    /// <summary>
+    /// Adds the necessary Locomotion System-related components and prepares the model for use.
+    /// </summary>
     public void SetupModel()
     {
         if (limbObjects.Count < 1)
@@ -660,9 +682,13 @@ public class LocomotionSystem : MonoBehaviour
         }
     }
 
-
+    /// <summary>
+    /// Resets the model, removing weights and Locomotion System-related components.
+    /// </summary>
     public void ResetModel()
     {
+        RemoveWeights();
+
         // Clear the Rig references
         RigBuilder rb = GetComponent<RigBuilder>();
         DestroyImmediate(rb.layers[0].rig.gameObject);
@@ -681,7 +707,9 @@ public class LocomotionSystem : MonoBehaviour
         body = null;
     }
 
-
+    /// <summary>
+    /// Adds a weight component to all limb and body objects.
+    /// </summary>
     public void GenerateWeights()
     {
         // Add a Weight component to the body
@@ -717,6 +745,9 @@ public class LocomotionSystem : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Removes all weight components from the object.
+    /// </summary>
     public void RemoveWeights()
     {
         // Remove the Weight component from the body
@@ -742,7 +773,6 @@ public class LocomotionSystem : MonoBehaviour
             if (midW != null) DestroyImmediate(midW, false);
         }
     }
-
 
 
     // Returns the root, mid and tip bones of an IK chain gameObject.

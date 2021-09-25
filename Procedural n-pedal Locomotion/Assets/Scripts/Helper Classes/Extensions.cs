@@ -32,11 +32,25 @@ public static class Extensions
         return Vector3.Scale(dividend, Reciprocal(divisor));
     }
 
+
+    /// <summary>
+    /// Returns the product of two Vectors component-wise.
+    /// </summary>
+    /// <param name="multiplier"></param>
+    /// <param name="multiplicand"></param>
+    /// <returns></returns>
     public static Vector3 MultiplyBy(this Vector3 multiplier, Vector3 multiplicand)
     {
         return Vector3.Scale(multiplier, multiplicand);
     }
 
+
+    /// <summary>
+    /// Returns the vector with the minimum value at the given component from a list of vectors.
+    /// </summary>
+    /// <param name="vectors">List of vectors</param>
+    /// <param name="axisComp">Component of interest</param>
+    /// <returns></returns>
     public static Vector3 Min(this List<Vector3> vectors, Settings.Axes axisComp)
     {
         int axis = (int)axisComp;
@@ -50,6 +64,12 @@ public static class Extensions
         return min;
     }
 
+
+    /// <summary>
+    /// Returns the average vector given a list of vectors.
+    /// </summary>
+    /// <param name="vectors"></param>
+    /// <returns></returns>
     public static Vector3 Average(List<Vector3> vectors)
     {
         if (vectors.Count == 0) return Vector3.zero;
@@ -68,18 +88,29 @@ public static class Extensions
         return new Vector3(x / vectors.Count, y / vectors.Count, z / vectors.Count);
     }
 
+
+    /// <summary>
+    /// Returns the weighted average vector from a list of vectors and a list of corresponding weights.
+    /// </summary>
+    /// <param name="vectors">List of vectors</param>
+    /// <param name="weights">List of weights</param>
+    /// <returns></returns>
     public static Vector3 WeightedAverage(List<Vector3> vectors, List<float> weights)
     {
         if (vectors.Count != weights.Count)
         {
-            Debug.LogError("Error computing the Center of Mass. Vectors and Weights are of different lengths.");
+#if UNITY_EDITOR
+            Debug.LogError("Error computing the Center of Mass. Vectors and Weights lists have different lengths.");
+#endif
             return Vector3.one;
         }
 
         float sum = weights.Sum();
         if (sum < 0.99f || sum > 1.01f) // 1 ± 0.1
         {
+#if UNITY_EDITOR
             Debug.LogError("Error computing the Center of Mass. Weights do not sum up to 1. (" + sum + ")");
+#endif
             return Vector3.one;
         }
 
@@ -94,6 +125,12 @@ public static class Extensions
 
     }
 
+
+    /// <summary>
+    /// Returns the total sum of a list of floats.
+    /// </summary>
+    /// <param name="items"></param>
+    /// <returns></returns>
     public static float Sum(this List<float> items)
     {
         float total = 0;
@@ -189,6 +226,7 @@ public static class Extensions
         return GetDeepestChild(parent.GetChild(0));
     }
 
+
     /// <summary>
     /// Returns the generation number of a parent transform: the number of child levels in the hierarchy. Only searches the topmost child.
     /// </summary>
@@ -222,7 +260,6 @@ public static class Extensions
 
         return GetChildAtLevel(parent.GetChild(0), --level);
     }
-
 
 
 }

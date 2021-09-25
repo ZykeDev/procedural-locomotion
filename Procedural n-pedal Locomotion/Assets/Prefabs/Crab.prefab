@@ -646,6 +646,7 @@ MonoBehaviour:
   realignmentThreshold: 0.1
   randomizeStartingPattern: 1
   generateBoneColliders: 0
+  colliderAxis: 4
   limbs:
   - {fileID: 1740291035052232083}
   - {fileID: 1740291034463102945}

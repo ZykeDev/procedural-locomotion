@@ -22,4 +22,5 @@ public static class Settings
     public static readonly KeyCode Sprint_Key = KeyCode.LeftShift;
 
     public enum Axes { X, Y, Z }
+    public enum Axes6 { X, Y, Z, NegativeX, NegativeY, NegativeZ };
 }

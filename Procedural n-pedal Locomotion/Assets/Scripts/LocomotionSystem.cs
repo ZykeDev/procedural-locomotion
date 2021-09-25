@@ -43,7 +43,7 @@ public class LocomotionSystem : MonoBehaviour
     [SerializeField, Tooltip("Automatically adds a Capsule Collider to each bone on startup.")]
     private ColliderGeneration generateBoneColliders;
     [SerializeField, Tooltip("If the Collider Generation mode is set to Each Limb, the Collider Axis indicates the direction along which the limbs are connected.")]
-    private Settings.Axes colliderAxis;
+    private Settings.Axes6 colliderAxis;
 
 
     public MovementController MovementController => GetComponent<MovementController>();
@@ -543,7 +543,16 @@ public class LocomotionSystem : MonoBehaviour
     private CapsuleCollider SetLimbCollider(GameObject go)
     {
         CapsuleCollider collider = go.AddComponent<CapsuleCollider>();
-        collider.direction = (int)colliderAxis;
+
+        int axis = (int)colliderAxis;
+        int sign = -1;
+        if (axis >= 3)
+        {
+            sign = 1;
+            axis -= 3;
+        }
+
+        collider.direction = axis;
 
         // Find the next child
         Transform child = go.transform.GetChild(0);
@@ -552,12 +561,12 @@ public class LocomotionSystem : MonoBehaviour
         float height = Vector3.Distance(go.transform.position, child.transform.position);
 
         // Scale it using the total global scale
-        height /= go.transform.lossyScale[(int)colliderAxis];
+        height /= go.transform.lossyScale[collider.direction];
 
-        float centerOffsetX = height / 2;
+        Vector3 offset = Vector3.zero;
+        offset[collider.direction] = height / 2;
 
-
-        collider.center -= new Vector3(centerOffsetX, 0, 0);
+        collider.center = offset * sign;
         collider.height = height;
         collider.radius = height / 8;
 

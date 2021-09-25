@@ -2153,6 +2153,7 @@ MonoBehaviour:
   realignmentThreshold: 0.1
   randomizeStartingPattern: 1
   generateBoneColliders: 0
+  colliderAxis: 4
   limbs: []
   limbObjects:
   - {fileID: 5576909671025734328}

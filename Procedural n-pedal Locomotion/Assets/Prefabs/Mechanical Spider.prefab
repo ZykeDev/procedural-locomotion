@@ -434,8 +434,9 @@ MonoBehaviour:
   customMaxRange: 2
   realignmentSpeed: 25
   realignmentThreshold: 0.1
-  randomizeStartingPattern: 0
+  randomizeStartingPattern: 1
   generateBoneColliders: 0
+  colliderAxis: 4
   limbs:
   - {fileID: 3818220609304449126}
   - {fileID: 3818220610523146230}

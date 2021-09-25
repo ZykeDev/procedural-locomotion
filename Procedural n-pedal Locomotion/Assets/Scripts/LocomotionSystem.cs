@@ -42,11 +42,13 @@ public class LocomotionSystem : MonoBehaviour
     [Space]
     [SerializeField, Tooltip("Automatically adds a Capsule Collider to each bone on startup.")]
     private ColliderGeneration generateBoneColliders;
+    [SerializeField, Tooltip("If the Collider Generation mode is set to Each Limb, the Collider Axis indicates the direction along which the limbs are connected.")]
+    private Settings.Axes colliderAxis;
 
 
     public MovementController MovementController => GetComponent<MovementController>();
 
-    [HideInInspector] 
+    [HideInInspector]
     public List<ConstraintController> limbs;
 
     [Tooltip("References to every limb root of the model. Add them before clicking Setup.")]
@@ -89,8 +91,6 @@ public class LocomotionSystem : MonoBehaviour
 
         GenerateBoneColliders();
     }
-
-
 
     void FixedUpdate()
     {
@@ -285,7 +285,6 @@ public class LocomotionSystem : MonoBehaviour
         MovementController?.SetArcLimit((from, to), id);
     }
 
-    
 
 
     /// <summary>
@@ -299,7 +298,7 @@ public class LocomotionSystem : MonoBehaviour
 
         Vector3 forward = transform.forward;
         //Debug.DrawLine(CenterOfMass, CenterOfMass + forward, Color.red, 1);
-        
+
         // Find the rotation along X
         float rotX;
         {
@@ -311,7 +310,7 @@ public class LocomotionSystem : MonoBehaviour
                 Vector3 a = limbs[i].transform.position;        // Pos of the first limb tip
                 Vector3 b = limbs[i + 2].transform.position;    // Pos of the second limb tip
                 Vector3 c;                                      // Point C to make a right triangle ACB
-                
+
                 // Skip this step if the limbs are (almost) at the same height
                 if (Mathf.Abs(a.y - b.y) <= realignmentThreshold)
                 {
@@ -382,7 +381,7 @@ public class LocomotionSystem : MonoBehaviour
             {
                 angleSum += angles[i];
             }
-            
+
             rotX = angleSum * Mathf.Rad2Deg / angles.Count;
         }
 
@@ -421,7 +420,7 @@ public class LocomotionSystem : MonoBehaviour
                 {
                     rotZDirection = 1;
                 }
-                
+
                 //Debug.DrawLine(a, b);
                 //Debug.DrawLine(b, c);
                 //Debug.DrawLine(a, c);
@@ -485,7 +484,7 @@ public class LocomotionSystem : MonoBehaviour
 
 
     /// <summary>
-    /// Adds Collider components to the character depending on the choosen ColliderGeneration
+    /// Adds Collider components to the character depending on the choosen ColliderGeneration mode
     /// </summary>
     private void GenerateBoneColliders()
     {
@@ -494,30 +493,30 @@ public class LocomotionSystem : MonoBehaviour
             // Chooses how to add colliders to the character depending on the generateBoneCollider enum
             if (generateBoneColliders == ColliderGeneration.CompleteBody)
             {
-                // Adds a single Box Collider to the complete body of the character
-                BoxCollider bodyCollider = gameObject.AddComponent<BoxCollider>();
-
-                // Find the biggest Renderer inside the character
-                Vector3 biggestSize = Vector3.zero;
-                Vector3 center = Vector3.zero;
+                bool hasBounds = false;
+                Bounds bounds = new Bounds(Vector3.zero, Vector3.zero);
 
                 foreach (Renderer r in GetComponentsInChildren<Renderer>())
                 {
-                    if (biggestSize == Vector3.zero)
+                    if (hasBounds)
                     {
-                        biggestSize = r.bounds.size;
-                        center = r.bounds.center;
+                        bounds.Encapsulate(r.bounds);
                     }
-                    else if (r.bounds.size.IsGreaterThan(biggestSize))
+                    else
                     {
-                        biggestSize = r.bounds.size;
-                        center = r.bounds.center;
+                        bounds = r.bounds;
+                        hasBounds = true;
                     }
                 }
 
-                // Use its bounds to determine the collider size and center
-                bodyCollider.center = center;
-                bodyCollider.size = biggestSize / 2;
+                BoxCollider collider = gameObject.AddComponent<BoxCollider>();
+
+                // Invert the sign of the Z value
+                collider.center = (bounds.center - transform.position).MultiplyBy(new Vector3(1, 1, -1));
+
+                // Divide the height by 2
+                collider.size = bounds.size.MultiplyBy(new Vector3(1, 0.5f, 1));
+
             }
 
             // Generate box colliders around each limb bone
@@ -544,14 +543,19 @@ public class LocomotionSystem : MonoBehaviour
     private CapsuleCollider SetLimbCollider(GameObject go)
     {
         CapsuleCollider collider = go.AddComponent<CapsuleCollider>();
-        collider.direction = (int)Settings.Axes.X;
+        collider.direction = (int)colliderAxis;
 
         // Find the next child
         Transform child = go.transform.GetChild(0);
-  
+
         // Set the collider height and shift its center position
         float height = Vector3.Distance(go.transform.position, child.transform.position);
+
+        // Scale it using the total global scale
+        height /= go.transform.lossyScale[(int)colliderAxis];
+
         float centerOffsetX = height / 2;
+
 
         collider.center -= new Vector3(centerOffsetX, 0, 0);
         collider.height = height;
@@ -726,11 +730,9 @@ public class LocomotionSystem : MonoBehaviour
             Weight midW = limbs[i].TwoBoneIKConstraint.data.mid.gameObject.GetComponent<Weight>();
 
             if (rootW != null) DestroyImmediate(rootW, false);
-            if (midW != null)  DestroyImmediate(midW, false);
+            if (midW != null) DestroyImmediate(midW, false);
         }
     }
-
-
 
 
 
@@ -750,29 +752,6 @@ public class LocomotionSystem : MonoBehaviour
         return (root, mid, tip);
     }
 
-
-    // Unused ------------------------------------------------------------------------------------
-
-    /// <summary>
-    /// Returns the transform's global scale by recursively multiplying all inherited scales
-    /// </summary>
-    /// <param name="child"></param>
-    /// <returns></returns>
-    private Vector3 GetInheritedScale(Transform child)
-    {
-        Vector3 thisScale = child.localScale;
-
-        if (child.parent == null)
-        {
-            return thisScale;
-        }
-        else
-        {
-            Vector3 parentScale = GetInheritedScale(child.parent);
-
-            return Vector3.Scale(thisScale, parentScale);
-        }
-    }
 
 #if UNITY_EDITOR
     private void OnDrawGizmos()
